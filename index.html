@@ -707,18 +707,26 @@
   }
 	/* MOBILE APP PROJECT STYLE */
 
-.project.mobileapp{
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  border-radius:15px;
+..project.mobileapp{
+  padding-top:80px !important;
+  padding-bottom:90px !important;
 }
 
 .mobile-img{
-  height:420px;
+  height:500px;
+  width:auto;
+  display:block;
+  margin:auto;
   object-fit:contain;
-  border-radius:20px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+
+  border-radius:40px;
   background:white;
   padding:10px;
+
+  box-shadow:
+    0 0 0 10px #111,
+    0 0 0 14px #000,
+    0 40px 90px rgba(0,0,0,0.9);
 }
 
 .mobile-slider .item p{
@@ -2036,21 +2044,23 @@ if (query.includes('social') || query.includes('media') || query.includes('conta
   });
 
 </script>
-	  <script>
+<script>
 $(document).ready(function(){
 
   $('.mobile-slider').owlCarousel({
       loop:true,
-      margin:20,
+      margin:30,
       nav:true,
       dots:true,
       autoplay:true,
-      autoplayTimeout:2500,
-      smartSpeed:800,
+      autoplayTimeout:2800,
+      smartSpeed:900,
+      items:1,
+      stagePadding:120,
       responsive:{
-          0:{ items:1 },
-          768:{ items:2 },
-          1200:{ items:3 }
+        0:{ stagePadding:0 },
+        768:{ stagePadding:80 },
+        1200:{ stagePadding:160 }
       }
   });
 
