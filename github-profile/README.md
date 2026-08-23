@@ -14,11 +14,11 @@
 
 <br/>
 
-[![Portfolio](https://img.shields.io/badge/🌐_Portfolio-visit-C9A057?style=for-the-badge)](https://sridhar-portfolio.vercel.app)
+[![Portfolio](https://img.shields.io/badge/🌐_Portfolio-visit-C9A057?style=for-the-badge)](https://sridharportfolio1.netlify.app)
 [![Email](https://img.shields.io/badge/📧_Email-hire_me-C05B3F?style=for-the-badge)](mailto:sridharansridhar22@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-connect-0A66C2?style=for-the-badge)](https://www.linkedin.com/in/sridhar-mahalingam-6b8357245/)
 [![Instagram](https://img.shields.io/badge/Instagram-@ig__sd__sha-FF0069?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/ig_sd_sha)
-[![Resume](https://img.shields.io/badge/📄_Resume-download-3AA189?style=for-the-badge)](https://sridhar-portfolio.vercel.app/resume/Sridhar_Mahalingam_Resume.pdf)
+[![Resume](https://img.shields.io/badge/📄_Resume-download-3AA189?style=for-the-badge)](https://sridharportfolio1.netlify.app/resume/Sridhar_Mahalingam_Resume.pdf)
 
 <img src="https://komarev.com/ghpvc/?username=Sridhar08-glitch&style=flat-square&color=C9A057" alt="Profile views"/>
 
@@ -559,7 +559,7 @@ A Flask web app streamlining cafeteria operations — authentication, menu manag
 
 **Start with constraints** · **Evaluate trade-offs** · **Prefer simplicity** · **Security by default** · **Own it end to end**
 
-A few of the questions my projects answer in depth (full write-ups on the [portfolio](https://sridhar-portfolio.vercel.app/#decisions)):
+A few of the questions my projects answer in depth (full write-ups on the [portfolio](https://sridharportfolio1.netlify.app/#decisions)):
 - Why a Bloom filter *before* the Patricia trie?
 - Why event sourcing for enterprise workflows?
 - Why local-first instead of a hosted server?
@@ -586,7 +586,7 @@ A few of the questions my projects answer in depth (full write-ups on the [portf
 <a href="https://www.linkedin.com/in/sridhar-mahalingam-6b8357245/">
   <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge" />
 </a>
-<a href="https://sridhar-portfolio.vercel.app">
+<a href="https://sridharportfolio1.netlify.app">
   <img src="https://img.shields.io/badge/🌐_Portfolio-View_Projects-C9A057?style=for-the-badge" />
 </a>
 

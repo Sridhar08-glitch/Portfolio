@@ -19,8 +19,23 @@ export const TOKEN_KEYS: (keyof ThemeColors)[] = [
   "panel",
 ];
 
-/** Two shipped palettes, both WCAG-AA-safe for their text pairings. */
+/** Shipped palettes, all WCAG-AA-safe for their text pairings. */
 export const PRESETS: Record<string, { label: string; colors: ThemeColors }> = {
+  noir: {
+    label: "Noir Black",
+    colors: {
+      mineral: "58 161 137",
+      blue: "77 138 129",
+      sand: "241 235 223",
+      clay: "201 106 76",
+      gold: "201 160 87",
+      surface: "8 8 8",
+      ink: "237 230 214",
+      muted: "152 156 152",
+      line: "40 40 40",
+      panel: "17 17 17",
+    },
+  },
   verdant: {
     label: "Verdant Dark",
     colors: {

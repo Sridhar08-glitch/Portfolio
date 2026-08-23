@@ -27,7 +27,7 @@ GitHub shows a README on your profile when you create a repository named
 
 ## Before pushing — one edit
 
-The portfolio links use the placeholder `https://sridhar-portfolio.vercel.app`.
+The portfolio links use the placeholder `https://sridharportfolio1.netlify.app`.
 Once your real domain is live, find-and-replace it in `README.md`.
 
 ## Enable the contribution snake (one click)

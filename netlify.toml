@@ -1,0 +1,11 @@
+# Netlify configuration — Next.js 14 App Router via the official runtime.
+# The plugin handles output, serverless functions (/api/contact) and image CDN.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
