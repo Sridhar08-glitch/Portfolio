@@ -30,7 +30,28 @@ const STATUS = {
 const badge = (label, color) =>
   `<img src="https://img.shields.io/badge/${label.replace(/-/g, "--")}-${color}?style=flat-square" />`;
 
-function card(p) {
+/** Screenshots that ship with the profile repo. */
+const SHOTS = {
+  "meetingmind-ai": "./assets/meetingmind.png",
+  "plugged-in-scents": "./assets/pluggedinscents.png",
+  "seven-stars-stationery": "./assets/sevenstars.png",
+};
+
+/** Expandable elaboration — problem, decision, trade-off from the portfolio. */
+function details(p) {
+  const bits = [];
+  if (SHOTS[p.id]) bits.push(`<img src="${SHOTS[p.id]}" alt="${p.title} screenshot" width="100%" />`);
+  if (p.audience?.who) bits.push(`<p><b>👥 Who it's for —</b> ${p.audience.who}</p>`);
+  if (p.problem) bits.push(`<p><b>🎯 The problem —</b> ${p.problem}</p>`);
+  if (p.decision) bits.push(`<p><b>🧠 Key decision · ${p.decision.title} —</b> ${p.decision.body}</p>`);
+  if (p.tradeoff) bits.push(`<p><b>⚖️ Trade-off —</b> ${p.tradeoff}</p>`);
+  if (p.highlights?.length)
+    bits.push(`<p><b>✨ Highlights</b></p><ul>${p.highlights.slice(0, 3).map((h) => `<li>${h}</li>`).join("")}</ul>`);
+  if (!bits.length) return "";
+  return `\n<details><summary><b>📖 More about this system</b></summary>\n<br/>\n${bits.join("\n")}\n</details>`;
+}
+
+function card(p, deep = false) {
   const [sLabel, sColor] = STATUS[p.status] ?? [p.status, "777777"];
   const emoji = EMOJI[p.id] ?? "🔧";
   const live = p.links.find((l) => l.kind === "live");
@@ -56,13 +77,17 @@ ${p.summary}
 ${tech}${more}
 
 🔗 ${links.join(" · ")}
+${deep ? details(p) : ""}
 </td>`;
 }
 
-function grid(list) {
+function grid(list, deep = false) {
   const rows = [];
   for (let i = 0; i < list.length; i += 2) {
-    const cells = [card(list[i]), list[i + 1] ? card(list[i + 1]) : "<td width=\"50%\"></td>"];
+    const cells = [
+      card(list[i], deep),
+      list[i + 1] ? card(list[i + 1], deep) : "<td width=\"50%\"></td>",
+    ];
     rows.push(`<tr>\n${cells.join("\n")}\n</tr>`);
   }
   return `<table>\n${rows.join("\n")}\n</table>`;
@@ -77,18 +102,19 @@ const additional = byTier("additional");
 const cards = `## 🚀 Flagship Systems
 
 Six systems, six different problems — each organised around a genuinely different constraint.
+<sub>Every card expands — click <b>📖 More about this system</b> for the problem, the key decision and the trade-off.</sub>
 
-${grid(flagship)}
+${grid(flagship, true)}
 
 ## ⚙️ Featured Systems
 
-${grid(featured)}
+${grid(featured, true)}
 
 ## 🌍 Production Client Work
 
 Shipped end to end for real businesses in the UK, Qatar and India — architecture, backend, frontend, deployment and direct client communication.
 
-${grid(production)}
+${grid(production, true)}
 
 ## 🧩 Additional Builds
 

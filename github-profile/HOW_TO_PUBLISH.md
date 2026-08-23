@@ -30,6 +30,19 @@ GitHub shows a README on your profile when you create a repository named
 The portfolio links use the placeholder `https://sridhar-portfolio.vercel.app`.
 Once your real domain is live, find-and-replace it in `README.md`.
 
+## Enable the contribution snake (one click)
+
+The animated snake is generated INSIDE your repo by
+`.github/workflows/snake.yml` — no third-party server involved.
+
+After pushing:
+1. Open the repo → **Actions** tab → enable workflows if prompted.
+2. Run **"Generate contribution snake"** once (workflow_dispatch → Run workflow).
+3. It commits `github-snake.svg` to an `output` branch; the README picks it up.
+   From then on it refreshes daily automatically.
+
+Until the first run, the snake image shows as broken — that's expected.
+
 ## Notes
 
 - The stats cards (github-readme-stats) render live from GitHub's API — no setup.
