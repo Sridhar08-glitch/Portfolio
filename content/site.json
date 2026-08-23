@@ -61,9 +61,9 @@
   },
   "quote": "Good systems don't happen by accident. They are designed, tested and earned.",
   "aboutBody": [
-    "I'm a software developer with 3+ years of experience shipping production web and mobile applications end to end, currently Senior Backend Developer at Holora Performance in Doha.",
-    "My work spans an unusually wide range of constraints: a cross-platform DNS security ecosystem, an offline-first desktop ERP that runs with no hosted server, multi-tenant commerce and metadata-driven enterprise platforms, and AI systems — OCR, computer vision and meeting intelligence — that I train and serve entirely on my own infrastructure with no third-party inference API.",
-    "Before Holora I spent three years at Techynova delivering five live client platforms for UK and Qatar businesses as the primary or sole engineer — owning architecture, backend, frontend, deployment, security and direct English-language client communication.",
-    "I'm comfortable as the sole technical owner of a product, and I care most about the decisions underneath the software: why a Bloom filter sits before the trie, why the network can disappear and the app keeps working, why the AI stays on owned hardware."
+    "I didn't start in software. I studied petrochemical technology at Anna University — and somewhere along the way realised the part of every project I actually loved was the code. So I taught myself to build, earned an IBM full-stack certification in Chennai, and never looked back.",
+    "Three years later, I've shipped live platforms for a UK fragrance brand, a Doha stationery store, a security firm and a construction company — most of them as the only engineer on the project, from the first database schema to the Nginx config on the server.",
+    "The projects I build for myself are the ones that keep me up at night: a DNS shield that protects a whole phone without root, an ERP that keeps working when the internet doesn't, meeting AI that runs entirely on my own hardware. If a system depends on someone else's cloud, my first question is always — does it have to?",
+    "Today I lead backend engineering at Holora Performance in Doha. The rule hasn't changed since my first commit: understand the constraint first, and the architecture follows."
   ]
 }

@@ -96,7 +96,7 @@ export function SystemsHub({
   const router = useRouter();
   const [active, setActive] = useState<string | null>(null);
 
-  const card = (c: Constraint, positioned: boolean) => {
+  const card = (c: Constraint, positioned: boolean, index = 0) => {
     const Icon = ICONS[c.key] ?? Zap;
     const color = CONSTRAINT_COLORS[c.key] ?? "#3AA189";
     const on = active === c.key;
@@ -125,12 +125,13 @@ export function SystemsHub({
       >
         <span className="flex items-center gap-3">
           <span
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border transition-transform group-hover:scale-110"
+            className="float-y grid h-12 w-12 shrink-0 place-items-center rounded-xl border transition-transform group-hover:scale-110"
             style={{
               background: `${color}1e`,
               borderColor: `${color}66`,
               color,
               boxShadow: `0 0 20px -6px ${color}88`,
+              animationDelay: `${index * 0.4}s`,
             }}
           >
             <Icon size={24} aria-hidden />
@@ -199,7 +200,12 @@ export function SystemsHub({
                 {/* arrival node where the connector plugs into the core ring */}
                 <circle cx={ex} cy={ey} r={on ? 1 : 0.65} fill={color} />
                 {/* energy dot travelling the path into the core (reference look) */}
-                <circle r={on ? 1.2 : 0.9} fill={color} className="anim-dot">
+                <circle
+                  r={on ? 1.2 : 0.9}
+                  fill={color}
+                  className="anim-dot"
+                  style={{ filter: `drop-shadow(0 0 3px ${color})` }}
+                >
                   <animateMotion
                     dur={`${2.6 + (i % 3) * 0.5}s`}
                     begin={`${i * 0.45}s`}
@@ -217,7 +223,7 @@ export function SystemsHub({
           className="absolute"
           style={{ left: "50%", top: "44%", transform: "translate(-50%, -50%)" }}
         >
-          <div className="relative grid h-44 w-44 place-items-center rounded-full border border-gold/40 bg-panel/90">
+          <div className="core-glow relative grid h-44 w-44 place-items-center rounded-full border border-gold/40 bg-panel/90">
             {/* outer orbit — slow, with colored markers (reference look) */}
             <svg
               className="orbit-spin absolute inset-[-22px] h-[calc(100%+44px)] w-[calc(100%+44px)]"
@@ -263,12 +269,12 @@ export function SystemsHub({
           </div>
         </div>
 
-        {constraints.map((c) => card(c, true))}
+        {constraints.map((c, i) => card(c, true, i))}
       </div>
 
       {/* Mobile: compact grid */}
       <div className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2 md:hidden" role="group" aria-label="Engineering constraints">
-        {constraints.map((c) => card(c, false))}
+        {constraints.map((c, i) => card(c, false, i))}
       </div>
     </div>
   );

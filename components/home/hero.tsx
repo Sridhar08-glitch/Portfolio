@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Boxes, Code2, MapPin, Target } from "lucide-react";
+import { GraduationCap, Languages, MapPin, Rocket } from "lucide-react";
 import type { Site } from "@/lib/schemas";
 import { Cta } from "@/components/ui/primitives";
 import { useMotionEnabled } from "@/components/ui/reveal";
@@ -33,10 +33,11 @@ function Rise({
   );
 }
 
-const TRAITS: { icon: React.ElementType; title: string; body: string }[] = [
-  { icon: Boxes, title: "Systems thinker", body: "I break complex problems into practical systems." },
-  { icon: Code2, title: "Full-stack builder", body: "From schema to UI to server — end to end." },
-  { icon: Target, title: "Outcome focused", body: "I ship software that's useful, reliable and real." },
+/* Quick personal facts — every one straight from the resume. */
+const FACTS: { icon: React.ElementType; label: string }[] = [
+  { icon: GraduationCap, label: "B.Tech · Anna University" },
+  { icon: Languages, label: "English · Tamil" },
+  { icon: Rocket, label: "Clients in UK · Qatar · India" },
 ];
 
 export function Hero({
@@ -63,7 +64,7 @@ export function Hero({
       />
 
       <div className="shell relative grid items-center gap-12 pb-14 pt-12 lg:grid-cols-[1.1fr_1.15fr] lg:gap-8 lg:pb-20 lg:pt-16">
-        {/* Left — who I am */}
+        {/* Left — a real introduction */}
         <div className="grid items-center gap-8 sm:grid-cols-[auto_1fr]">
           {/* Portrait with glow ring */}
           <Rise delay={0.05} className="justify-self-center sm:justify-self-start">
@@ -78,12 +79,12 @@ export function Hero({
               />
               <div className="relative overflow-hidden rounded-2xl border-2 border-gold/50 shadow-[0_0_40px_-8px_rgb(var(--c-gold)/0.45)]">
                 <Image
-                  src="/images/portrait-sand.png"
+                  src="/images/portrait-studio.png"
                   alt="Sridhar Mahalingam"
-                  width={230}
-                  height={306}
+                  width={250}
+                  height={376}
                   priority
-                  className="h-[280px] w-[210px] object-cover object-top sm:h-[306px] sm:w-[230px]"
+                  className="h-[320px] w-[220px] object-cover object-top sm:h-[376px] sm:w-[250px]"
                 />
               </div>
               <p className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-surface/90 px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-gold backdrop-blur">
@@ -93,15 +94,8 @@ export function Hero({
           </Rise>
 
           <div>
-            <Rise delay={0}>
-              <p className="inline-flex items-center gap-2.5 rounded-full border border-mineral/40 bg-mineral/10 px-4 py-2 font-mono text-[0.64rem] uppercase tracking-[0.18em] text-mineral">
-                <span className="node-pulse h-1.5 w-1.5 rounded-full bg-mineral" aria-hidden />
-                Senior Backend Developer · Holora Performance
-              </p>
-            </Rise>
-
             <Rise delay={0.08}>
-              <h1 className="serif mt-5 text-5xl leading-[1.04] sm:text-6xl">
+              <h1 className="serif text-5xl leading-[1.04] sm:text-6xl">
                 Hi, I&apos;m{" "}
                 <em
                   className="bg-clip-text italic text-transparent"
@@ -113,18 +107,36 @@ export function Hero({
                   {firstName}.
                 </em>
               </h1>
-              <p className="mt-3 font-mono text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-mineral">
-                I build software around constraints.
-              </p>
             </Rise>
 
             <Rise delay={0.16}>
-              <p className="mt-5 max-w-xl text-[1rem] leading-relaxed text-muted">
-                {site.heroSupport}
+              <p className="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">
+                A software engineer from Chennai, India — now building in Doha,
+                Qatar. For the last three years I&apos;ve been the person a
+                business hands a problem to and gets working software back:
+                web, mobile, backend and the server it runs on.
+              </p>
+              <p className="mt-3 max-w-xl text-[1.02rem] leading-relaxed text-muted">
+                By day I lead backend engineering at Holora Performance. The
+                rest of the time I&apos;m training my own AI models, sharpening
+                ShieldDNS, and chasing whatever hard problem refuses to let me
+                sleep.
               </p>
             </Rise>
 
-            <Rise delay={0.24} className="mt-7 flex flex-wrap gap-3">
+            <Rise delay={0.24} className="mt-6 flex flex-wrap gap-2">
+              {FACTS.map((f) => (
+                <span
+                  key={f.label}
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/70 px-3.5 py-1.5 font-mono text-[0.66rem] text-muted"
+                >
+                  <f.icon size={13} className="text-gold" aria-hidden />
+                  {f.label}
+                </span>
+              ))}
+            </Rise>
+
+            <Rise delay={0.32} className="mt-7 flex flex-wrap gap-3">
               {site.email && (
                 <Cta href={`mailto:${site.email}`} external>
                   Let&apos;s connect
@@ -133,20 +145,6 @@ export function Hero({
               <Cta href="/resume/Sridhar_Mahalingam_Resume.pdf" variant="ghost" external>
                 View resume ↓
               </Cta>
-            </Rise>
-
-            <Rise delay={0.32}>
-              <ul className="mt-8 grid gap-3 min-[480px]:grid-cols-3">
-                {TRAITS.map((t) => (
-                  <li key={t.title} className="rounded-theme border border-line bg-panel/60 p-3">
-                    <t.icon size={16} className="text-gold" aria-hidden />
-                    <p className="mt-2 font-display text-[0.8rem] font-semibold leading-tight">
-                      {t.title}
-                    </p>
-                    <p className="mt-1 text-[0.68rem] leading-snug text-muted">{t.body}</p>
-                  </li>
-                ))}
-              </ul>
             </Rise>
           </div>
         </div>
