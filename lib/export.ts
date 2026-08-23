@@ -28,6 +28,18 @@ export function changedFiles(draft: Content, base: Content): string[] {
   return Object.keys(d).filter((k) => fingerprint(d[k]) !== fingerprint(b[k]));
 }
 
+/** Changed files with their serialized JSON — payload for auto-publish. */
+export function filesForPublish(
+  draft: Content,
+  base: Content,
+): { path: string; content: string }[] {
+  const d = contentToFiles(draft);
+  return changedFiles(draft, base).map((path) => ({
+    path,
+    content: JSON.stringify(d[path], null, 2) + "\n",
+  }));
+}
+
 export async function buildExportZip(
   draft: Content,
   base: Content,

@@ -125,11 +125,23 @@ project's `images` array (each needs `alt` text).
    `content/site.json` to the real domain (used for canonical URLs, sitemap and
    Open Graph).
 4. **Contact form (Resend):** create a free account at resend.com, generate an
-   API key, and set `RESEND_API_KEY` in Vercel env vars. Messages arrive at the
-   `email` in `content/site.json` from Resend's shared onboarding sender — no
-   DNS setup needed. Until the key is set, the form degrades gracefully and
+   API key, and set `RESEND_API_KEY` in the host's env vars. Messages arrive at
+   the `email` in `content/site.json` from Resend's shared onboarding sender —
+   no DNS setup needed. Until the key is set, the form degrades gracefully and
    points visitors to email directly.
-5. Deploy. No other environment variables are required.
+5. **One-click publish from /admin (optional but recommended):** lets the admin
+   commit content edits straight to GitHub so the host auto-rebuilds — no
+   manual export. Set these env vars (server-side):
+   - `GITHUB_TOKEN` — fine-grained PAT with **Contents: read & write** scoped
+     to this repository only (github.com → Settings → Developer settings →
+     Fine-grained tokens)
+   - `GITHUB_REPO` — e.g. `Sridhar08-glitch/sridharportfolio`
+   - `GITHUB_BRANCH` — the deployed branch (default `main`)
+   - `ADMIN_PUBLISH_KEY` — same value as the admin passphrase
+   Then Admin → Import/Export → **🚀 Publish** commits the draft; the site is
+   live ~2 minutes later. Without these vars the button explains itself and the
+   ZIP export flow still works.
+6. Deploy. No other environment variables are required.
 
 ## Extras
 

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Download, RotateCcw, Upload } from "lucide-react";
+import { Download, Loader2, Rocket, RotateCcw, Upload } from "lucide-react";
 import type { Content } from "@/lib/schemas";
 import { ContentSchema } from "@/lib/schemas";
-import { buildExportZip, changedFiles } from "@/lib/export";
+import { buildExportZip, changedFiles, filesForPublish } from "@/lib/export";
+import { SESSION_KEY } from "../gate";
 import { PanelHeader } from "./panel-header";
 
 export function DataPanel({
@@ -22,9 +23,39 @@ export function DataPanel({
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
   const [imported, setImported] = useState(false);
+  const [pubState, setPubState] = useState<"idle" | "publishing" | "done" | "error">("idle");
+  const [pubMsg, setPubMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const changed = changedFiles(content, base);
+
+  async function doPublish() {
+    setPubState("publishing");
+    setPubMsg(null);
+    try {
+      const res = await fetch("/api/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          key: sessionStorage.getItem(SESSION_KEY) ?? "",
+          files: filesForPublish(content, base),
+        }),
+      });
+      const json = (await res.json()) as { ok: boolean; error?: string; committed?: string[] };
+      if (json.ok) {
+        setPubState("done");
+        setPubMsg(
+          `Committed ${json.committed?.length ?? 0} file(s) to GitHub. Netlify is rebuilding — live in ~2 minutes. Your draft is kept until you reload after the deploy.`,
+        );
+      } else {
+        setPubState("error");
+        setPubMsg(json.error ?? "Publish failed.");
+      }
+    } catch {
+      setPubState("error");
+      setPubMsg("Network error — publish did not complete.");
+    }
+  }
 
   async function doExport() {
     setBusy(true);
@@ -65,6 +96,49 @@ export function DataPanel({
   return (
     <div>
       <PanelHeader title="Import / Export" subtitle="Move content in and out. Nothing here touches the live site until you commit an export." />
+
+      {/* One-click publish */}
+      <section className="mb-8 rounded-lg border border-adminAccent/40 bg-adminAccent/5 p-5">
+        <h3 className="flex items-center gap-2 font-display text-lg">
+          <Rocket size={18} className="text-adminAccent" /> Publish to live site
+        </h3>
+        <p className="mt-1 text-sm text-adminMuted">
+          Commits your changed content straight to GitHub — Netlify rebuilds
+          automatically and the site updates in about two minutes. No manual
+          export needed. Requires <code className="text-adminAccent">GITHUB_TOKEN</code> to be configured.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <button
+            onClick={doPublish}
+            disabled={pubState === "publishing" || changed.length === 0}
+            className="inline-flex items-center gap-2 rounded-md bg-adminAccent px-4 py-2 text-sm font-medium text-adminBg disabled:opacity-40"
+          >
+            {pubState === "publishing" ? (
+              <>
+                <Loader2 size={15} className="animate-spin" /> Publishing…
+              </>
+            ) : (
+              <>
+                <Rocket size={15} /> Publish {changed.length > 0 ? `${changed.length} file(s)` : ""}
+              </>
+            )}
+          </button>
+          {changed.length === 0 && (
+            <span className="text-sm text-adminMuted">No changes to publish.</span>
+          )}
+        </div>
+        {pubMsg && (
+          <p
+            className={`mt-3 rounded-md border px-3 py-2 text-sm ${
+              pubState === "done"
+                ? "border-adminAccent/40 bg-adminAccent/10 text-adminAccent"
+                : "border-red-500/40 bg-red-500/10 text-red-300"
+            }`}
+          >
+            {pubMsg}
+          </p>
+        )}
+      </section>
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Export */}

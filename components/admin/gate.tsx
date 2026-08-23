@@ -11,6 +11,9 @@ import { Lock } from "lucide-react";
  */
 const KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || "sridhar-admin";
 const SESSION_FLAG = "sridhar-portfolio:admin-unlocked";
+/** The typed passphrase is kept for the session so auto-publish can present it
+ *  to the server-side check (ADMIN_PUBLISH_KEY) without re-prompting. */
+export const SESSION_KEY = "sridhar-portfolio:admin-key";
 
 export function Gate({ children }: { children: React.ReactNode }) {
   const [unlocked, setUnlocked] = useState(false);
@@ -33,6 +36,7 @@ export function Gate({ children }: { children: React.ReactNode }) {
             e.preventDefault();
             if (value === KEY) {
               sessionStorage.setItem(SESSION_FLAG, "1");
+              sessionStorage.setItem(SESSION_KEY, value);
               setUnlocked(true);
             } else {
               setError(true);
