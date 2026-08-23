@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { TerminalSquare, X } from "lucide-react";
 import { answer, greet, type AssistantReply } from "@/lib/assistant";
+import { useMotionEnabled } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
 type Entry =
@@ -12,10 +13,145 @@ type Entry =
 
 const PROMPT = "sridhar@portfolio";
 
+function PromptLine({ text }: { text: string }) {
+  return (
+    <p className="mt-3 break-words">
+      <span className="text-[#28c840]">{PROMPT}</span>
+      <span className="text-[#8a8a8a]">:~$</span>{" "}
+      <span className="text-[#e8e6df]">{text}</span>
+    </p>
+  );
+}
+
+/** Types the output character-by-character, like a live terminal. */
+function TypeOut({
+  text,
+  live,
+  onDone,
+}: {
+  text: string;
+  live: boolean;
+  onDone: () => void;
+}) {
+  const enabled = useMotionEnabled();
+  const animate = live && enabled;
+  const [n, setN] = useState(animate ? 0 : text.length);
+  const doneRef = useRef(!animate);
+
+  useEffect(() => {
+    if (!animate) {
+      if (!doneRef.current) {
+        doneRef.current = true;
+      }
+      onDone();
+      return;
+    }
+    let i = 0;
+    const id = window.setInterval(() => {
+      i = Math.min(text.length, i + 3);
+      setN(i);
+      if (i >= text.length) {
+        window.clearInterval(id);
+        doneRef.current = true;
+        onDone();
+      }
+    }, 14);
+    return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, animate]);
+
+  const typing = n < text.length;
+  return (
+    <span className="whitespace-pre-line break-words">
+      {text.slice(0, n)}
+      {typing && (
+        <span aria-hidden className="term-cursor ml-0.5 inline-block h-[1em] w-[0.55em] translate-y-[2px] bg-[#28c840]/80" />
+      )}
+    </span>
+  );
+}
+
+/** One bot reply — pseudo-command echoed on a prompt line, output typed out. */
+function BotOutput({
+  reply,
+  live,
+  onOpen,
+  onRun,
+  onGrew,
+}: {
+  reply: AssistantReply;
+  live: boolean;
+  onOpen: () => void;
+  onRun: (cmd: string) => void;
+  onGrew: () => void;
+}) {
+  const [done, setDone] = useState(!live);
+  const lines = reply.text.split("\n");
+  const hasCmd = lines[0]?.startsWith("$ ");
+  const cmd = hasCmd ? lines[0].slice(2) : null;
+  const body = (hasCmd ? lines.slice(1) : lines).join("\n").replace(/^\n/, "");
+
+  return (
+    <div className="text-[#b9c4b9]">
+      {cmd && <PromptLine text={cmd} />}
+      <div className="mt-1.5">
+        <TypeOut
+          text={body}
+          live={live}
+          onDone={() => {
+            setDone(true);
+            onGrew();
+          }}
+        />
+      </div>
+      {done && reply.links && reply.links.length > 0 && (
+        <span className="mt-1.5 block">
+          {reply.links.map((l) =>
+            l.href.startsWith("/") && !l.href.endsWith(".pdf") ? (
+              <Link
+                key={l.href + l.label}
+                href={l.href}
+                onClick={onOpen}
+                className="block text-[#4ec9b0] underline decoration-dotted underline-offset-4 hover:text-[#6fe0c8]"
+              >
+                → {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href + l.label}
+                href={l.href}
+                target={l.href.startsWith("http") || l.href.endsWith(".pdf") ? "_blank" : undefined}
+                rel="noreferrer noopener"
+                className="block text-[#4ec9b0] underline decoration-dotted underline-offset-4 hover:text-[#6fe0c8]"
+              >
+                → {l.label}
+              </a>
+            ),
+          )}
+        </span>
+      )}
+      {done && reply.chips && (
+        <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+          {reply.chips.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => onRun(c)}
+              className="text-[#c9a057] hover:text-[#e5c078] hover:underline"
+            >
+              [{c.toLowerCase()}]
+            </button>
+          ))}
+        </span>
+      )}
+    </div>
+  );
+}
+
 /**
  * The portfolio assistant as a real terminal session. Commands echo on a
- * prompt line, replies render as command output — deterministic retrieval
- * over the validated content layer; never a guess.
+ * prompt line; replies run their own pseudo-command and type out live —
+ * deterministic retrieval over the validated content layer, never a guess.
  */
 export function AssistantWidget() {
   const [open, setOpen] = useState(false);
@@ -31,9 +167,10 @@ export function AssistantWidget() {
     if (open) inputRef.current?.focus();
   }, [open, entries.length]);
 
-  useEffect(() => {
+  const scrollToEnd = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [entries]);
+  };
+  useEffect(scrollToEnd, [entries]);
 
   function run(text: string) {
     const clean = text.trim();
@@ -108,55 +245,16 @@ export function AssistantWidget() {
 
             {entries.map((e, i) =>
               e.kind === "cmd" ? (
-                <p key={i} className="mt-3 break-words">
-                  <span className="text-[#28c840]">{PROMPT}</span>
-                  <span className="text-[#8a8a8a]">:~$</span>{" "}
-                  <span className="text-[#e8e6df]">{e.text}</span>
-                </p>
+                <PromptLine key={i} text={e.text} />
               ) : (
-                <div key={i} className="mt-1.5 whitespace-pre-line break-words text-[#b9c4b9]">
-                  {e.reply.text}
-                  {e.reply.links && e.reply.links.length > 0 && (
-                    <span className="mt-1.5 block">
-                      {e.reply.links.map((l) =>
-                        l.href.startsWith("/") && !l.href.endsWith(".pdf") ? (
-                          <Link
-                            key={l.href + l.label}
-                            href={l.href}
-                            onClick={() => setOpen(false)}
-                            className="block text-[#4ec9b0] underline decoration-dotted underline-offset-4 hover:text-[#6fe0c8]"
-                          >
-                            → {l.label}
-                          </Link>
-                        ) : (
-                          <a
-                            key={l.href + l.label}
-                            href={l.href}
-                            target={l.href.startsWith("http") || l.href.endsWith(".pdf") ? "_blank" : undefined}
-                            rel="noreferrer noopener"
-                            className="block text-[#4ec9b0] underline decoration-dotted underline-offset-4 hover:text-[#6fe0c8]"
-                          >
-                            → {l.label}
-                          </a>
-                        ),
-                      )}
-                    </span>
-                  )}
-                  {e.reply.chips && (
-                    <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-                      {e.reply.chips.map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => run(c)}
-                          className="text-[#c9a057] hover:text-[#e5c078] hover:underline"
-                        >
-                          [{c.toLowerCase()}]
-                        </button>
-                      ))}
-                    </span>
-                  )}
-                </div>
+                <BotOutput
+                  key={i}
+                  reply={e.reply}
+                  live={i === entries.length - 1 && i > 0}
+                  onOpen={() => setOpen(false)}
+                  onRun={run}
+                  onGrew={scrollToEnd}
+                />
               ),
             )}
 
