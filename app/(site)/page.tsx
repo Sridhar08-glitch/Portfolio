@@ -11,9 +11,10 @@ import {
 } from "@/lib/content";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Hero } from "@/components/home/hero";
+import { SystemsHub } from "@/components/home/systems-hub";
 import { FeaturedSystems } from "@/components/home/featured-systems";
 import { ProductionWork, ViewAllLink } from "@/components/home/collections";
-import { StatsBand, AboutBand, WhatIDo } from "@/components/home/stats-about";
+import { AboutBand, WhatIDo } from "@/components/home/stats-about";
 import { Decisions, DecisionPrinciples } from "@/components/home/decisions";
 import { ExperiencePanel } from "@/components/home/experience-panel";
 import { SkillsGrid } from "@/components/home/experience-skills";
@@ -36,22 +37,36 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero site={site} counts={counts} total={publicProjects.length} />
-
-      <StatsBand
+      <Hero
         site={site}
         systems={publicProjects.length}
+        clientPlatforms={production.length}
         domains={activeConstraints().length}
       />
 
       <section className="shell mt-16 scroll-mt-24 sm:mt-24" id="systems">
         <SectionHeading
           index="01"
-          label="Featured systems"
-          title="Six systems, six different problems."
-          intro="Each flagship is organised around a genuinely different constraint — and drawn with a different visual grammar, because the architecture is what makes it interesting."
-          action={<ViewAllLink href="/work">Explore all systems</ViewAllLink>}
+          label="Systems I build"
+          title="Seven constraints, one builder."
+          intro="Every project here is organised around a hard constraint. Hover a domain to see it light up — click to filter the work."
         />
+        <div className="mt-10">
+          <SystemsHub
+            constraints={site.constraints}
+            counts={counts}
+            total={publicProjects.length}
+          />
+        </div>
+
+        <div className="mt-20">
+          <SectionHeading
+            label="Featured systems"
+            title="Six systems, six different problems."
+            intro="Each flagship is organised around a genuinely different constraint — and drawn with a different visual grammar, because the architecture is what makes it interesting."
+            action={<ViewAllLink href="/work">Explore all systems</ViewAllLink>}
+          />
+        </div>
         <FeaturedSystems flagship={flagship} featured={featured} />
       </section>
 

@@ -1,12 +1,25 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { GraduationCap, Languages, MapPin, Rocket } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  BrainCircuit,
+  Boxes,
+  Code2,
+  Download,
+  LockKeyhole,
+  Mouse,
+  Rocket,
+  Users,
+  CalendarDays,
+  Globe2,
+} from "lucide-react";
 import type { Site } from "@/lib/schemas";
-import { Cta } from "@/components/ui/primitives";
+import { TechIcon } from "@/lib/tech-icons";
 import { useMotionEnabled } from "@/components/ui/reveal";
-import { SystemsHub } from "./systems-hub";
 
 const EASE: [number, number, number, number] = [0.22, 0.68, 0, 1];
 
@@ -33,130 +46,247 @@ function Rise({
   );
 }
 
-/* Quick personal facts — every one straight from the resume. */
-const FACTS: { icon: React.ElementType; label: string }[] = [
-  { icon: GraduationCap, label: "B.Tech · Anna University" },
-  { icon: Languages, label: "English · Tamil" },
-  { icon: Rocket, label: "Clients in UK · Qatar · India" },
+const HERO_TECH = ["Python", "Django", "React", "PostgreSQL", "AWS S3"];
+
+/** Floating capability cards on the arc — honest qualitative traits. */
+const CAPS: { icon: React.ElementType; title: string; sub: string; offset: number }[] = [
+  { icon: Code2, title: "Clean Code", sub: "Maintainable. Scalable.", offset: 0 },
+  { icon: LockKeyhole, title: "Secure Systems", sub: "Security-first approach.", offset: 26 },
+  { icon: BrainCircuit, title: "AI Integrated", sub: "Self-hosted & data-driven.", offset: 18 },
+  { icon: Rocket, title: "Performance", sub: "Optimised for scale.", offset: -10 },
 ];
 
 export function Hero({
   site,
-  counts,
-  total,
+  systems,
+  clientPlatforms,
+  domains,
 }: {
   site: Site;
-  counts: Record<string, number>;
-  total: number;
+  systems: number;
+  clientPlatforms: number;
+  domains: number;
 }) {
   const firstName = site.name.split(" ")[0];
+
+  const stats: { icon: React.ElementType; value: string; label: string }[] = [
+    { icon: Boxes, value: `${systems}`, label: "Systems built" },
+    { icon: CalendarDays, value: "3+", label: "Years experience" },
+    { icon: Users, value: `${clientPlatforms}`, label: "Client platforms live" },
+    { icon: Globe2, value: `${domains}`, label: "Problem domains" },
+  ];
+
   return (
     <section className="relative overflow-hidden">
-      {/* engineered backdrop: grid + gold aura */}
+      {/* backdrop: grid + copper wave glow bottom-right */}
       <div className="grid-field pointer-events-none absolute inset-0" aria-hidden />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/3 h-[540px] w-[820px] -translate-x-1/2 rounded-full opacity-60 blur-3xl"
+        className="pointer-events-none absolute -bottom-32 -right-24 h-[420px] w-[720px] rounded-full opacity-40 blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgb(var(--c-mineral) / 0.16), rgb(var(--c-gold) / 0.05) 55%, transparent)",
+            "radial-gradient(closest-side, rgb(var(--c-gold) / 0.35), rgb(var(--c-clay) / 0.12) 60%, transparent)",
         }}
       />
 
-      <div className="shell relative grid items-center gap-12 pb-14 pt-12 lg:grid-cols-[1.1fr_1.15fr] lg:gap-8 lg:pb-20 lg:pt-16">
-        {/* Left — a real introduction */}
-        <div className="grid items-center gap-8 sm:grid-cols-[auto_1fr]">
-          {/* Portrait — containerless, blended straight into the canvas */}
-          <Rise delay={0.05} className="justify-self-center sm:justify-self-start">
-            <div className="relative">
-              {/* warm aura behind the subject */}
-              <div
-                aria-hidden
-                className="absolute inset-x-0 top-6 mx-auto h-[75%] w-[85%] rounded-full opacity-60 blur-3xl"
-                style={{
-                  background:
-                    "radial-gradient(closest-side, rgb(var(--c-gold) / 0.3), rgb(var(--c-clay) / 0.12) 60%, transparent)",
-                }}
-              />
-              <Image
-                src="/images/portrait-mono.png"
-                alt="Sridhar Mahalingam"
-                width={640}
-                height={800}
-                priority
-                quality={95}
-                className="relative h-[360px] w-auto sm:h-[440px]"
-                style={{
-                  maskImage:
-                    "radial-gradient(78% 88% at 50% 40%, black 55%, transparent 94%)",
-                  WebkitMaskImage:
-                    "radial-gradient(78% 88% at 50% 40%, black 55%, transparent 94%)",
-                }}
-              />
-              <p className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-surface/80 px-3.5 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-gold backdrop-blur">
-                <MapPin size={11} aria-hidden /> {site.location}
-              </p>
-            </div>
+      <div className="shell relative grid items-center gap-10 pb-10 pt-10 lg:grid-cols-[1fr_1fr] lg:gap-4 lg:pb-14 lg:pt-6">
+        {/* ------------------------------------------------------- left */}
+        <div className="relative z-10 py-4 lg:py-10">
+          <Rise delay={0}>
+            <p className="flex items-center gap-3 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-gold">
+              <Code2 size={15} aria-hidden />
+              Full Stack Developer
+              <span aria-hidden className="h-px w-16 bg-gold/50" />
+            </p>
           </Rise>
 
-          <div>
-            <Rise delay={0.08}>
-              <h1 className="serif text-5xl leading-[1.04] sm:text-6xl">
-                Hi, I&apos;m{" "}
-                <em
-                  className="bg-clip-text italic text-transparent"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(100deg, rgb(var(--c-gold)), rgb(var(--c-clay)))",
-                  }}
-                >
-                  {firstName}.
-                </em>
-              </h1>
-            </Rise>
+          <Rise delay={0.08}>
+            <h1 className="serif mt-6 text-6xl leading-[0.98] sm:text-7xl lg:text-[5.4rem]">
+              Hi, I&apos;m
+              <br />
+              <em
+                className="bg-clip-text italic text-transparent"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(100deg, rgb(var(--c-gold)), rgb(var(--c-clay)))",
+                }}
+              >
+                {firstName}.
+              </em>
+            </h1>
+          </Rise>
 
-            <Rise delay={0.16}>
-              <p className="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-                {site.heroSupport}
-              </p>
-              <p className="mt-3 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-                By day I lead backend engineering at Holora Performance. After
-                hours I&apos;m building my own products — training models,
-                refining architectures, and turning hard problems into working
-                software.
-              </p>
-            </Rise>
+          <Rise delay={0.16}>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
+              I build secure, scalable and intelligent systems that solve
+              real-world problems and{" "}
+              <span className="text-gold">create impact.</span>
+            </p>
+          </Rise>
 
-            <Rise delay={0.24} className="mt-6 flex flex-wrap gap-2">
-              {FACTS.map((f) => (
-                <span
-                  key={f.label}
-                  className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/70 px-3.5 py-1.5 font-mono text-[0.66rem] text-muted"
+          <Rise delay={0.22}>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {HERO_TECH.map((t) => (
+                <li
+                  key={t}
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-panel/70 px-4 py-2 font-mono text-[0.72rem]"
                 >
-                  <f.icon size={13} className="text-gold" aria-hidden />
-                  {f.label}
-                </span>
+                  <TechIcon name={t} size={15} />
+                  {t.replace(" S3", "")}
+                </li>
               ))}
-            </Rise>
+            </ul>
+          </Rise>
 
-            <Rise delay={0.32} className="mt-7 flex flex-wrap gap-3">
-              {site.email && (
-                <Cta href={`mailto:${site.email}`} external>
-                  Let&apos;s connect
-                </Cta>
-              )}
-              <Cta href="/resume/Sridhar_Mahalingam_Resume.pdf" variant="ghost" external>
-                View resume ↓
-              </Cta>
-            </Rise>
-          </div>
+          <Rise delay={0.3} className="mt-8 flex flex-wrap items-center gap-5">
+            <Link href="/work" className="btn-gold">
+              View my work <ArrowUpRight size={16} aria-hidden />
+            </Link>
+            <a
+              href="/resume/Sridhar_Mahalingam_Resume.pdf"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-2 font-medium text-gold underline-offset-4 transition-colors hover:text-clay hover:underline"
+            >
+              <Download size={16} aria-hidden /> Download resume
+            </a>
+          </Rise>
+
+          {/* Stats bar — every number real and computed */}
+          <Rise delay={0.38}>
+            <dl className="card-dark mt-9 grid max-w-2xl grid-cols-2 divide-line/70 sm:grid-cols-4 sm:divide-x">
+              {stats.map((s) => (
+                <div key={s.label} className="flex items-center gap-3 px-4 py-4">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gold/10 text-gold">
+                    <s.icon size={16} aria-hidden />
+                  </span>
+                  <div>
+                    <dd className="font-display text-xl font-bold leading-none">{s.value}</dd>
+                    <dt className="mt-1 font-mono text-[0.56rem] uppercase tracking-[0.1em] text-muted">
+                      {s.label}
+                    </dt>
+                  </div>
+                </div>
+              ))}
+            </dl>
+          </Rise>
+
+          <Rise delay={0.46}>
+            <p className="mt-9 hidden items-center gap-3 font-mono text-[0.62rem] uppercase tracking-[0.24em] text-muted lg:flex">
+              <Mouse size={15} aria-hidden className="text-gold" />
+              Scroll to explore
+            </p>
+          </Rise>
         </div>
 
-        {/* Right — the animated hub */}
-        <Rise delay={0.2}>
-          <SystemsHub constraints={site.constraints} counts={counts} total={total} />
-        </Rise>
+        {/* ------------------------------------------------------ right */}
+        <div className="relative h-[420px] sm:h-[520px] lg:h-[640px]">
+          {/* copper disc behind the subject */}
+          <div
+            aria-hidden
+            className="absolute left-1/2 top-[16%] h-[55%] aspect-square -translate-x-[62%] rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 35% 30%, rgb(var(--c-gold) / 0.75), rgb(var(--c-clay) / 0.55) 55%, rgb(var(--c-clay) / 0.25))",
+            }}
+          />
+          {/* vertical line texture, right edge */}
+          <div
+            aria-hidden
+            className="absolute right-0 top-[6%] h-[46%] w-[22%] opacity-25"
+            style={{
+              background:
+                "repeating-linear-gradient(90deg, rgb(var(--c-gold) / 0.6) 0 1px, transparent 1px 9px)",
+              maskImage: "linear-gradient(to bottom, black 60%, transparent)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent)",
+            }}
+          />
+
+          {/* portrait — blended, no container */}
+          <Rise delay={0.15} className="absolute inset-x-0 bottom-0 flex justify-center lg:justify-center">
+            <Image
+              src="/images/portrait-mono.png"
+              alt="Sridhar Mahalingam"
+              width={720}
+              height={900}
+              priority
+              quality={95}
+              className="h-[420px] w-auto sm:h-[520px] lg:h-[620px]"
+              style={{
+                maskImage:
+                  "linear-gradient(to bottom, black 82%, transparent 99%), linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, black 82%, transparent 99%)",
+                maskComposite: "intersect",
+              }}
+            />
+          </Rise>
+
+          {/* dotted arc guiding the capability cards */}
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute -right-6 top-1/2 hidden h-[86%] w-40 -translate-y-1/2 lg:block"
+            viewBox="0 0 100 400"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M 90 0 Q -30 200 90 400"
+              fill="none"
+              stroke="rgb(var(--c-gold) / 0.45)"
+              strokeWidth="1.2"
+              strokeDasharray="2 7"
+              vectorEffect="non-scaling-stroke"
+              className="dash-flow"
+            />
+            {[70, 170, 270, 360].map((y, i) => (
+              <circle key={i} cx={i % 2 ? 22 : 34} cy={y} r="2.4" fill="rgb(var(--c-gold))" className="node-pulse" />
+            ))}
+          </svg>
+
+          {/* floating capability cards */}
+          <div className="absolute inset-y-0 right-0 z-10 hidden flex-col justify-center gap-5 lg:flex">
+            {CAPS.map((c, i) => (
+              <Rise key={c.title} delay={0.35 + i * 0.12}>
+                <div
+                  className="card-dark float-y flex w-60 items-center gap-3.5 p-4 backdrop-blur-sm"
+                  style={{
+                    transform: `translateX(${-c.offset}px)`,
+                    animationDelay: `${i * 0.5}s`,
+                    "--glow": "rgb(var(--c-gold) / 0.4)",
+                  } as React.CSSProperties}
+                >
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-gold/40 bg-gold/10 text-gold">
+                    <c.icon size={18} aria-hidden />
+                  </span>
+                  <div>
+                    <p className="font-display text-[0.9rem] font-semibold">{c.title}</p>
+                    <p className="mt-0.5 text-[0.7rem] text-muted">{c.sub}</p>
+                  </div>
+                </div>
+              </Rise>
+            ))}
+          </div>
+
+          {/* capability chips on small screens */}
+          <div className="absolute inset-x-0 bottom-0 z-10 grid grid-cols-2 gap-2 lg:hidden">
+            {CAPS.map((c) => (
+              <div key={c.title} className="card-dark flex items-center gap-2.5 p-3 backdrop-blur-sm">
+                <c.icon size={15} className="shrink-0 text-gold" aria-hidden />
+                <p className="font-display text-[0.76rem] font-semibold">{c.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* scroll FAB */}
+      <a
+        href="#systems"
+        aria-label="Scroll to systems"
+        className="absolute bottom-6 right-8 z-10 hidden h-12 w-12 place-items-center rounded-full border border-gold/50 text-gold transition-all hover:translate-y-1 hover:bg-gold/10 lg:grid"
+      >
+        <ArrowDown size={18} />
+      </a>
     </section>
   );
 }

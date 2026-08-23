@@ -41,10 +41,17 @@ function projectAnswer(id: string): AssistantReply | null {
   );
   if (!p) return null;
   return {
-    text: `${p.title} — ${p.category}.\n\n${p.summary}\n\nStack: ${p.technologies.slice(0, 8).join(", ")}${p.technologies.length > 8 ? "…" : ""}.`,
+    text: [
+      `NAME      ${p.title}`,
+      `TYPE      ${p.category}`,
+      `STATUS    ${p.status}`,
+      `STACK     ${p.technologies.slice(0, 6).join(" · ")}${p.technologies.length > 6 ? " …" : ""}`,
+      ``,
+      p.summary,
+    ].join("\n"),
     links: [
-      { label: `Open the ${p.title} case study`, href: `/work/${p.id}` },
-      ...p.links.slice(0, 1).map((l) => ({ label: l.label, href: l.href })),
+      { label: `open case-study`, href: `/work/${p.id}` },
+      ...p.links.slice(0, 1).map((l) => ({ label: l.label.toLowerCase(), href: l.href })),
     ],
     chips: ["More projects", "Skills", "Contact"],
   };
@@ -118,8 +125,18 @@ export function answer(raw: string): AssistantReply {
   /* Who is Sridhar / about him */
   if (/who is|about (sridhar|him|the developer)|tell me about (sridhar|him)|introduce/.test(q)) {
     return {
-      text: `${site.name} is a Full Stack Developer from Chennai, India, now based in ${site.location}. 3+ years of shipping production software end to end — security tools, enterprise ERPs, e-commerce, healthcare platforms, mobile apps and self-hosted AI. Currently Senior Backend Developer at Holora Performance. He studied petrochemical engineering, fell in love with code, and never looked back.`,
-      links: [{ label: "Read the full story", href: "/#about" }],
+      text: [
+        "$ whoami --verbose",
+        "",
+        `NAME      ${site.name}`,
+        "ROLE      Full Stack Developer · Senior Backend Developer @ Holora Performance",
+        "FROM      Chennai, India",
+        `BASE      ${site.location}`,
+        "YEARS     3+ shipping production software end to end",
+        "SCOPE     security · ERPs · e-commerce · healthcare · mobile · self-hosted AI",
+        "ORIGIN    studied petrochemical engineering → fell in love with code",
+      ].join("\n"),
+      links: [{ label: "read the full story", href: "/#about" }],
       chips: ["Projects", "Experience", "Why hire him"],
     };
   }
@@ -195,11 +212,17 @@ export function answer(raw: string): AssistantReply {
   /* Contact / hire */
   if (/contact|email|phone|hire|reach|touch|connect|whatsapp|call/.test(q)) {
     return {
-      text: `The fastest way is email — or use the contact form on the home page and it lands straight in his inbox.${site.phone ? `\n\nPhone: ${site.phone}` : ""}\nLocation: ${site.location}. ${site.availability}.`,
+      text: [
+        "$ cat ~/contact",
+        "",
+        `EMAIL     ${site.email ?? "—"}`,
+        `PHONE     ${site.phone ?? "—"}`,
+        `LOCATION  ${site.location}`,
+        `STATUS    open to opportunities`,
+      ].join("\n"),
       links: [
-        ...(site.email ? [{ label: site.email, href: `mailto:${site.email}` }] : []),
-        ...(site.github ? [{ label: "GitHub", href: site.github }] : []),
-        { label: "Open the contact form", href: "/#contact" },
+        ...(site.email ? [{ label: "send email", href: `mailto:${site.email}` }] : []),
+        { label: "open contact form", href: "/#contact" },
       ],
       chips: ["Resume", "Projects"],
     };
@@ -208,11 +231,12 @@ export function answer(raw: string): AssistantReply {
   /* Experience */
   if (/experience|career|job|work history|employ|holora|techynova|years/.test(q)) {
     const lines = experience.map(
-      (e) => `• ${e.role} — ${e.company}, ${e.location} (${e.start} – ${e.end})`,
+      (e) =>
+        `${(e.start + " – " + e.end).padEnd(22)} ${e.role} @ ${e.company} (${e.location})`,
     );
     return {
-      text: `3+ years shipping production software end to end:\n\n${lines.join("\n")}\n\nAt Techynova he delivered five live client platforms for UK and Qatar businesses as the primary or sole engineer; at Holora Performance he leads backend engineering across a portfolio of products.`,
-      links: [{ label: "See the career timeline", href: "/#experience" }],
+      text: `$ history --career\n\n${lines.join("\n")}\n\ntotal: 3+ years · 5 client platforms shipped at Techynova · backend lead at Holora`,
+      links: [{ label: "view full timeline", href: "/#experience" }],
       chips: ["Projects", "Skills", "Resume"],
     };
   }
@@ -229,10 +253,10 @@ export function answer(raw: string): AssistantReply {
   if (/skill|stack|tech|language|framework|tool|database|frontend|backend/.test(q)) {
     const lines = skills
       .slice(0, 6)
-      .map((g) => `• ${g.name}: ${g.items.slice(0, 5).join(", ")}${g.items.length > 5 ? "…" : ""}`);
+      .map((g) => `${g.name.toLowerCase().padEnd(20)} ${g.items.slice(0, 4).join(" · ")}${g.items.length > 4 ? " …" : ""}`);
     return {
-      text: `The stack, organised by capability:\n\n${lines.join("\n")}`,
-      links: [{ label: "Full skills breakdown", href: "/#skills" }],
+      text: `$ ls ~/skills\n\n${lines.join("\n")}`,
+      links: [{ label: "full breakdown", href: "/#skills" }],
       chips: ["Projects", "AI / ML", "Experience"],
     };
   }
@@ -251,8 +275,10 @@ export function answer(raw: string): AssistantReply {
   if (/project|system|portfolio|built|work|show/.test(q) || q === "more projects") {
     const flag = publicProjects.filter((p) => p.tier === "flagship");
     return {
-      text: `${publicProjects.length} projects across ${activeConstraints().length} problem domains. The flagships:\n\n${flag.map((p) => `• ${p.title} — ${p.category}`).join("\n")}\n\nPlus production client platforms for UK and Qatar businesses.`,
-      links: [{ label: "Browse all projects", href: "/work" }],
+      text: `$ ls ~/projects --flagship\n\n${flag
+        .map((p) => `${p.id.padEnd(18)} ${p.category.toLowerCase()}`)
+        .join("\n")}\n\ntotal: ${publicProjects.length} projects · ${activeConstraints().length} domains · + client platforms for UK & Qatar`,
+      links: [{ label: "browse all projects", href: "/work" }],
       chips: ["ShieldDNS", "MeetingMind", "CommerceOS", "Client work"],
     };
   }
