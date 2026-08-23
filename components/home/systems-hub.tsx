@@ -171,15 +171,16 @@ export function SystemsHub({
           preserveAspectRatio="none"
           aria-hidden
         >
-          {constraints.map((c) => {
+          {constraints.map((c, i) => {
             const color = CONSTRAINT_COLORS[c.key] ?? "#3AA189";
             const on = active === c.key;
             const anchor = LAYOUT[c.key].anchor;
             const [ex, ey] = ringPoint(anchor);
+            const d = pathFor(anchor);
             return (
               <g key={c.key}>
                 <path
-                  d={pathFor(anchor)}
+                  d={d}
                   fill="none"
                   stroke={color}
                   strokeOpacity={on ? 0.95 : 0.5}
@@ -197,6 +198,15 @@ export function SystemsHub({
                 />
                 {/* arrival node where the connector plugs into the core ring */}
                 <circle cx={ex} cy={ey} r={on ? 1 : 0.65} fill={color} />
+                {/* energy dot travelling the path into the core (reference look) */}
+                <circle r={on ? 1.2 : 0.9} fill={color} className="anim-dot">
+                  <animateMotion
+                    dur={`${2.6 + (i % 3) * 0.5}s`}
+                    begin={`${i * 0.45}s`}
+                    repeatCount="indefinite"
+                    path={d}
+                  />
+                </circle>
               </g>
             );
           })}
@@ -208,20 +218,39 @@ export function SystemsHub({
           style={{ left: "50%", top: "44%", transform: "translate(-50%, -50%)" }}
         >
           <div className="relative grid h-44 w-44 place-items-center rounded-full border border-gold/40 bg-panel/90">
+            {/* outer orbit — slow, with colored markers (reference look) */}
             <svg
-              className="orbit-spin absolute inset-[-14px] h-[calc(100%+28px)] w-[calc(100%+28px)]"
+              className="orbit-spin absolute inset-[-22px] h-[calc(100%+44px)] w-[calc(100%+44px)]"
               viewBox="0 0 100 100"
               aria-hidden
             >
               <circle
                 cx="50" cy="50" r="48"
                 fill="none"
-                stroke="rgb(var(--c-gold) / 0.5)"
-                strokeWidth="0.7"
+                stroke="rgb(var(--c-gold) / 0.45)"
+                strokeWidth="0.6"
                 strokeDasharray="1 6"
               />
-              <circle cx="50" cy="2" r="1.6" fill="rgb(var(--c-gold))" />
-              <circle cx="50" cy="98" r="1.1" fill="rgb(var(--c-mineral))" />
+              <circle cx="50" cy="2" r="1.7" fill="#C9A057" />
+              <circle cx="91.5" cy="74" r="1.3" fill="#3AA189" />
+              <circle cx="8.5" cy="74" r="1.3" fill="#C05B3F" />
+            </svg>
+            {/* inner orbit — counter-phase, tighter */}
+            <svg
+              className="orbit-spin absolute inset-[-8px] h-[calc(100%+16px)] w-[calc(100%+16px)]"
+              style={{ animationDuration: "26s", animationDirection: "reverse" }}
+              viewBox="0 0 100 100"
+              aria-hidden
+            >
+              <circle
+                cx="50" cy="50" r="48"
+                fill="none"
+                stroke="rgb(var(--c-mineral) / 0.4)"
+                strokeWidth="0.5"
+                strokeDasharray="0.8 5"
+              />
+              <circle cx="98" cy="50" r="1.2" fill="#4BA47B" />
+              <circle cx="2" cy="50" r="1" fill="#A99A45" />
             </svg>
             <div className="text-center">
               <p className="font-display text-base font-bold uppercase leading-tight tracking-[0.14em]">

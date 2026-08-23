@@ -54,9 +54,9 @@ export function ProductionWork({ projects }: { projects: Project[] }) {
                       <li
                         key={t}
                         title={t}
-                        className="grid h-6 w-6 place-items-center rounded-md border border-surface/12 bg-surface/5 text-surface/70"
+                        className="grid h-7 w-7 place-items-center rounded-md border border-surface/12 bg-white/70 text-surface/70"
                       >
-                        <TechIcon name={t} size={12} />
+                        <TechIcon name={t} size={15} />
                       </li>
                     ))}
                   </ul>

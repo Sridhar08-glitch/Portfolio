@@ -189,6 +189,8 @@ html[data-motion="off"] .orbit-spin,
 html[data-motion="off"] .marquee-track {
   animation: none !important;
 }
+html[data-motion="off"] .anim-dot { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .dash-flow, .node-pulse, .orbit-spin, .marquee-track { animation: none !important; }
+  .anim-dot { display: none; }
 }
