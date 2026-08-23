@@ -128,6 +128,33 @@ export function ProjectEditor({
 
         <StringListField label="Technologies" items={p.technologies} onChange={(v) => set("technologies", v)} />
 
+        {/* Audience — who it's for / where it fits */}
+        <div className="rounded-md border border-adminLine p-4">
+          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-adminMuted">
+            Audience (shown atop the case study)
+          </p>
+          <div className="grid gap-3 lg:grid-cols-2">
+            <TextArea
+              label="Who it's for"
+              value={p.audience?.who ?? ""}
+              rows={3}
+              onChange={(v) => {
+                const where = p.audience?.where ?? "";
+                set("audience", v || where ? { who: v, where } : undefined);
+              }}
+            />
+            <TextArea
+              label="Where it fits"
+              value={p.audience?.where ?? ""}
+              rows={3}
+              onChange={(v) => {
+                const who = p.audience?.who ?? "";
+                set("audience", v || who ? { who, where: v } : undefined);
+              }}
+            />
+          </div>
+        </div>
+
         <h3 className="border-t border-adminLine pt-5 font-display text-lg">Case study</h3>
         <TextArea label="Problem" value={p.problem ?? ""} onChange={(v) => set("problem", v || undefined)} rows={3} />
         <TextArea

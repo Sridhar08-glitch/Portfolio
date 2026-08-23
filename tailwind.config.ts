@@ -26,13 +26,13 @@ const config: Config = {
         panel: "rgb(var(--c-panel) / <alpha-value>)",
         // Admin tool palette — deliberately distinct from the public theme and
         // not driven by CSS vars (the admin is a configuration tool, not themed).
-        adminBg: "#0e1315",
-        adminPanel: "#171e21",
-        adminElevated: "#1e262a",
-        adminLine: "#2b353a",
-        adminInk: "#e7ece9",
-        adminMuted: "#93a29c",
-        adminAccent: "#57c3a0",
+        adminBg: "#0b0b0b",
+        adminPanel: "#161514",
+        adminElevated: "#1e1c1a",
+        adminLine: "#2e2b27",
+        adminInk: "#ece9e2",
+        adminMuted: "#9c988f",
+        adminAccent: "#c9a057",
       },
       fontFamily: {
         display: ["var(--font-display)", "system-ui", "sans-serif"],

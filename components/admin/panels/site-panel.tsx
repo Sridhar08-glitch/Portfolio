@@ -58,6 +58,12 @@ export function SitePanel({
           onChange={(v) => set("linkedin", v || undefined)}
         />
         <TextField
+          label="Instagram URL"
+          hint="optional"
+          value={site.instagram ?? ""}
+          onChange={(v) => set("instagram", v || undefined)}
+        />
+        <TextField
           label="Site URL"
           hint="used for canonical + sitemap"
           value={site.siteUrl}
@@ -66,7 +72,14 @@ export function SitePanel({
       </div>
 
       <h3 className="mt-8 font-display text-lg">About</h3>
-      <div className="mt-3">
+      <div className="mt-3 grid gap-5">
+        <TextArea
+          label="Personal quote"
+          hint="shown in the stats band"
+          value={site.quote ?? ""}
+          onChange={(v) => set("quote", v || undefined)}
+          rows={2}
+        />
         <StringListField
           label="About paragraphs"
           items={site.aboutBody}
