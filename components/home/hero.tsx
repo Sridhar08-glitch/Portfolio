@@ -66,29 +66,34 @@ export function Hero({
       <div className="shell relative grid items-center gap-12 pb-14 pt-12 lg:grid-cols-[1.1fr_1.15fr] lg:gap-8 lg:pb-20 lg:pt-16">
         {/* Left — a real introduction */}
         <div className="grid items-center gap-8 sm:grid-cols-[auto_1fr]">
-          {/* Portrait with glow ring */}
+          {/* Portrait — containerless, blended straight into the canvas */}
           <Rise delay={0.05} className="justify-self-center sm:justify-self-start">
             <div className="relative">
+              {/* warm aura behind the subject */}
               <div
                 aria-hidden
-                className="absolute -inset-4 rounded-full opacity-70 blur-2xl"
+                className="absolute inset-x-0 top-6 mx-auto h-[75%] w-[85%] rounded-full opacity-60 blur-3xl"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgb(var(--c-gold) / 0.35), transparent 70%)",
+                    "radial-gradient(closest-side, rgb(var(--c-gold) / 0.3), rgb(var(--c-clay) / 0.12) 60%, transparent)",
                 }}
               />
-              <div className="relative overflow-hidden rounded-2xl border-2 border-gold/50 shadow-[0_0_40px_-8px_rgb(var(--c-gold)/0.45)]">
-                <Image
-                  src="/images/portrait-formal.png"
-                  alt="Sridhar Mahalingam"
-                  width={280}
-                  height={360}
-                  priority
-                  className="h-[320px] w-[240px] object-cover sm:h-[360px] sm:w-[280px]"
-                  style={{ objectPosition: "32% 12%" }}
-                />
-              </div>
-              <p className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-surface/90 px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-gold backdrop-blur">
+              <Image
+                src="/images/portrait-mono.png"
+                alt="Sridhar Mahalingam"
+                width={640}
+                height={800}
+                priority
+                quality={95}
+                className="relative h-[360px] w-auto sm:h-[440px]"
+                style={{
+                  maskImage:
+                    "radial-gradient(78% 88% at 50% 40%, black 55%, transparent 94%)",
+                  WebkitMaskImage:
+                    "radial-gradient(78% 88% at 50% 40%, black 55%, transparent 94%)",
+                }}
+              />
+              <p className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-surface/80 px-3.5 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-gold backdrop-blur">
                 <MapPin size={11} aria-hidden /> {site.location}
               </p>
             </div>
