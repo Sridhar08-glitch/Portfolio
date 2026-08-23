@@ -53,6 +53,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         prev={prev}
         next={next}
         constraintLabels={constraintLabels}
+        site={site}
       />
     </>
   );

@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Option A â€” Electric Cyan</title>
+<style>
+  :root {
+    --canvas: #0a0c10;
+    --raised: #11151c;
+    --elevated: #171d26;
+    --line: rgba(255,255,255,.08);
+    --ink: #e8ecf1;
+    --dim: #8b94a3;
+    --accent: #f59e0b;
+    --accent2: #f97316;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 75%);
+  }
+  .aura {
+    position: fixed; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,11,.16), transparent 65%);
+    filter: blur(40px);
+  }
+  .wrap { position: relative; max-width: 1200px; margin: 0 auto; padding: 28px 48px; }
+  nav { display: flex; justify-content: space-between; align-items: center; }
+  .logo { display: flex; gap: 10px; align-items: center; font-weight: 600; font-size: 14px; }
+  .logo span {
+    display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #231303; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800;
+  }
+  .links { display: flex; gap: 26px; font-size: 13.5px; color: var(--dim); }
+  .links b { color: var(--ink); font-weight: 500; }
+  .hero { padding: 72px 0 40px; }
+  .status {
+    font-family: 'Cascadia Code', 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--accent);
+    background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 100px; margin-bottom: 26px;
+  }
+  .status i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); box-shadow: 0 0 10px var(--accent2); }
+  h1 { font-size: 76px; line-height: 1.02; letter-spacing: -3px; font-weight: 700; }
+  h1 .grad {
+    background: linear-gradient(100deg, var(--accent) 10%, var(--accent2) 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { margin-top: 22px; max-width: 560px; color: var(--dim); font-size: 17px; line-height: 1.65; }
+  .ctas { display: flex; gap: 14px; margin-top: 34px; }
+  .btn-a {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #231303;
+    padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 14.5px;
+    box-shadow: 0 0 32px rgba(245,158,11,.35);
+  }
+  .btn-b {
+    border: 1px solid var(--line); color: var(--ink); background: rgba(255,255,255,.03);
+    padding: 14px 28px; border-radius: 12px; font-weight: 500; font-size: 14.5px;
+  }
+  .bento { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 18px; margin-top: 56px; }
+  .card {
+    background: linear-gradient(180deg, var(--raised), rgba(17,21,28,.6));
+    border: 1px solid var(--line); border-radius: 20px; padding: 24px; position: relative; overflow: hidden;
+  }
+  .card.glow { border-color: rgba(245,158,11,.35); box-shadow: 0 0 40px rgba(245,158,11,.08) inset, 0 0 24px rgba(245,158,11,.06); }
+  .chip { font-family: monospace; font-size: 10.5px; letter-spacing: 1.5px; color: var(--accent); text-transform: uppercase; }
+  .card h3 { margin-top: 10px; font-size: 21px; letter-spacing: -.4px; }
+  .card p { margin-top: 8px; color: var(--dim); font-size: 13.5px; line-height: 1.6; }
+  .pipe { margin-top: 18px; display: flex; flex-direction: column; gap: 7px; }
+  .stage {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--line);
+    border-radius: 9px; padding: 8px 13px; font-family: monospace; font-size: 11.5px; color: var(--dim);
+  }
+  .stage.hot { border-color: rgba(245,158,11,.5); color: var(--ink); box-shadow: 0 0 16px rgba(245,158,11,.12); }
+  .stage i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .stage.dimm i { background: #3a4351; box-shadow: none; }
+  .verdict {
+    align-self: flex-start; margin-top: 4px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #231303; font-family: monospace; font-weight: 800; font-size: 11px; letter-spacing: 2px;
+    padding: 7px 18px; border-radius: 8px; box-shadow: 0 0 24px rgba(249,115,22,.4);
+  }
+  .num { font-size: 44px; font-weight: 700; letter-spacing: -1px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tag { display: inline-block; margin: 3px 3px 0 0; border: 1px solid var(--line); border-radius: 7px; padding: 4px 9px; font-family: monospace; font-size: 10.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="aura"></div>
+  <div class="wrap">
+    <nav>
+      <div class="logo"><span>SM</span> Sridhar Mahalingam</div>
+      <div class="links"><b>Work</b> <span>Systems</span> <span>Decisions</span> <span>Experience</span> <span>Contact</span></div>
+    </nav>
+    <div class="hero">
+      <div class="status"><i></i> AVAILABLE Â· SENIOR BACKEND DEVELOPER Â· DOHA</div>
+      <h1>I build software<br>around <span class="grad">constraints.</span></h1>
+      <p class="sub">Security ecosystems, offline-first desktop apps, multi-tenant platforms and self-hosted AI â€” designed, built and shipped end to end.</p>
+      <div class="ctas"><div class="btn-a">Explore the systems</div><div class="btn-b">Get in touch</div></div>
+    </div>
+    <div class="bento">
+      <div class="card glow">
+        <div class="chip">Security Â· Signature system</div>
+        <h3>ShieldDNS v2.0</h3>
+        <div class="pipe">
+          <div class="stage hot"><i></i> session whitelist</div>
+          <div class="stage hot"><i></i> LFU hot cache</div>
+          <div class="stage hot"><i></i> bloom prefilter</div>
+          <div class="stage dimm"><i></i> patricia trie</div>
+          <div class="verdict">ALLOW âœ“</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chip">Breadth</div>
+        <div class="num" style="margin-top:14px;">19</div>
+        <p>systems across 7 kinds of constraint â€” security, offline, real-time, AI, mobile, enterprise, commerce.</p>
+      </div>
+      <div class="card">
+        <div class="chip">Local-First AI</div>
+        <h3>MeetingMind AI</h3>
+        <p>Meeting intelligence with zero cloud AI â€” Whisper, Llama & diarisation on owned hardware.</p>
+        <div style="margin-top:10px;"><span class="tag">Django</span><span class="tag">Celery</span><span class="tag">Ollama</span><span class="tag">pgvector</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

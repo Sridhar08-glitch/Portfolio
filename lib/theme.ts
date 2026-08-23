@@ -21,14 +21,29 @@ export const TOKEN_KEYS: (keyof ThemeColors)[] = [
 
 /** Two shipped palettes, both WCAG-AA-safe for their text pairings. */
 export const PRESETS: Record<string, { label: string; colors: ThemeColors }> = {
-  "warm-mineral": {
-    label: "Warm Mineral",
+  verdant: {
+    label: "Verdant Dark",
+    colors: {
+      mineral: "58 161 137", // teal-green accent
+      blue: "77 138 129", // deep teal secondary
+      sand: "241 235 223", // cream — light band background
+      clay: "201 106 76", // copper / rust
+      gold: "201 160 87", // gold
+      surface: "10 20 17", // canvas (near-black green)
+      ink: "237 230 214", // cream text on dark
+      muted: "148 166 152",
+      line: "38 58 49",
+      panel: "16 32 27", // raised dark
+    },
+  },
+  ivory: {
+    label: "Warm Ivory (light)",
     colors: {
       mineral: "18 63 59",
       blue: "49 90 99",
       sand: "216 203 184",
       clay: "150 82 55",
-      gold: "196 154 74",
+      gold: "150 108 42",
       surface: "238 231 219",
       ink: "27 42 40",
       muted: "92 104 100",
@@ -36,21 +51,27 @@ export const PRESETS: Record<string, { label: string; colors: ThemeColors }> = {
       panel: "245 240 231",
     },
   },
-  "cool-slate": {
-    label: "Cool Slate",
-    colors: {
-      mineral: "22 43 52",
-      blue: "45 78 92",
-      sand: "212 205 192",
-      clay: "150 82 55",
-      gold: "178 146 86",
-      surface: "233 234 230",
-      ink: "23 32 36",
-      muted: "84 96 101",
-      line: "201 205 201",
-      panel: "242 243 239",
-    },
-  },
+};
+
+/**
+ * Fixed per-constraint accent hues (from the approved reference design).
+ * These are identity colors for the hub, cards and diagrams — not theme tokens.
+ */
+export const CONSTRAINT_COLORS: Record<string, string> = {
+  security: "#3AA189",
+  enterprise: "#C9A057",
+  offline: "#7E9E8C",
+  realtime: "#C05B3F",
+  "ai-ml": "#A99A45",
+  mobile: "#4BA47B",
+  commerce: "#AF6B41",
+};
+
+export const ACCENT_HEX: Record<string, string> = {
+  mineral: "#3AA189",
+  blue: "#4D8A81",
+  clay: "#C05B3F",
+  gold: "#C9A057",
 };
 
 export const SPACING_SCALE: Record<Theme["spacing"], string> = {

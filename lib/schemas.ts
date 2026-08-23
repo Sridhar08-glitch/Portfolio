@@ -111,6 +111,10 @@ export const ProjectSchema = z.object({
   /** Constraint tags this system is organised around (keys from site.constraints). */
   constraints: z.array(z.string()).default([]),
   technologies: z.array(z.string()).default([]),
+  /** Who this system serves and where it fits — shown atop the case study. */
+  audience: z
+    .object({ who: z.string().min(1), where: z.string().min(1) })
+    .optional(),
   /** Deep case-study fields — all optional; present only when supported. */
   problem: z.string().optional(),
   constraintsNarrative: z.string().optional(),
@@ -204,6 +208,7 @@ export const SiteSchema = z.object({
   portrait: ImageRefSchema.optional(),
   aboutPortrait: ImageRefSchema.optional(),
   aboutBody: z.array(z.string()).default([]),
+  quote: z.string().optional(),
 });
 export type Site = z.infer<typeof SiteSchema>;
 

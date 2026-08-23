@@ -2,6 +2,7 @@ import { site } from "@/lib/content";
 import { personJsonLd } from "@/lib/seo";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
+import { AssistantWidget } from "@/components/chat/assistant-widget";
 
 export default function SiteLayout({
   children,
@@ -19,6 +20,7 @@ export default function SiteLayout({
       <Nav site={site} />
       <main id="main">{children}</main>
       <Footer site={site} />
+      <AssistantWidget />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}

@@ -9,7 +9,10 @@
     "accent": "mineral",
     "role": "Sole developer — designed, built and released end to end",
     "summary": "A self-hosted, privacy-first ecosystem that blocks ads, trackers and malware at three layers — an Android VPN filter, a Windows DNS server and a browser extension — all filtering locally with no accounts and no telemetry.",
-    "constraints": ["security", "mobile"],
+    "constraints": [
+      "security",
+      "mobile"
+    ],
     "technologies": [
       "Kotlin 2.0",
       "Jetpack Compose",
@@ -67,21 +70,57 @@
       }
     ],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Sheild-DNS", "kind": "repo" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Sheild-DNS",
+        "kind": "repo"
+      }
     ],
     "images": [],
     "diagram": {
       "kind": "funnel",
       "caption": "A DNS request descends an ordered, fastest-first pipeline — session whitelist, LFU hot cache, session blacklist, Bloom-filter prefilter, then an authoritative Patricia trie — and resolves to ALLOW or BLOCK. Most requests exit early; only ambiguous ones reach the trie.",
       "stages": [
-        { "id": "request", "label": "DNS request", "detail": "Incoming domain lookup" },
-        { "id": "whitelist", "label": "Session whitelist", "detail": "Known-good — allow immediately" },
-        { "id": "cache", "label": "LFU hot cache", "detail": "Recently seen — answer without a full match" },
-        { "id": "blacklist", "label": "Session blacklist", "detail": "Known-bad — block immediately" },
-        { "id": "bloom", "label": "Bloom-filter prefilter", "detail": "Definitely-not-blocked exits here" },
-        { "id": "trie", "label": "Patricia trie", "detail": "Authoritative match against millions of entries" },
-        { "id": "verdict", "label": "Allow / Block", "detail": "Clean queries forwarded over DoH / DoT" }
+        {
+          "id": "request",
+          "label": "DNS request",
+          "detail": "Incoming domain lookup"
+        },
+        {
+          "id": "whitelist",
+          "label": "Session whitelist",
+          "detail": "Known-good — allow immediately"
+        },
+        {
+          "id": "cache",
+          "label": "LFU hot cache",
+          "detail": "Recently seen — answer without a full match"
+        },
+        {
+          "id": "blacklist",
+          "label": "Session blacklist",
+          "detail": "Known-bad — block immediately"
+        },
+        {
+          "id": "bloom",
+          "label": "Bloom-filter prefilter",
+          "detail": "Definitely-not-blocked exits here"
+        },
+        {
+          "id": "trie",
+          "label": "Patricia trie",
+          "detail": "Authoritative match against millions of entries"
+        },
+        {
+          "id": "verdict",
+          "label": "Allow / Block",
+          "detail": "Clean queries forwarded over DoH / DoT"
+        }
       ]
+    },
+    "audience": {
+      "who": "Privacy-conscious individuals, families and small teams who want ads, trackers and malware blocked on every device — without trusting a third-party resolver with their browsing history.",
+      "where": "Personal Android phones (no root), Windows desktops and any Chromium/Firefox browser; equally at home protecting a household or a small office network."
     }
   },
   {
@@ -94,7 +133,11 @@
     "accent": "blue",
     "role": "Independent project — sole architect and developer",
     "summary": "A meeting-intelligence platform that turns raw audio and video into transcripts, grounded summaries and tracked work — running entirely locally with no paid APIs, cloud AI or commercial SDKs.",
-    "constraints": ["ai-ml", "offline", "realtime"],
+    "constraints": [
+      "ai-ml",
+      "offline",
+      "realtime"
+    ],
     "technologies": [
       "Python",
       "Django 5",
@@ -156,14 +199,39 @@
       "kind": "stream",
       "caption": "Raw media enters an asynchronous pipeline — validate, extract, transcribe, diarise, summarise, index — and every result is appended to a bitemporal, event-sourced knowledge hub that supports time-travel queries and feeds human-approved work items.",
       "stages": [
-        { "id": "media", "label": "Audio / video in" },
-        { "id": "transcribe", "label": "Transcribe (Whisper)" },
-        { "id": "diarise", "label": "Diarise (ECAPA)" },
-        { "id": "summarise", "label": "Ground & summarise (Llama)" },
-        { "id": "index", "label": "Index" },
-        { "id": "knowledge", "label": "Event-sourced knowledge hub" },
-        { "id": "approve", "label": "Human-approved work items" }
+        {
+          "id": "media",
+          "label": "Audio / video in"
+        },
+        {
+          "id": "transcribe",
+          "label": "Transcribe (Whisper)"
+        },
+        {
+          "id": "diarise",
+          "label": "Diarise (ECAPA)"
+        },
+        {
+          "id": "summarise",
+          "label": "Ground & summarise (Llama)"
+        },
+        {
+          "id": "index",
+          "label": "Index"
+        },
+        {
+          "id": "knowledge",
+          "label": "Event-sourced knowledge hub"
+        },
+        {
+          "id": "approve",
+          "label": "Human-approved work items"
+        }
       ]
+    },
+    "audience": {
+      "who": "Teams and organisations that record meetings but can't ship confidential audio to a cloud AI — legal, healthcare, finance, or anyone who values data sovereignty.",
+      "where": "On-premise or self-hosted deployments where transcripts, summaries, decisions and action items must stay inside the organisation's own infrastructure."
     }
   },
   {
@@ -176,7 +244,10 @@
     "accent": "clay",
     "role": "Independent project — sole architect and developer",
     "summary": "A multi-tenant, headless commerce platform whose backend is deliberately vertical-neutral — the same engine powers a fashion boutique, a grocery, a pharmacy or a B2B wholesaler, with each store's identity expressed as data rather than code.",
-    "constraints": ["commerce", "enterprise"],
+    "constraints": [
+      "commerce",
+      "enterprise"
+    ],
     "technologies": [
       "Python 3.12",
       "Django 5.2",
@@ -230,12 +301,31 @@
       "kind": "lattice",
       "caption": "One deployment hosts many tenants. Each tenant-scoped row carries a tenant identifier and isolation is enforced at the query layer, so independent stores share one engine and one catalogue model without ever reading each other's data.",
       "stages": [
-        { "id": "engine", "label": "Vertical-neutral core" },
-        { "id": "t1", "label": "Tenant · fashion" },
-        { "id": "t2", "label": "Tenant · grocery" },
-        { "id": "t3", "label": "Tenant · pharmacy" },
-        { "id": "t4", "label": "Tenant · B2B" }
+        {
+          "id": "engine",
+          "label": "Vertical-neutral core"
+        },
+        {
+          "id": "t1",
+          "label": "Tenant · fashion"
+        },
+        {
+          "id": "t2",
+          "label": "Tenant · grocery"
+        },
+        {
+          "id": "t3",
+          "label": "Tenant · pharmacy"
+        },
+        {
+          "id": "t4",
+          "label": "Tenant · B2B"
+        }
       ]
+    },
+    "audience": {
+      "who": "Businesses of any vertical — fashion, grocery, pharmacy, B2B wholesale — that need a real commerce backend without building one from scratch.",
+      "where": "As the headless engine behind one store or a whole portfolio of tenants: one deployment, many isolated storefronts, any frontend."
     }
   },
   {
@@ -248,7 +338,9 @@
     "accent": "gold",
     "role": "Independent project — sole architect and developer",
     "summary": "A metadata-driven enterprise operating system where organisations define their own data models, workflows and business logic through configuration rather than code — entities and rules stored as metadata and interpreted at runtime.",
-    "constraints": ["enterprise"],
+    "constraints": [
+      "enterprise"
+    ],
     "technologies": [
       "Python",
       "Django REST Framework",
@@ -299,13 +391,35 @@
       "kind": "projection",
       "caption": "A command is validated, becomes an immutable domain event on an append-only stream, and current state is a projection folded from those events — so any record can be replayed to any point in time.",
       "stages": [
-        { "id": "command", "label": "Command" },
-        { "id": "validate", "label": "Validation" },
-        { "id": "event", "label": "Domain event" },
-        { "id": "stream", "label": "Immutable event stream" },
-        { "id": "projection", "label": "Projection" },
-        { "id": "state", "label": "Current state (replayable)" }
+        {
+          "id": "command",
+          "label": "Command"
+        },
+        {
+          "id": "validate",
+          "label": "Validation"
+        },
+        {
+          "id": "event",
+          "label": "Domain event"
+        },
+        {
+          "id": "stream",
+          "label": "Immutable event stream"
+        },
+        {
+          "id": "projection",
+          "label": "Projection"
+        },
+        {
+          "id": "state",
+          "label": "Current state (replayable)"
+        }
       ]
+    },
+    "audience": {
+      "who": "Organisations that outgrow spreadsheets but can't afford a development team for every process change — operations, finance and admin teams who want to shape their own tools.",
+      "where": "Internal business platforms in the space of Odoo/Salesforce: custom entities, approval chains, SLAs and accounting assembled through configuration, not code."
     }
   },
   {
@@ -318,7 +432,10 @@
     "accent": "mineral",
     "role": "Independent project — sole architect and developer",
     "summary": "An enterprise resource planning system for construction, delivered as a native Windows desktop application that runs fully offline — all records persist locally and synchronise to other authorised installations when connectivity returns.",
-    "constraints": ["offline", "enterprise"],
+    "constraints": [
+      "offline",
+      "enterprise"
+    ],
     "technologies": [
       "Tauri (Rust shell)",
       "Rust",
@@ -367,13 +484,35 @@
       "kind": "clusters",
       "caption": "Two devices work independently offline, each writing to local storage. When connectivity returns, their changes propagate peer-to-peer across a sync bridge and a conflict-reconciliation step converges divergent edits — with no central server between them.",
       "stages": [
-        { "id": "a-write", "label": "Device A · local write" },
-        { "id": "a-offline", "label": "Offline" },
-        { "id": "reconnect", "label": "Reconnect" },
-        { "id": "sync", "label": "Peer sync" },
-        { "id": "reconcile", "label": "Conflict reconciliation" },
-        { "id": "b-write", "label": "Device B · local write" }
+        {
+          "id": "a-write",
+          "label": "Device A · local write"
+        },
+        {
+          "id": "a-offline",
+          "label": "Offline"
+        },
+        {
+          "id": "reconnect",
+          "label": "Reconnect"
+        },
+        {
+          "id": "sync",
+          "label": "Peer sync"
+        },
+        {
+          "id": "reconcile",
+          "label": "Conflict reconciliation"
+        },
+        {
+          "id": "b-write",
+          "label": "Device B · local write"
+        }
       ]
+    },
+    "audience": {
+      "who": "Construction companies whose site and field staff work where connectivity is unreliable or absent — and who don't want to pay for an always-on server.",
+      "where": "On-site Windows laptops and office desktops that must stay fully productive offline and converge automatically when a connection returns."
     }
   },
   {
@@ -386,7 +525,10 @@
     "accent": "blue",
     "role": "Independent research project — sole architect and developer",
     "summary": "A resume-analysis and ATS platform that turns unstructured resumes and job descriptions into structured, explainable hiring intelligence — with no LLM or cloud AI. Every parsed field and score traces back to the exact text and rule that produced it.",
-    "constraints": ["ai-ml", "offline"],
+    "constraints": [
+      "ai-ml",
+      "offline"
+    ],
     "technologies": [
       "Python",
       "Django 5.2",
@@ -445,12 +587,31 @@
       "kind": "review",
       "caption": "A document is parsed offline into typed fields, each carrying a confidence score and a source span. Fields above the no-guess threshold pass through; low-confidence fields are held rather than fabricated, and scoring ships with the reasons behind it.",
       "stages": [
-        { "id": "document", "label": "Resume / job description" },
-        { "id": "extract", "label": "Deterministic extraction" },
-        { "id": "confidence", "label": "Confidence + source span" },
-        { "id": "match", "label": "Staged taxonomy match" },
-        { "id": "score", "label": "Explainable score" }
+        {
+          "id": "document",
+          "label": "Resume / job description"
+        },
+        {
+          "id": "extract",
+          "label": "Deterministic extraction"
+        },
+        {
+          "id": "confidence",
+          "label": "Confidence + source span"
+        },
+        {
+          "id": "match",
+          "label": "Staged taxonomy match"
+        },
+        {
+          "id": "score",
+          "label": "Explainable score"
+        }
       ]
+    },
+    "audience": {
+      "who": "Recruiters, HR teams and job seekers who need resume screening they can actually defend — every score traceable to the exact text and rule that produced it.",
+      "where": "Hiring pipelines where explainability and data privacy rule out cloud LLMs: parsing, skill matching and ATS scoring entirely on owned infrastructure."
     }
   },
   {
@@ -463,7 +624,10 @@
     "accent": "clay",
     "role": "Sole developer",
     "summary": "A full-stack hospital management platform integrating patient management, EMR, pharmacy, laboratory, nursing, ward management, billing, staff administration and analytics into one real-time system.",
-    "constraints": ["enterprise", "realtime"],
+    "constraints": [
+      "enterprise",
+      "realtime"
+    ],
     "technologies": [
       "Next.js 14",
       "TypeScript",
@@ -499,20 +663,46 @@
       }
     ],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Medical--ERP", "kind": "repo" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Medical--ERP",
+        "kind": "repo"
+      }
     ],
     "images": [],
     "diagram": {
       "kind": "hub",
       "caption": "The patient record sits at the centre; EMR, lab, pharmacy, ward, billing and staff modules connect as spokes, and domain events propagate between them in real time over WebSockets.",
       "stages": [
-        { "id": "patient", "label": "Patient / EMR" },
-        { "id": "lab", "label": "Laboratory" },
-        { "id": "pharmacy", "label": "Pharmacy" },
-        { "id": "ward", "label": "Nursing / Ward" },
-        { "id": "billing", "label": "Billing" },
-        { "id": "staff", "label": "Staff" }
+        {
+          "id": "patient",
+          "label": "Patient / EMR"
+        },
+        {
+          "id": "lab",
+          "label": "Laboratory"
+        },
+        {
+          "id": "pharmacy",
+          "label": "Pharmacy"
+        },
+        {
+          "id": "ward",
+          "label": "Nursing / Ward"
+        },
+        {
+          "id": "billing",
+          "label": "Billing"
+        },
+        {
+          "id": "staff",
+          "label": "Staff"
+        }
       ]
+    },
+    "audience": {
+      "who": "Hospitals and clinics that need every department — reception, doctors, lab, pharmacy, wards, billing — working from one live picture of the patient.",
+      "where": "Clinical operations where a lab result or a freed bed must reach the right person instantly; eight distinct roles from doctors to accountants."
     }
   },
   {
@@ -525,7 +715,10 @@
     "accent": "gold",
     "role": "Independent research project — sole architect and developer",
     "summary": "A computer-vision platform that ingests traffic video and turns it into structured, real-time intelligence about vehicles and road conditions — built from the detection model up on self-owned infrastructure.",
-    "constraints": ["ai-ml", "realtime"],
+    "constraints": [
+      "ai-ml",
+      "realtime"
+    ],
     "technologies": [
       "Python",
       "PyTorch",
@@ -568,11 +761,27 @@
       "kind": "spatial",
       "caption": "The platform models the road network hierarchically — city down to intersection, road and individual lane — so each frame-by-frame vehicle detection is anchored to a real place rather than a raw pixel box.",
       "stages": [
-        { "id": "city", "label": "City" },
-        { "id": "intersection", "label": "Intersection" },
-        { "id": "road", "label": "Road" },
-        { "id": "lane", "label": "Lane · ROI · counting line" }
+        {
+          "id": "city",
+          "label": "City"
+        },
+        {
+          "id": "intersection",
+          "label": "Intersection"
+        },
+        {
+          "id": "road",
+          "label": "Road"
+        },
+        {
+          "id": "lane",
+          "label": "Lane · ROI · counting line"
+        }
       ]
+    },
+    "audience": {
+      "who": "Traffic authorities, researchers and smart-city teams who need structured intelligence from raw road video — counts, congestion, lane-level behaviour.",
+      "where": "Research and evaluation settings today; architected for RTSP/CCTV ingestion and multi-GPU scale as the detection model matures."
     }
   },
   {
@@ -585,7 +794,9 @@
     "accent": "blue",
     "role": "Sole developer — in-house model development",
     "summary": "Document intelligence built entirely on internally trained models, with no third-party AI service or external inference API anywhere in the pipeline — from dataset preparation and training through to a structured extraction serving layer.",
-    "constraints": ["ai-ml"],
+    "constraints": [
+      "ai-ml"
+    ],
     "technologies": [
       "Python",
       "PyTorch",
@@ -625,12 +836,31 @@
       "kind": "review",
       "caption": "A document is preprocessed, passed through in-house OCR, and its fields extracted with confidence scores. High-confidence fields flow onward; low-confidence fields route to a human review queue instead of being trusted automatically.",
       "stages": [
-        { "id": "document", "label": "Document" },
-        { "id": "preprocess", "label": "Preprocessing" },
-        { "id": "ocr", "label": "In-house OCR" },
-        { "id": "extract", "label": "Extraction + confidence" },
-        { "id": "review", "label": "Human review queue" }
+        {
+          "id": "document",
+          "label": "Document"
+        },
+        {
+          "id": "preprocess",
+          "label": "Preprocessing"
+        },
+        {
+          "id": "ocr",
+          "label": "In-house OCR"
+        },
+        {
+          "id": "extract",
+          "label": "Extraction + confidence"
+        },
+        {
+          "id": "review",
+          "label": "Human review queue"
+        }
       ]
+    },
+    "audience": {
+      "who": "Businesses processing confidential documents — invoices, IDs, contracts — under privacy or data-residency rules that forbid third-party OCR APIs.",
+      "where": "Back-office document pipelines feeding ERPs and business systems, with low-confidence results routed to human review instead of guessed."
     }
   },
   {
@@ -643,7 +873,11 @@
     "accent": "mineral",
     "role": "Sole developer",
     "summary": "A full-stack Flutter platform for car-wash businesses — customers book services, track appointments live, manage vehicles, buy memberships, earn loyalty rewards and pay securely, backed by a real-time Django REST + Channels API.",
-    "constraints": ["mobile", "realtime", "commerce"],
+    "constraints": [
+      "mobile",
+      "realtime",
+      "commerce"
+    ],
     "technologies": [
       "Flutter",
       "Riverpod",
@@ -680,20 +914,46 @@
     ],
     "claims": [],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Carwash-Booking-App", "kind": "repo" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Carwash-Booking-App",
+        "kind": "repo"
+      }
     ],
     "images": [],
     "diagram": {
       "kind": "journey",
       "caption": "A customer moves through a service lifecycle — book, pick location, choose service, pay, then watch live status update in real time until completion.",
       "stages": [
-        { "id": "book", "label": "Book" },
-        { "id": "location", "label": "Location" },
-        { "id": "service", "label": "Service" },
-        { "id": "pay", "label": "Payment" },
-        { "id": "live", "label": "Live status" },
-        { "id": "done", "label": "Completion" }
+        {
+          "id": "book",
+          "label": "Book"
+        },
+        {
+          "id": "location",
+          "label": "Location"
+        },
+        {
+          "id": "service",
+          "label": "Service"
+        },
+        {
+          "id": "pay",
+          "label": "Payment"
+        },
+        {
+          "id": "live",
+          "label": "Live status"
+        },
+        {
+          "id": "done",
+          "label": "Completion"
+        }
       ]
+    },
+    "audience": {
+      "who": "Car-wash and vehicle-service businesses that want bookings, live tracking, memberships, loyalty and payments in one branded app.",
+      "where": "Customer phones (Android and iOS via one Flutter codebase) plus an operations dashboard for staff, scheduling and revenue analytics."
     }
   },
   {
@@ -705,8 +965,18 @@
     "accent": "clay",
     "role": "Full Stack Developer (team of 3) — React admin, Django REST, Stripe, AWS S3, deployment",
     "summary": "A secure e-commerce platform for a UK fragrance brand, with a custom React admin dashboard for full control over products, orders, users and inventory, and a separate customer storefront.",
-    "constraints": ["commerce"],
-    "technologies": ["React.js", "Django", "MySQL", "Stripe", "AWS S3", "JWT", "Linux"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "React.js",
+      "Django",
+      "MySQL",
+      "Stripe",
+      "AWS S3",
+      "JWT",
+      "Linux"
+    ],
     "implementation": [
       "Custom React admin dashboard for products, categories, pricing, inventory, users and orders.",
       "Stripe payment gateway with encrypted, PCI-compliant checkout.",
@@ -716,9 +986,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "pluggedinscents.co.uk", "href": "https://www.pluggedinscents.co.uk", "kind": "live" }
+      {
+        "label": "pluggedinscents.co.uk",
+        "href": "https://www.pluggedinscents.co.uk",
+        "kind": "live"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "A UK fragrance brand selling direct to consumers, with staff managing products, orders and customers from a custom dashboard.",
+      "where": "Live at pluggedinscents.co.uk — storefront, Stripe checkout and admin, running on Linux with media on AWS S3."
+    }
   },
   {
     "id": "seven-stars-stationery",
@@ -729,8 +1007,15 @@
     "accent": "gold",
     "role": "Full Stack Developer — Next.js frontend, Django REST, payments, SEO, VPS deployment",
     "summary": "An e-commerce platform for a Doha stationery and office-supplies store, extending it online with cart, checkout (COD and online payment), automated invoicing and SEO-optimised, server-rendered product pages.",
-    "constraints": ["commerce"],
-    "technologies": ["Next.js", "Django", "MySQL", "Linux VPS"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "Next.js",
+      "Django",
+      "MySQL",
+      "Linux VPS"
+    ],
     "implementation": [
       "Cart and checkout supporting both Cash on Delivery and online payment.",
       "Automated downloadable invoices and order-confirmation emails.",
@@ -740,9 +1025,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "sevenstars.qa", "href": "https://www.sevenstars.qa", "kind": "live" }
+      {
+        "label": "sevenstars.qa",
+        "href": "https://www.sevenstars.qa",
+        "kind": "live"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "A Doha stationery and office-supplies store extending beyond its physical shop to students, professionals and businesses.",
+      "where": "Live at sevenstars.qa — 24/7 ordering with COD and online payment, automated invoices, and SEO-tuned server-rendered pages."
+    }
   },
   {
     "id": "indiguard-security",
@@ -753,8 +1046,17 @@
     "accent": "mineral",
     "role": "Full Stack Developer — frontend, backend API integration, deployment",
     "summary": "A scalable web platform for a UK security-services provider, with dynamic service modules the client can extend without a code change, secure quotation workflows and SEO-optimised content.",
-    "constraints": ["commerce"],
-    "technologies": ["React.js", "Tailwind CSS", "Django", "MySQL", "Vercel", "Render"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "React.js",
+      "Tailwind CSS",
+      "Django",
+      "MySQL",
+      "Vercel",
+      "Render"
+    ],
     "implementation": [
       "Service modules as dynamic Django models rendered by reusable React components — the client adds services without a code change.",
       "Secure inquiry and quotation forms with backend validation and automated email notifications.",
@@ -763,9 +1065,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "indiguardsecurity.co.uk", "href": "https://www.indiguardsecurity.co.uk", "kind": "live" }
+      {
+        "label": "indiguardsecurity.co.uk",
+        "href": "https://www.indiguardsecurity.co.uk",
+        "kind": "live"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "A UK security-services provider — manned guarding, CCTV monitoring, keyholding — presenting services and capturing qualified inquiries.",
+      "where": "Live at indiguardsecurity.co.uk — dynamic service modules the client extends without code changes, plus quotation workflows."
+    }
   },
   {
     "id": "nh-livespace",
@@ -776,8 +1086,17 @@
     "accent": "clay",
     "role": "Full Stack Developer — frontend, backend API integration, deployment",
     "summary": "A professional business website for a construction and interior-solutions company — showcasing services, architectural capability and completed projects, with a secure client inquiry system and SEO-optimised structure.",
-    "constraints": ["commerce"],
-    "technologies": ["React.js", "Django", "JavaScript", "HTML", "CSS", "Linux"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "React.js",
+      "Django",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Linux"
+    ],
     "implementation": [
       "Service and portfolio showcase for construction and interior work.",
       "Secure contact forms handled through the Django backend via REST APIs.",
@@ -786,9 +1105,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "nhlivespace.com", "href": "https://www.nhlivespace.com", "kind": "live" }
+      {
+        "label": "nhlivespace.com",
+        "href": "https://www.nhlivespace.com",
+        "kind": "live"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "A licensed construction and interior-solutions company showcasing craftsmanship and converting visitors into project inquiries.",
+      "where": "Live at nhlivespace.com — services, portfolio and secure inquiry handling on a Linux deployment."
+    }
   },
   {
     "id": "techynova",
@@ -799,8 +1126,17 @@
     "accent": "blue",
     "role": "Full Stack Developer — frontend, backend integration, deployment",
     "summary": "A business website for a technology consultancy's own startup initiative — service showcase, client inquiry handling, SEO-friendly structure and Linux deployment.",
-    "constraints": ["commerce"],
-    "technologies": ["React.js", "Django", "JavaScript", "HTML", "CSS", "Linux"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "React.js",
+      "Django",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Linux"
+    ],
     "implementation": [
       "Structured service pages for web and application development.",
       "Secure client inquiry forms processed through the Django backend.",
@@ -809,9 +1145,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "techynova.tech", "href": "https://www.techynova.tech", "kind": "live" }
+      {
+        "label": "techynova.tech",
+        "href": "https://www.techynova.tech",
+        "kind": "live"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "A technology consultancy's own storefront — presenting web and application development services to prospective clients.",
+      "where": "Live at techynova.tech — service showcase, inquiry capture and SEO-friendly structure."
+    }
   },
   {
     "id": "student-teacher-management",
@@ -822,8 +1166,16 @@
     "accent": "gold",
     "role": "Sole developer",
     "summary": "A cross-platform React Native app digitalising academic administration — role-based dashboards for teachers and students covering attendance, marks, class info and notifications, with real-time data sync.",
-    "constraints": ["mobile", "realtime"],
-    "technologies": ["React Native", "Django REST Framework", "MySQL", "REST API"],
+    "constraints": [
+      "mobile",
+      "realtime"
+    ],
+    "technologies": [
+      "React Native",
+      "Django REST Framework",
+      "MySQL",
+      "REST API"
+    ],
     "implementation": [
       "Separate role-based dashboards for teachers and students.",
       "Attendance and marks management; in-app notifications.",
@@ -832,10 +1184,22 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "Frontend repo", "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-frontend", "kind": "repo" },
-      { "label": "Backend repo", "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-backend", "kind": "repo" }
+      {
+        "label": "Frontend repo",
+        "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-frontend",
+        "kind": "repo"
+      },
+      {
+        "label": "Backend repo",
+        "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-backend",
+        "kind": "repo"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "Schools and coaching institutes digitalising attendance, marks and communication between teachers and students.",
+      "where": "Android and iOS from one React Native codebase, with role-separated dashboards for teachers and students."
+    }
   },
   {
     "id": "inventory-management",
@@ -846,8 +1210,15 @@
     "accent": "mineral",
     "role": "Sole developer",
     "summary": "A full-stack web app for product inventory, stock movement, seller activity and sales analytics — with real-time stock updates, JWT auth, low-stock alerts and advanced search.",
-    "constraints": ["commerce"],
-    "technologies": ["React.js", "Django", "MySQL", "JWT"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "React.js",
+      "Django",
+      "MySQL",
+      "JWT"
+    ],
     "implementation": [
       "Product and stock management with stock levels auto-updated from sales.",
       "Seller and sales management with analytics dashboards.",
@@ -856,10 +1227,22 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "Frontend repo", "href": "https://github.com/Sridhar08-glitch/Inventory-Frontend", "kind": "repo" },
-      { "label": "Backend repo", "href": "https://github.com/Sridhar08-glitch/Inventory-Backend", "kind": "repo" }
+      {
+        "label": "Frontend repo",
+        "href": "https://github.com/Sridhar08-glitch/Inventory-Frontend",
+        "kind": "repo"
+      },
+      {
+        "label": "Backend repo",
+        "href": "https://github.com/Sridhar08-glitch/Inventory-Backend",
+        "kind": "repo"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "Businesses tracking products, stock movement, sellers and sales performance in one place.",
+      "where": "Web-based back office with live stock levels, low-stock alerts and analytics dashboards."
+    }
   },
   {
     "id": "people-safety",
@@ -870,8 +1253,16 @@
     "accent": "clay",
     "role": "Developer (team of 4)",
     "summary": "A public-safety web app for reporting crimes on an interactive map, viewing nearby incidents and danger zones, real-time chat with authorities and an SOS alert to saved contacts.",
-    "constraints": ["realtime"],
-    "technologies": ["Django", "JavaScript", "MySQL", "WebSockets", "Maps API"],
+    "constraints": [
+      "realtime"
+    ],
+    "technologies": [
+      "Django",
+      "JavaScript",
+      "MySQL",
+      "WebSockets",
+      "Maps API"
+    ],
     "implementation": [
       "Map-based crime reporting with auto-detected and manual location.",
       "WebSocket chat between users and authorities, plus alerts.",
@@ -880,9 +1271,17 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Feel-safe", "kind": "repo" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Feel-safe",
+        "kind": "repo"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "Communities and local authorities coordinating on public safety — reporting incidents, tracking danger zones, reaching help fast.",
+      "where": "A web platform with map-based reporting, real-time chat with authorities and SOS alerts to saved contacts."
+    }
   },
   {
     "id": "smart-cafeteria",
@@ -893,8 +1292,15 @@
     "accent": "gold",
     "role": "Sole developer",
     "summary": "A Flask web app streamlining cafeteria operations — authentication, menu management, order processing with email notifications and nutritional tracking.",
-    "constraints": ["commerce"],
-    "technologies": ["Python (Flask)", "SQLite", "Bootstrap", "JavaScript"],
+    "constraints": [
+      "commerce"
+    ],
+    "technologies": [
+      "Python (Flask)",
+      "SQLite",
+      "Bootstrap",
+      "JavaScript"
+    ],
     "implementation": [
       "User and admin authentication.",
       "Menu management and order processing with automated email notifications.",
@@ -903,8 +1309,16 @@
     "highlights": [],
     "claims": [],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/SMART-CAFETERIA", "kind": "repo" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/SMART-CAFETERIA",
+        "kind": "repo"
+      }
     ],
-    "images": []
+    "images": [],
+    "audience": {
+      "who": "Cafeteria operators streamlining menus, orders and nutrition awareness for their customers.",
+      "where": "A Flask web app covering authentication, menu management and order processing with email notifications."
+    }
   }
 ]

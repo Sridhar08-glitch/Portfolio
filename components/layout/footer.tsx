@@ -1,72 +1,91 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail, Phone } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import type { Site } from "@/lib/schemas";
 
 export function Footer({ site }: { site: Site }) {
   const year = 2026;
   return (
-    <footer id="contact" className="mt-24 border-t border-line bg-panel">
-      <div className="shell grid gap-10 py-16 md:grid-cols-[1.4fr_1fr]">
+    <footer className="mt-28 border-t border-line">
+      <div className="shell grid gap-10 py-16 lg:grid-cols-[1.3fr_1fr]">
         <div>
-          <p className="label">Get in touch</p>
-          <h2 className="mt-3 max-w-xl text-3xl sm:text-4xl">
-            Building something that has to work around a real constraint?
+          <p className="label">Let&apos;s connect</p>
+          <h2 className="serif mt-4 max-w-2xl text-4xl sm:text-5xl">
+            Building something that has to work around a{" "}
+            <em className="text-gold">real constraint?</em>
           </h2>
-          <p className="mt-4 max-w-md text-muted">
-            I&apos;m {site.availability.toLowerCase()}. Open to conversations about
-            systems, backend and full-stack work.
+          <p className="mt-5 max-w-md leading-relaxed text-muted">
+            I&apos;m always open to discussing new projects, systems problems and
+            opportunities. Based in {site.location}.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             {site.email && (
-              <a
-                href={`mailto:${site.email}`}
-                className="inline-flex items-center gap-2 rounded-theme bg-mineral px-5 py-3 text-sm font-medium on-dark transition-transform ease-systems hover:-translate-y-0.5"
-              >
+              <a href={`mailto:${site.email}`} className="btn-gold">
                 <Mail size={16} /> Get in touch
               </a>
             )}
             {site.github && (
-              <a
-                href={site.github}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-theme border border-line px-5 py-3 text-sm font-medium transition-colors hover:bg-surface"
-              >
+              <a href={site.github} target="_blank" rel="noreferrer noopener" className="btn-ghost">
                 <Github size={16} /> View GitHub
               </a>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 md:items-end md:text-right">
+        <div className="card-dark flex flex-col justify-center gap-4 p-7">
           <p className="label">Direct</p>
           {site.email && (
-            <a href={`mailto:${site.email}`} className="flex items-center gap-2 text-sm hover:text-mineral md:flex-row-reverse">
-              <Mail size={15} /> {site.email}
+            <a href={`mailto:${site.email}`} className="flex items-center gap-3 text-sm hover:text-gold">
+              <Mail size={15} className="text-gold" /> {site.email}
             </a>
           )}
           {site.phone && (
-            <a href={`tel:${site.phone.replace(/\s+/g, "")}`} className="flex items-center gap-2 text-sm hover:text-mineral md:flex-row-reverse">
-              <Phone size={15} /> {site.phone}
+            <a href={`tel:${site.phone.replace(/\s+/g, "")}`} className="flex items-center gap-3 text-sm hover:text-gold">
+              <Phone size={15} className="text-gold" /> {site.phone}
             </a>
           )}
-          {site.github && (
-            <a href={site.github} target="_blank" rel="noreferrer noopener" className="flex items-center gap-2 text-sm hover:text-mineral md:flex-row-reverse">
-              <Github size={15} /> GitHub
-            </a>
-          )}
-          {site.linkedin && (
-            <a href={site.linkedin} target="_blank" rel="noreferrer noopener" className="flex items-center gap-2 text-sm hover:text-mineral md:flex-row-reverse">
-              <Linkedin size={15} /> LinkedIn
-            </a>
-          )}
+          <p className="flex items-center gap-3 text-sm text-muted">
+            <MapPin size={15} className="text-gold" /> {site.location}
+          </p>
+          <div className="mt-2 flex gap-2">
+            {site.github && (
+              <a
+                href={site.github}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="GitHub"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+              >
+                <Github size={16} />
+              </a>
+            )}
+            {site.linkedin && (
+              <a
+                href={site.linkedin}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="LinkedIn"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+              >
+                <Linkedin size={16} />
+              </a>
+            )}
+            {site.email && (
+              <a
+                href={`mailto:${site.email}`}
+                aria-label="Email"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+              >
+                <Mail size={16} />
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="border-t border-line">
         <div className="shell flex flex-col items-start justify-between gap-2 py-6 text-xs text-muted sm:flex-row sm:items-center">
           <p>
-            © {year} {site.name}. Built with Next.js — a portfolio of systems, not screenshots.
+            © {year} {site.name} · A portfolio of systems, not screenshots.
           </p>
           <Link href="/admin" className="label hover:text-ink">
             Admin

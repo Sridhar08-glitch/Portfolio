@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import { baseTheme } from "@/lib/content";
 import { themeCssVars } from "@/lib/theme";
@@ -20,6 +20,13 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
 });
+const serif = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600"],
+});
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -37,7 +44,7 @@ export default function RootLayout({
       lang="en"
       data-motion={baseTheme.motion}
       style={styleVars}
-      className={`${display.variable} ${body.variable} ${mono.variable}`}
+      className={`${display.variable} ${body.variable} ${mono.variable} ${serif.variable}`}
     >
       <body>{children}</body>
     </html>

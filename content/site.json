@@ -3,7 +3,7 @@
   "role": "Systems & Full-Stack Developer",
   "tagline": "Software Developer building systems around constraints — security, offline, real-time, multi-tenancy and self-hosted AI.",
   "heroThesis": "I build software around constraints.",
-  "heroSupport": "Security ecosystems, metadata-driven enterprise platforms, offline-first desktop software, real-time apps and AI that runs entirely on my own infrastructure — designed, built and shipped end to end.",
+  "heroSupport": "From a DNS security ecosystem that matches millions of blocklist entries on-device, to desktop software that keeps working when the network disappears, to AI that never leaves my own hardware — I design complete systems and carry them all the way to production.",
   "location": "Doha, Qatar",
   "availability": "Currently Senior Backend Developer at Holora Performance · Transferable visa, NOC available",
   "email": "sridharansridhar22@gmail.com",
@@ -59,6 +59,7 @@
     "width": 480,
     "height": 320
   },
+  "quote": "Good systems don't happen by accident. They are designed, tested and earned.",
   "aboutBody": [
     "I'm a software developer with 3+ years of experience shipping production web and mobile applications end to end, currently Senior Backend Developer at Holora Performance in Doha.",
     "My work spans an unusually wide range of constraints: a cross-platform DNS security ecosystem, an offline-first desktop ERP that runs with no hosted server, multi-tenant commerce and metadata-driven enterprise platforms, and AI systems — OCR, computer vision and meeting intelligence — that I train and serve entirely on my own infrastructure with no third-party inference API.",

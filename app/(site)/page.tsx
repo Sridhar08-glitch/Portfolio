@@ -12,99 +12,106 @@ import {
 import { SectionHeading } from "@/components/ui/primitives";
 import { Hero } from "@/components/home/hero";
 import { FeaturedSystems } from "@/components/home/featured-systems";
-import { ProductionWork, AdditionalBuilds } from "@/components/home/collections";
-import { Decisions } from "@/components/home/decisions";
-import {
-  ExperienceTimeline,
-  SkillsGrid,
-} from "@/components/home/experience-skills";
+import { ProductionWork, ViewAllLink } from "@/components/home/collections";
+import { StatsBand, AboutBand, WhatIDo } from "@/components/home/stats-about";
+import { Decisions, DecisionPrinciples } from "@/components/home/decisions";
+import { ExperiencePanel } from "@/components/home/experience-panel";
+import { SkillsGrid } from "@/components/home/experience-skills";
 import { WritingTeaser } from "@/components/home/writing-teaser";
+import { ContactSection } from "@/components/home/contact-section";
 
 export default function HomePage() {
   const flagship = projectsByTier("flagship");
   const featured = projectsByTier("featured");
   const production = projectsByTier("production");
-  const additional = projectsByTier("additional");
 
-  // Constraint → project chips for the hero map.
-  const groups: Record<string, { id: string; title: string }[]> = {};
+  const counts: Record<string, number> = {};
   for (const c of activeConstraints()) {
-    groups[c.key] = projectsForConstraint(c.key).map((p) => ({
-      id: p.id,
-      title: p.title,
-    }));
+    counts[c.key] = projectsForConstraint(c.key).length;
   }
 
   const projectTitles = Object.fromEntries(
     publicProjects.map((p) => [p.id, p.title]),
   );
+  const technologies = new Set(publicProjects.flatMap((p) => p.technologies)).size;
 
   return (
     <>
-      <Hero site={site} groups={groups} total={publicProjects.length} />
+      <Hero site={site} counts={counts} total={publicProjects.length} />
 
-      <section className="shell mt-24 sm:mt-32">
+      <StatsBand
+        site={site}
+        systems={publicProjects.length}
+        technologies={technologies}
+        domains={activeConstraints().length}
+      />
+
+      <section className="shell mt-16 scroll-mt-24 sm:mt-24" id="systems">
         <SectionHeading
           index="01"
-          label="Selected systems"
+          label="Featured systems"
           title="Six systems, six different problems."
           intro="Each flagship is organised around a genuinely different constraint — and drawn with a different visual grammar, because the architecture is what makes it interesting."
+          action={<ViewAllLink href="/work">Explore all systems</ViewAllLink>}
         />
         <FeaturedSystems flagship={flagship} featured={featured} />
       </section>
 
-      <section className="shell mt-24 sm:mt-32">
-        <SectionHeading
-          index="02"
-          label="Production work"
-          title="Shipped for real businesses."
-          intro="Client platforms delivered end to end at Techynova for UK and Qatar businesses — architecture, backend, frontend, deployment and direct client communication."
-        />
-        <ProductionWork projects={production} />
+      {/* Production client work — cream editorial band */}
+      <section className="band-cream mt-24 sm:mt-32">
+        <div className="shell py-16 sm:py-20">
+          <SectionHeading
+            index="02"
+            label="Production client work"
+            title="Shipped for real businesses."
+            intro="Client platforms delivered end to end at Techynova for UK and Qatar businesses — architecture, backend, frontend, deployment and direct client communication."
+            cream
+            action={<ViewAllLink href="/work">View all projects</ViewAllLink>}
+          />
+          <ProductionWork projects={production} />
+        </div>
       </section>
 
-      <section className="shell mt-24 sm:mt-32">
-        <SectionHeading
-          index="03"
-          label="Additional builds"
-          title="Earlier and smaller work."
-          intro="Useful projects kept deliberately at a lower visual weight — mobile, civic, inventory and cafeteria systems."
-        />
-        <AdditionalBuilds projects={additional} />
-      </section>
+      <WhatIDo site={site} />
 
       <section className="shell mt-24 scroll-mt-24 sm:mt-32" id="decisions">
         <SectionHeading
-          index="04"
+          index="03"
           label="Engineering decisions"
           title="How I think about trade-offs."
           intro="The reasoning underneath the software — written for engineers who want to go deeper than the feature list."
         />
         <Decisions decisions={decisions} projectTitles={projectTitles} />
+        <DecisionPrinciples />
       </section>
 
       <section className="shell mt-24 scroll-mt-24 sm:mt-32" id="experience">
         <SectionHeading
-          index="05"
-          label="Experience"
+          index="04"
+          label="Career timeline"
           title="Where I've worked."
+          intro="Two roles, one delivery record — the client platforms were shipped end to end during the Techynova years."
         />
-        <ExperienceTimeline experience={experience} />
+        <ExperiencePanel experience={experience} />
       </section>
 
       <section className="shell mt-24 sm:mt-32" id="skills">
         <SectionHeading
-          index="06"
+          index="05"
           label="Skills"
           title="Organised around capability, not logos."
         />
         <SkillsGrid groups={skills} />
       </section>
 
+      <AboutBand site={site} />
+
       <section className="shell mt-24 scroll-mt-24 sm:mt-32" id="writing">
-        <SectionHeading index="07" label="Writing" title="Notes, when they're ready." />
+        <SectionHeading index="06" label="Writing" title="Notes, when they're ready." />
         <WritingTeaser posts={posts} />
       </section>
+
+      <ContactSection site={site} />
     </>
   );
 }

@@ -3,23 +3,22 @@
 @tailwind utilities;
 
 /*
- * Theme tokens are injected as CSS custom properties by the ThemeProvider and,
- * for the first paint, inline on <html> in layout.tsx. The values below are only
- * a fallback so the file is valid on its own — the real source of truth is
- * content/theme.json via lib/theme.ts.
+ * Verdant dark theme. Tokens are injected as CSS custom properties by the
+ * server layout (content/theme.json via lib/theme.ts). Values below are only a
+ * standalone fallback.
  */
 :root {
-  --c-mineral: 18 63 59;
-  --c-blue: 49 90 99;
-  --c-sand: 216 203 184;
-  --c-clay: 185 121 93;
-  --c-gold: 196 154 74;
-  --c-surface: 238 231 219;
-  --c-ink: 27 42 40;
-  --c-muted: 92 104 100;
-  --c-line: 205 194 176;
-  --c-panel: 245 240 231;
-  --radius: 0.375rem;
+  --c-mineral: 58 161 137;
+  --c-blue: 77 138 129;
+  --c-sand: 241 235 223;
+  --c-clay: 201 106 76;
+  --c-gold: 201 160 87;
+  --c-surface: 10 20 17;
+  --c-ink: 237 230 214;
+  --c-muted: 148 166 152;
+  --c-line: 38 58 49;
+  --c-panel: 16 32 27;
+  --radius: 0.625rem;
   --space-scale: 1;
 }
 
@@ -41,17 +40,17 @@
     font-family: var(--font-display), system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.05;
+    line-height: 1.08;
     text-wrap: balance;
   }
 
   ::selection {
-    background-color: rgb(var(--c-gold) / 0.35);
+    background-color: rgb(var(--c-gold) / 0.4);
+    color: rgb(var(--c-surface));
   }
 
-  /* Visible, consistent keyboard focus everywhere. */
   :focus-visible {
-    outline: 2px solid rgb(var(--c-mineral));
+    outline: 2px solid rgb(var(--c-gold));
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -69,11 +68,14 @@
 
   .label {
     font-family: var(--font-mono), monospace;
-    @apply text-[0.7rem] uppercase tracking-[0.18em] text-muted;
+    @apply text-[0.68rem] uppercase tracking-[0.2em] text-muted;
   }
 
-  .hairline {
-    background-color: rgb(var(--c-line));
+  /* Serif display for the hero and editorial statements. */
+  .serif {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.015em;
   }
 
   .panel {
@@ -82,20 +84,49 @@
     border-radius: var(--radius);
   }
 
-  /* The one place we lift text off a dark field. */
-  .on-dark {
+  /* Dark glass card with hover lift + glow (accent set via --glow). */
+  .card-dark {
+    background: linear-gradient(180deg, rgb(var(--c-panel)), rgb(var(--c-panel) / 0.55));
+    border: 1px solid rgb(var(--c-line));
+    border-radius: calc(var(--radius) + 4px);
+    transition: transform 0.35s cubic-bezier(.22,.68,0,1), border-color 0.35s, box-shadow 0.35s;
+  }
+  .card-dark:hover {
+    transform: translateY(-4px);
+    border-color: var(--glow, rgb(var(--c-mineral)));
+    box-shadow: 0 12px 40px -12px rgb(0 0 0 / 0.6), 0 0 24px -6px var(--glow, rgb(var(--c-mineral) / 0.4));
+  }
+
+  /* Cream editorial band — dark ink inside. */
+  .band-cream {
+    background-color: rgb(var(--c-sand));
     color: rgb(var(--c-surface));
   }
+  .band-cream .label { color: rgb(var(--c-surface) / 0.55); }
+
+  .on-dark { color: rgb(var(--c-surface)); }
+
+  .btn-gold {
+    @apply inline-flex items-center gap-2 rounded-theme px-6 py-3.5 text-sm font-semibold;
+    background: linear-gradient(135deg, rgb(var(--c-gold)), rgb(var(--c-clay)));
+    color: rgb(var(--c-surface));
+    box-shadow: 0 0 28px rgb(var(--c-gold) / 0.25);
+    transition: transform 0.3s cubic-bezier(.22,.68,0,1), box-shadow 0.3s;
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgb(var(--c-gold) / 0.4); }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-theme px-6 py-3.5 text-sm font-medium;
+    border: 1px solid rgb(var(--c-line));
+    background: rgb(255 255 255 / 0.03);
+    transition: border-color 0.3s, background-color 0.3s, transform 0.3s cubic-bezier(.22,.68,0,1);
+  }
+  .btn-ghost:hover { border-color: rgb(var(--c-mineral)); background: rgb(var(--c-mineral) / 0.08); transform: translateY(-2px); }
 }
 
-/*
- * Motion policy. Framer Motion handles entrances; this is the CSS backstop.
- * Both the OS setting and the in-site theme (data-motion="off") disable it.
- */
+/* ---------------------------------------------------------------- motion */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
@@ -110,11 +141,42 @@ html[data-motion="off"] *::after {
   transition-duration: 0.001ms !important;
 }
 
-/* Grain-free subtle diagram grid used behind system visuals. */
+/* Subtle engineering grid behind hero / diagrams. */
 .grid-field {
   background-image:
-    linear-gradient(rgb(var(--c-line) / 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--c-line) / 0.5) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 78%);
+    linear-gradient(rgb(var(--c-ink) / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-ink) / 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 50% 35%, black 35%, transparent 78%);
+}
+
+/* Flowing dotted connectors (hub + pipelines). Cheap: dashoffset only. */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+.dash-flow {
+  stroke-dasharray: 3 9;
+  animation: dash-flow 1.6s linear infinite;
+}
+
+/* Soft pulse for nodes/dots. */
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+.node-pulse { animation: node-pulse 2.4s ease-in-out infinite; }
+
+/* Slow orbit rotation for the hub ring. */
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+.orbit-spin { animation: orbit-spin 40s linear infinite; transform-origin: center; }
+
+html[data-motion="off"] .dash-flow,
+html[data-motion="off"] .node-pulse,
+html[data-motion="off"] .orbit-spin {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-flow, .node-pulse, .orbit-spin { animation: none !important; }
 }

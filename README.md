@@ -124,7 +124,21 @@ project's `images` array (each needs `alt` text).
 3. Set `NEXT_PUBLIC_ADMIN_KEY` (optional) and update `siteUrl` in
    `content/site.json` to the real domain (used for canonical URLs, sitemap and
    Open Graph).
-4. Deploy. No other environment variables are required.
+4. **Contact form (Resend):** create a free account at resend.com, generate an
+   API key, and set `RESEND_API_KEY` in Vercel env vars. Messages arrive at the
+   `email` in `content/site.json` from Resend's shared onboarding sender — no
+   DNS setup needed. Until the key is set, the form degrades gracefully and
+   points visitors to email directly.
+5. Deploy. No other environment variables are required.
+
+## Extras
+
+- **Resume:** served from `public/resume/Sridhar_Mahalingam_Resume.pdf`
+  (preview + download from the hero and the assistant). Replace the file to
+  update it.
+- **Assistant:** the floating chat answers only from the validated content
+  layer (`lib/assistant.ts`) — deterministic, no LLM, no API cost, never
+  hallucinates. Update content and the assistant updates with it.
 
 ---
 

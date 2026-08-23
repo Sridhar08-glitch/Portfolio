@@ -5,6 +5,7 @@ import { useState } from "react";
 import { RotateCw, ShieldCheck, ShieldX } from "lucide-react";
 import type { DiagramStage } from "@/lib/schemas";
 import { useMotionEnabled } from "@/components/ui/reveal";
+import { stageIcon } from "./stage-icon";
 import { cn } from "@/lib/utils";
 
 /**
@@ -71,11 +72,12 @@ export function ShieldFunnel({
             const active = i <= run.exit;
             const isExit = i === run.exit;
             const delay = i * STEP;
+            const Icon = stageIcon(stage.id, stage.label);
             return (
               <li key={stage.id} className="flex flex-col items-center">
                 <motion.div
                   className={cn(
-                    "w-full max-w-md rounded-theme border px-4 py-3 text-center transition-colors",
+                    "w-full max-w-md rounded-theme border px-4 py-2.5 transition-colors",
                     active
                       ? "border-mineral bg-surface"
                       : "border-dashed border-muted/40 bg-transparent",
@@ -87,27 +89,31 @@ export function ShieldFunnel({
                   viewport={{ once: true, margin: "-15% 0px" }}
                   transition={{ duration: 0.4, ease: EASE, delay }}
                 >
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center gap-3">
                     <motion.span
                       aria-hidden
                       className={cn(
-                        "h-2 w-2 rounded-full",
-                        active ? "bg-mineral" : "bg-muted/40",
+                        "grid h-9 w-9 shrink-0 place-items-center rounded-lg border",
+                        active
+                          ? "border-mineral/60 bg-mineral/15 text-mineral shadow-[0_0_16px_-4px_rgb(var(--c-mineral)/0.6)]"
+                          : "border-line text-muted/60",
                       )}
-                      initial={enabled ? { scale: 0.4 } : false}
-                      whileInView={enabled ? { scale: isExit ? 1.6 : 1 } : undefined}
+                      initial={enabled ? { scale: 0.6 } : false}
+                      whileInView={enabled ? { scale: isExit ? 1.15 : 1 } : undefined}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, ease: EASE, delay: delay + 0.1 }}
-                    />
-                    <span className="font-mono text-xs font-medium sm:text-sm">
+                    >
+                      <Icon size={17} />
+                    </motion.span>
+                    <span className="flex-1 text-left font-mono text-xs font-medium sm:text-sm">
                       {stage.label}
                     </span>
                   </div>
                   {stage.detail && (
-                    <p className="mt-1 text-[0.72rem] text-muted">{stage.detail}</p>
+                    <p className="mt-1 pl-12 text-[0.72rem] text-muted">{stage.detail}</p>
                   )}
                   {isExit && (
-                    <span className="mt-1 inline-block font-mono text-[0.62rem] uppercase tracking-[0.14em] text-clay">
+                    <span className="mt-1 inline-block pl-12 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-clay">
                       request exits here
                     </span>
                   )}

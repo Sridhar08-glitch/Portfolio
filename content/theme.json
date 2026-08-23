@@ -1,23 +1,23 @@
 {
-  "preset": "warm-mineral",
+  "preset": "verdant",
   "colors": {
-    "mineral": "18 63 59",
-    "blue": "49 90 99",
-    "sand": "216 203 184",
-    "clay": "150 82 55",
-    "gold": "196 154 74",
-    "surface": "238 231 219",
-    "ink": "27 42 40",
-    "muted": "92 104 100",
-    "line": "205 194 176",
-    "panel": "245 240 231"
+    "mineral": "58 161 137",
+    "blue": "77 138 129",
+    "sand": "241 235 223",
+    "clay": "201 106 76",
+    "gold": "201 160 87",
+    "surface": "10 20 17",
+    "ink": "237 230 214",
+    "muted": "148 166 152",
+    "line": "38 58 49",
+    "panel": "16 32 27"
   },
   "fonts": {
     "display": "Space Grotesk",
     "body": "Inter",
     "mono": "JetBrains Mono"
   },
-  "radius": "0.375rem",
+  "radius": "0.625rem",
   "spacing": "regular",
   "motion": "moderate",
   "projectLayout": "bands",

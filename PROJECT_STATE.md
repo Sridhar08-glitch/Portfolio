@@ -2,6 +2,21 @@
 
 _Read this before modifying anything in a new session._
 
+## v2 redesign (approved reference images)
+
+The site was fully reskinned to the owner's reference set: **verdant dark**
+(forest-green canvas + cream bands + gold/copper), Fraunces serif hero,
+animated radial constraint hub, icon-pipeline diagrams for every project
+(stage→icon resolver in `components/systems/stage-icon.tsx`), mini icon
+elaborations on all cards, instrument-panel detail pages (TOC sidebar, honest
+stat chips, who-it's-for/where-it-fits, four-panel alternatives, colored brand
+logos), sidebar-filtered /work index, decisions filters + principles row,
+interactive experience panel, Resend contact form (`/api/contact`,
+`RESEND_API_KEY`), resume PDF (`public/resume/`), and a deterministic chat
+assistant (`lib/assistant.ts` + `components/chat/`). Reference mockups'
+invented metrics/employers/tech were deliberately NOT copied — layouts adopted,
+facts kept real. Shell widened to 96rem.
+
 ## Status: complete and building
 
 All phases done. `npm run check` and `npm run build` pass; site verified in-browser
