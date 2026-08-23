@@ -117,16 +117,13 @@ export function Hero({
 
             <Rise delay={0.16}>
               <p className="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-                A software engineer from Chennai, India — now building in Doha,
-                Qatar. For the last three years I&apos;ve been the person a
-                business hands a problem to and gets working software back:
-                web, mobile, backend and the server it runs on.
+                {site.heroSupport}
               </p>
               <p className="mt-3 max-w-xl text-[1.02rem] leading-relaxed text-muted">
-                By day I lead backend engineering at Holora Performance. The
-                rest of the time I&apos;m training my own AI models, sharpening
-                ShieldDNS, and chasing whatever hard problem refuses to let me
-                sleep.
+                By day I lead backend engineering at Holora Performance. After
+                hours I&apos;m building my own products — training models,
+                refining architectures, and turning hard problems into working
+                software.
               </p>
             </Rise>
 

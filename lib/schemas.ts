@@ -203,6 +203,7 @@ export const SiteSchema = z.object({
   phone: z.string().optional(),
   github: z.string().url().optional(),
   linkedin: z.string().url().optional(),
+  instagram: z.string().url().optional(),
   siteUrl: z.string().url(),
   constraints: z.array(ConstraintSchema).min(1),
   portrait: ImageRefSchema.optional(),

@@ -1,14 +1,16 @@
 {
   "name": "Sridhar Mahalingam",
-  "role": "Systems & Full-Stack Developer",
-  "tagline": "Software Developer building systems around constraints — security, offline, real-time, multi-tenancy and self-hosted AI.",
-  "heroThesis": "I build software around constraints.",
-  "heroSupport": "From a DNS security ecosystem that matches millions of blocklist entries on-device, to desktop software that keeps working when the network disappears, to AI that never leaves my own hardware — I design complete systems and carry them all the way to production.",
+  "role": "Full Stack Developer",
+  "tagline": "Full Stack Developer in Doha crafting web, mobile and AI-powered systems — from the first database schema to the production server.",
+  "heroThesis": "Hi, I'm Sridhar.",
+  "heroSupport": "A Full Stack Developer from Chennai, India — now building in Doha, Qatar. Over the last three years I've designed and shipped systems across security, enterprise ERPs, e-commerce, healthcare, mobile apps and self-hosted AI — most of them end to end, as the only engineer on the project.",
   "location": "Doha, Qatar",
   "availability": "Currently Senior Backend Developer at Holora Performance · Transferable visa, NOC available",
   "email": "sridharansridhar22@gmail.com",
   "phone": "+974 3145 2430",
   "github": "https://github.com/Sridhar08-glitch",
+  "linkedin": "https://www.linkedin.com/in/sridhar-mahalingam-6b8357245",
+  "instagram": "https://www.instagram.com/ig_ds_sha",
   "siteUrl": "https://sridhar-portfolio.vercel.app",
   "constraints": [
     {

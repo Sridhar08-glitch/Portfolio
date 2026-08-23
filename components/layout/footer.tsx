@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Github, Mail, MapPin, Phone } from "lucide-react";
 import type { Site } from "@/lib/schemas";
+import { TechIcon } from "@/lib/tech-icons";
 
 export function Footer({ site }: { site: Site }) {
   const year = 2026;
@@ -10,12 +11,12 @@ export function Footer({ site }: { site: Site }) {
         <div>
           <p className="label">Let&apos;s connect</p>
           <h2 className="serif mt-4 max-w-2xl text-4xl sm:text-5xl">
-            Building something that has to work around a{" "}
-            <em className="text-gold">real constraint?</em>
+            Have an idea worth building?{" "}
+            <em className="text-gold">Let&apos;s make it real.</em>
           </h2>
           <p className="mt-5 max-w-md leading-relaxed text-muted">
-            I&apos;m always open to discussing new projects, systems problems and
-            opportunities. Based in {site.location}.
+            From a rough sketch to a running product — I&apos;m open to new
+            projects, roles and collaborations. Based in {site.location}.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {site.email && (
@@ -53,9 +54,10 @@ export function Footer({ site }: { site: Site }) {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="GitHub"
-                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+                title="GitHub"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line transition-all hover:-translate-y-0.5 hover:border-gold"
               >
-                <Github size={16} />
+                <TechIcon name="GitHub" size={17} />
               </a>
             )}
             {site.linkedin && (
@@ -64,16 +66,30 @@ export function Footer({ site }: { site: Site }) {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="LinkedIn"
-                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+                title="LinkedIn"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line transition-all hover:-translate-y-0.5 hover:border-gold"
               >
-                <Linkedin size={16} />
+                <TechIcon name="LinkedIn" size={17} />
+              </a>
+            )}
+            {site.instagram && (
+              <a
+                href={site.instagram}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Instagram"
+                title="Instagram (@ig_ds_sha)"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line transition-all hover:-translate-y-0.5 hover:border-gold"
+              >
+                <TechIcon name="Instagram" size={17} />
               </a>
             )}
             {site.email && (
               <a
                 href={`mailto:${site.email}`}
                 aria-label="Email"
-                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-muted transition-colors hover:border-gold hover:text-gold"
+                title="Email"
+                className="grid h-10 w-10 place-items-center rounded-theme border border-line text-gold transition-all hover:-translate-y-0.5 hover:border-gold"
               >
                 <Mail size={16} />
               </a>
@@ -85,7 +101,7 @@ export function Footer({ site }: { site: Site }) {
       <div className="border-t border-line">
         <div className="shell flex flex-col items-start justify-between gap-2 py-6 text-xs text-muted sm:flex-row sm:items-center">
           <p>
-            © {year} {site.name} · A portfolio of systems, not screenshots.
+            © {year} {site.name}. All rights reserved.
           </p>
           <Link href="/admin" className="label hover:text-ink">
             Admin

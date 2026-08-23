@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { Site } from "@/lib/schemas";
 import { Reveal } from "@/components/ui/reveal";
+import { TechIcon } from "@/lib/tech-icons";
 
 const inputCls =
   "w-full rounded-theme border border-line bg-panel/70 px-4 py-3 text-sm text-ink placeholder:text-muted/70 outline-none transition-colors focus:border-mineral";
@@ -59,6 +60,7 @@ export function ContactSection({ site }: { site: Site }) {
   const cards = [
     site.email && {
       icon: Mail,
+      brand: null,
       title: "Email",
       sub: "Best way to reach me",
       value: site.email,
@@ -66,6 +68,7 @@ export function ContactSection({ site }: { site: Site }) {
     },
     site.github && {
       icon: Github,
+      brand: "GitHub",
       title: "GitHub",
       sub: "Check out the code",
       value: site.github.replace("https://", ""),
@@ -73,13 +76,23 @@ export function ContactSection({ site }: { site: Site }) {
     },
     site.linkedin && {
       icon: Linkedin,
+      brand: "LinkedIn",
       title: "LinkedIn",
       sub: "Let's connect",
-      value: site.linkedin.replace("https://", ""),
+      value: site.linkedin.replace("https://www.", ""),
       href: site.linkedin,
+    },
+    site.instagram && {
+      icon: Mail,
+      brand: "Instagram",
+      title: "Instagram",
+      sub: "Behind the code",
+      value: "@ig_ds_sha",
+      href: site.instagram,
     },
     {
       icon: MapPin,
+      brand: null,
       title: "Location",
       sub: site.location,
       value: "Transferable visa · NOC available",
@@ -87,6 +100,7 @@ export function ContactSection({ site }: { site: Site }) {
     },
   ].filter(Boolean) as {
     icon: React.ElementType;
+    brand: string | null;
     title: string;
     sub: string;
     value: string;
@@ -119,12 +133,16 @@ export function ContactSection({ site }: { site: Site }) {
       </Reveal>
 
       {/* Method cards */}
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map((c) => {
           const inner = (
             <>
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-mineral/12 text-mineral">
-                <c.icon size={17} aria-hidden />
+                {c.brand ? (
+                  <TechIcon name={c.brand} size={18} />
+                ) : (
+                  <c.icon size={17} aria-hidden />
+                )}
               </span>
               <span className="min-w-0">
                 <span className="flex items-center gap-2 font-display text-[0.95rem] font-semibold">
