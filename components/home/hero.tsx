@@ -23,6 +23,49 @@ import { useMotionEnabled } from "@/components/ui/reveal";
 
 const EASE: [number, number, number, number] = [0.22, 0.68, 0, 1];
 
+/**
+ * Very thin gold lines drifting like silk waves (reference bottom-right).
+ * SMIL path morphs — cheap, GPU-friendly; rendered static under reduced motion.
+ */
+function GoldWaves() {
+  const enabled = useMotionEnabled();
+  const lines = [0, 1, 2, 3, 4];
+  const d1 = (i: number) =>
+    `M0 ${150 - i * 16} C 260 ${95 - i * 10}, 520 ${175 - i * 14}, 920 ${70 - i * 9}`;
+  const d2 = (i: number) =>
+    `M0 ${125 - i * 13} C 260 ${180 - i * 15}, 520 ${85 - i * 11}, 920 ${115 - i * 13}`;
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute bottom-0 right-0 h-52 w-[62%] opacity-70"
+      viewBox="0 0 920 200"
+      preserveAspectRatio="none"
+    >
+      {lines.map((i) => (
+        <path
+          key={i}
+          d={d1(i)}
+          fill="none"
+          stroke={i % 2 ? "rgb(var(--c-gold))" : "rgb(var(--c-clay))"}
+          strokeOpacity={0.1 + i * 0.05}
+          strokeWidth={0.8}
+        >
+          {enabled && (
+            <animate
+              attributeName="d"
+              values={`${d1(i)};${d2(i)};${d1(i)}`}
+              dur={`${8 + i * 1.6}s`}
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.4 0 0.6 1;0.4 0 0.6 1"
+            />
+          )}
+        </path>
+      ))}
+    </svg>
+  );
+}
+
 function Rise({
   children,
   delay,
@@ -50,10 +93,10 @@ const HERO_TECH = ["Python", "Django", "React", "PostgreSQL", "AWS S3"];
 
 /** Floating capability cards on the arc — honest qualitative traits. */
 const CAPS: { icon: React.ElementType; title: string; sub: string; offset: number }[] = [
-  { icon: Code2, title: "Clean Code", sub: "Maintainable. Scalable.", offset: 0 },
-  { icon: LockKeyhole, title: "Secure Systems", sub: "Security-first approach.", offset: 26 },
-  { icon: BrainCircuit, title: "AI Integrated", sub: "Self-hosted & data-driven.", offset: 18 },
-  { icon: Rocket, title: "Performance", sub: "Optimised for scale.", offset: -10 },
+  { icon: Code2, title: "Clean Code", sub: "Maintainable. Scalable.", offset: 8 },
+  { icon: LockKeyhole, title: "Secure Systems", sub: "Security-first approach.", offset: -32 },
+  { icon: BrainCircuit, title: "AI Integrated", sub: "Self-hosted & data-driven.", offset: -22 },
+  { icon: Rocket, title: "Performance", sub: "Optimised for scale.", offset: 12 },
 ];
 
 export function Hero({
@@ -117,10 +160,9 @@ export function Hero({
           </Rise>
 
           <Rise delay={0.16}>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
-              I build secure, scalable and intelligent systems that solve
-              real-world problems and{" "}
-              <span className="text-gold">create impact.</span>
+            <p className="mt-6 max-w-lg text-[1.02rem] leading-relaxed text-muted">
+              {site.heroSupport}{" "}
+              <span className="text-gold">Built to create impact.</span>
             </p>
           </Rise>
 
@@ -181,76 +223,62 @@ export function Hero({
 
         {/* ------------------------------------------------------ right */}
         <div className="relative h-[420px] sm:h-[520px] lg:h-[640px]">
-          {/* copper disc behind the subject */}
-          <div
-            aria-hidden
-            className="absolute left-1/2 top-[16%] h-[55%] aspect-square -translate-x-[62%] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle at 35% 30%, rgb(var(--c-gold) / 0.75), rgb(var(--c-clay) / 0.55) 55%, rgb(var(--c-clay) / 0.25))",
-            }}
-          />
-          {/* vertical line texture, right edge */}
-          <div
-            aria-hidden
-            className="absolute right-0 top-[6%] h-[46%] w-[22%] opacity-25"
-            style={{
-              background:
-                "repeating-linear-gradient(90deg, rgb(var(--c-gold) / 0.6) 0 1px, transparent 1px 9px)",
-              maskImage: "linear-gradient(to bottom, black 60%, transparent)",
-              WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent)",
-            }}
-          />
-
-          {/* portrait — blended, no container */}
-          <Rise delay={0.15} className="absolute inset-x-0 bottom-0 flex justify-center lg:justify-center">
+          {/* the composed portrait — copper disc, gold lines and wave streaks
+              baked into the artwork; feathered into the canvas on all sides */}
+          <Rise delay={0.15} className="absolute inset-0">
             <Image
-              src="/images/portrait-mono.png"
+              src="/images/hero-composite.png"
               alt="Sridhar Mahalingam"
-              width={720}
-              height={900}
+              fill
               priority
               quality={95}
-              className="h-[420px] w-auto sm:h-[520px] lg:h-[620px]"
+              sizes="(max-width: 1024px) 100vw, 54vw"
+              className="object-cover object-top"
               style={{
                 maskImage:
-                  "linear-gradient(to bottom, black 82%, transparent 99%), linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+                  "radial-gradient(115% 100% at 50% 38%, black 62%, transparent 96%)",
                 WebkitMaskImage:
-                  "linear-gradient(to bottom, black 82%, transparent 99%)",
-                maskComposite: "intersect",
+                  "radial-gradient(115% 100% at 50% 38%, black 62%, transparent 96%)",
               }}
             />
           </Rise>
 
-          {/* dotted arc guiding the capability cards */}
+          {/* curved dotted guide — bulges around the subject like the reference */}
           <svg
             aria-hidden
-            className="pointer-events-none absolute -right-6 top-1/2 hidden h-[86%] w-40 -translate-y-1/2 lg:block"
+            className="pointer-events-none absolute -right-2 top-1/2 hidden h-[92%] w-48 -translate-y-1/2 overflow-visible lg:block"
             viewBox="0 0 100 400"
             preserveAspectRatio="none"
           >
             <path
-              d="M 90 0 Q -30 200 90 400"
+              d="M 62 -10 Q -55 200 62 410"
               fill="none"
-              stroke="rgb(var(--c-gold) / 0.45)"
+              stroke="rgb(var(--c-gold) / 0.5)"
               strokeWidth="1.2"
               strokeDasharray="2 7"
               vectorEffect="non-scaling-stroke"
               className="dash-flow"
             />
-            {[70, 170, 270, 360].map((y, i) => (
-              <circle key={i} cx={i % 2 ? 22 : 34} cy={y} r="2.4" fill="rgb(var(--c-gold))" className="node-pulse" />
+            {[60, 160, 250, 345].map((y, i) => (
+              <circle
+                key={i}
+                cx={[30, 6, 8, 34][i]}
+                cy={y}
+                r="2.4"
+                fill="rgb(var(--c-gold))"
+                className="node-pulse"
+              />
             ))}
           </svg>
 
-          {/* floating capability cards */}
+          {/* floating capability cards — hugging the curve */}
           <div className="absolute inset-y-0 right-0 z-10 hidden flex-col justify-center gap-5 lg:flex">
             {CAPS.map((c, i) => (
               <Rise key={c.title} delay={0.35 + i * 0.12}>
                 <div
                   className="card-dark float-y flex w-60 items-center gap-3.5 p-4 backdrop-blur-sm"
                   style={{
-                    transform: `translateX(${-c.offset}px)`,
+                    transform: `translateX(${c.offset}px)`,
                     animationDelay: `${i * 0.5}s`,
                     "--glow": "rgb(var(--c-gold) / 0.4)",
                   } as React.CSSProperties}
