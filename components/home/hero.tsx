@@ -223,22 +223,37 @@ export function Hero({
 
         {/* ------------------------------------------------------ right */}
         <div className="relative h-[420px] sm:h-[520px] lg:h-[640px]">
-          {/* the composed portrait — copper disc, gold lines and wave streaks
-              baked into the artwork; feathered into the canvas on all sides */}
-          <Rise delay={0.15} className="absolute inset-0">
+          {/* curved golden-lines bar — its own element with room to breathe */}
+          <div
+            aria-hidden
+            className="absolute -right-2 top-0 hidden h-[68%] w-[20%] opacity-45 lg:block"
+            style={{
+              background:
+                "repeating-linear-gradient(90deg, rgb(var(--c-gold) / 0.75) 0 1.5px, transparent 1.5px 9px)",
+              clipPath: "ellipse(100% 100% at 100% 0%)",
+              maskImage:
+                "linear-gradient(to bottom, black 45%, transparent 96%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, black 45%, transparent 96%)",
+            }}
+          />
+
+          {/* the composed portrait — shifted left of the bar, deeply feathered
+              so it melts into the canvas with no visible frame */}
+          <Rise delay={0.15} className="absolute inset-y-0 left-0 right-[3%]">
             <Image
               src="/images/hero-composite.png"
               alt="Sridhar Mahalingam"
               fill
               priority
               quality={95}
-              sizes="(max-width: 1024px) 100vw, 54vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-top"
               style={{
                 maskImage:
-                  "radial-gradient(115% 100% at 50% 38%, black 62%, transparent 96%)",
+                  "radial-gradient(105% 100% at 48% 40%, black 45%, transparent 87%)",
                 WebkitMaskImage:
-                  "radial-gradient(115% 100% at 50% 38%, black 62%, transparent 96%)",
+                  "radial-gradient(105% 100% at 48% 40%, black 45%, transparent 87%)",
               }}
             />
           </Rise>

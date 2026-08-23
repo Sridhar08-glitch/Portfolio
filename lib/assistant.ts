@@ -10,8 +10,7 @@ import {
 /**
  * Deterministic portfolio assistant. Every answer is assembled from the same
  * validated content files that render the site — no LLM, no API, no
- * hallucination. (Education/certification facts below come straight from the
- * resume, which is the content source of truth.)
+ * hallucination — and every reply is formatted as terminal command output.
  */
 
 export type AssistantReply = {
@@ -29,8 +28,9 @@ const DEFAULT_CHIPS = [
   "Resume",
 ];
 
-const EDUCATION =
-  "B.Tech in Petrochemical Technology — Anna University, India (2022), CGPA 7.61/10. Certifications: Full Stack Development with Python (IBM Certification, SLA Institute, Chennai) and a Codeathon Event Project (IBM Certification).";
+function out(cmd: string, ...lines: string[]): string {
+  return [`$ ${cmd}`, "", ...lines].join("\n");
+}
 
 function projectAnswer(id: string): AssistantReply | null {
   const p = publicProjects.find(
@@ -41,16 +41,17 @@ function projectAnswer(id: string): AssistantReply | null {
   );
   if (!p) return null;
   return {
-    text: [
-      `NAME      ${p.title}`,
-      `TYPE      ${p.category}`,
-      `STATUS    ${p.status}`,
-      `STACK     ${p.technologies.slice(0, 6).join(" · ")}${p.technologies.length > 6 ? " …" : ""}`,
-      ``,
+    text: out(
+      `cat ~/projects/${p.id}`,
+      `NAME    ${p.title}`,
+      `TYPE    ${p.category}`,
+      `STATUS  ${p.status}`,
+      `STACK   ${p.technologies.slice(0, 6).join(" · ")}${p.technologies.length > 6 ? " …" : ""}`,
+      "",
       p.summary,
-    ].join("\n"),
+    ),
     links: [
-      { label: `open case-study`, href: `/work/${p.id}` },
+      { label: "open case-study", href: `/work/${p.id}` },
       ...p.links.slice(0, 1).map((l) => ({ label: l.label.toLowerCase(), href: l.href })),
     ],
     chips: ["More projects", "Skills", "Contact"],
@@ -67,33 +68,49 @@ export function greet(): AssistantReply {
 export function answer(raw: string): AssistantReply {
   const q = raw.toLowerCase().trim();
 
-  /* Greetings — greet back like a person, not a banner */
+  /* Greetings — greet back, command style */
   if (/^(hi|hello|hey|salam|hola|good (morning|afternoon|evening))\b/.test(q)) {
     const timeWord = /morning/.test(q)
-      ? "Good morning"
+      ? "good morning"
       : /afternoon/.test(q)
-        ? "Good afternoon"
+        ? "good afternoon"
         : /evening/.test(q)
-          ? "Good evening"
-          : "Hello";
+          ? "good evening"
+          : "hello";
     return {
-      text: `${timeWord}! 👋 Welcome to Sridhar's portfolio. Happy to help — ask me about his projects, experience, skills, or how to reach him.`,
+      text: out(
+        `echo "${timeWord}"`,
+        `${timeWord.charAt(0).toUpperCase() + timeWord.slice(1)}! 👋 Welcome to Sridhar's portfolio.`,
+        "Ask about his projects, experience, skills — or how to reach him.",
+      ),
       chips: DEFAULT_CHIPS,
     };
   }
 
-  /* Conversational — about the assistant itself */
+  /* About the assistant itself */
   if (/who are you|what are you|your name|are you (a )?(bot|ai|human)|chatgpt|gpt/.test(q)) {
     return {
-      text: "I'm SM-shell — a small deterministic assistant built into this portfolio. No LLM, no cloud API: every answer is assembled from the same validated data files that render the site. Ask me anything about Sridhar and I'll answer with facts, not guesses.",
+      text: out(
+        "man sm-shell",
+        "SM-SHELL(1)                    portfolio tools",
+        "",
+        "NAME     sm-shell — deterministic portfolio assistant",
+        "ENGINE   no LLM · no cloud API · zero hallucination",
+        "SOURCE   the same validated data files that render this site",
+        "PURPOSE  answer anything about Sridhar, with facts only",
+      ),
       chips: ["Who is Sridhar", "Projects", "Contact"],
     };
   }
 
-  /* How are you / small talk */
+  /* Small talk */
   if (/how are you|how('s| is) it going|what'?s up/.test(q)) {
     return {
-      text: "Running at 0.02ms per query — can't complain. More importantly: what would you like to know about Sridhar?",
+      text: out(
+        "uptime",
+        "status: running smooth · 0 hallucinations to date",
+        "more importantly — what would you like to know about Sridhar?",
+      ),
       chips: DEFAULT_CHIPS,
     };
   }
@@ -101,7 +118,10 @@ export function answer(raw: string): AssistantReply {
   /* Thanks */
   if (/thank|thanks|thx|appreciated?/.test(q)) {
     return {
-      text: "You're welcome! If anything else comes to mind — projects, experience, or just how to reach Sridhar — I'm right here.",
+      text: out(
+        'echo "you\'re welcome"',
+        "You're welcome! Anything else — projects, experience, or how to reach him — I'm right here.",
+      ),
       chips: ["Contact", "Resume", "Projects"],
     };
   }
@@ -109,61 +129,93 @@ export function answer(raw: string): AssistantReply {
   /* Goodbye */
   if (/\b(bye|goodbye|see you|later|exit|quit)\b/.test(q)) {
     return {
-      text: "Goodbye — thanks for stopping by. If you'd like to continue the conversation with the real Sridhar, his inbox is always open.",
+      text: out(
+        "logout",
+        "session closed — thanks for stopping by.",
+        "Sridhar's inbox, however, never logs out:",
+      ),
       links: site.email ? [{ label: site.email, href: `mailto:${site.email}` }] : undefined,
     };
   }
 
-  /* Help / what can you do */
+  /* Help */
   if (/^help$|what can you (do|answer)|how (do|can) (i|you) use/.test(q)) {
     return {
-      text: "I can answer anything the portfolio knows:\n\n• projects — all 19 systems, or ask about one by name\n• skills / stack — technologies organised by capability\n• experience — the career timeline\n• education — degree and certifications\n• resume — preview or download the PDF\n• contact — email, phone, socials\n\nType a question or click a command. `clear` resets the session.",
+      text: out(
+        "help",
+        "AVAILABLE TOPICS",
+        "  projects      all 19 systems, or ask one by name",
+        "  skills        the stack, organised by capability",
+        "  experience    the career timeline",
+        "  education     degree and certifications",
+        "  resume        preview / download the PDF",
+        "  contact       email, phone, socials",
+        "",
+        "type a question or click a command · `clear` resets",
+      ),
       chips: DEFAULT_CHIPS,
     };
   }
 
-  /* Who is Sridhar / about him */
+  /* Who is Sridhar */
   if (/who is|about (sridhar|him|the developer)|tell me about (sridhar|him)|introduce/.test(q)) {
     return {
-      text: [
-        "$ whoami --verbose",
-        "",
-        `NAME      ${site.name}`,
-        "ROLE      Full Stack Developer · Senior Backend Developer @ Holora Performance",
-        "FROM      Chennai, India",
-        `BASE      ${site.location}`,
-        "YEARS     3+ shipping production software end to end",
-        "SCOPE     security · ERPs · e-commerce · healthcare · mobile · self-hosted AI",
-        "ORIGIN    studied petrochemical engineering → fell in love with code",
-      ].join("\n"),
+      text: out(
+        "whoami --verbose",
+        `NAME    ${site.name}`,
+        "ROLE    Full Stack Developer · Senior Backend @ Holora Performance",
+        "FROM    Chennai, India",
+        `BASE    ${site.location}`,
+        "YEARS   3+ shipping production software end to end",
+        "SCOPE   security · ERPs · e-commerce · healthcare · mobile · self-hosted AI",
+        "ORIGIN  studied petrochemical engineering → fell in love with code",
+      ),
       links: [{ label: "read the full story", href: "/#about" }],
       chips: ["Projects", "Experience", "Why hire him"],
     };
   }
 
-  /* Why hire / strengths */
+  /* Why hire */
   if (/why (should i )?(hire|choose)|strength|good at|what makes|stand out|best at/.test(q)) {
     return {
-      text: "A few honest reasons:\n\n• Sole-owner delivery — he's shipped entire platforms alone, from database schema to Nginx config\n• Breadth with depth — 19 systems across 7 problem domains, each with real architectural decisions behind it\n• Direct communication — ran UK and Qatar client relationships in English without an account manager\n• Security-first, self-hosted mindset — if it can run on owned infrastructure, it does\n\nThe best evidence is the work itself.",
-      links: [{ label: "Browse the projects", href: "/work" }],
+      text: out(
+        "cat ~/strengths",
+        "- sole-owner delivery    entire platforms alone, schema → nginx",
+        "- breadth with depth     19 systems · 7 domains · real decisions",
+        "- direct communication   ran UK & Qatar clients in English, no middleman",
+        "- self-hosted mindset    if it can run on owned infrastructure, it does",
+        "",
+        "the best evidence is the work itself ↓",
+      ),
+      links: [{ label: "browse the projects", href: "/work" }],
       chips: ["Experience", "Contact", "Resume"],
     };
   }
 
-  /* Availability / open to work */
+  /* Availability */
   if (/available|availability|open to|notice period|join|start date|freelance|full.?time|remote/.test(q)) {
     return {
-      text: `${site.availability}. Open to full-time roles, freelance projects and technical consultations. Notice period: to be confirmed on offer.`,
-      links: [{ label: "Get in touch", href: "/#contact" }],
+      text: out(
+        "status --availability",
+        "CURRENT   Senior Backend Developer @ Holora Performance",
+        "OPEN TO   full-time roles · freelance projects · consultations",
+        "VISA      Qatar residence permit · transferable · NOC available",
+        "NOTICE    to be confirmed on offer",
+      ),
+      links: [{ label: "get in touch", href: "/#contact" }],
       chips: ["Contact", "Resume"],
     };
   }
 
-  /* Private topics — decline politely */
+  /* Private topics */
   if (/salary|pay|age|married|religion|personal life|girlfriend|family/.test(q)) {
     return {
-      text: "That's one for Sridhar directly rather than his data files. Drop him a message — he responds personally.",
-      links: [{ label: "Open the contact form", href: "/#contact" }],
+      text: out(
+        "sudo cat ~/private",
+        "Permission denied.",
+        "that one's for Sridhar directly — he responds personally:",
+      ),
+      links: [{ label: "open contact form", href: "/#contact" }],
       chips: ["Contact", "Projects"],
     };
   }
@@ -171,17 +223,17 @@ export function answer(raw: string): AssistantReply {
   /* Socials */
   if (/github|linkedin|instagram|social/.test(q)) {
     return {
-      text: "Find him here:",
+      text: out("ls ~/socials", "found 3 profiles:"),
       links: [
-        ...(site.github ? [{ label: "GitHub — the code", href: site.github }] : []),
-        ...(site.linkedin ? [{ label: "LinkedIn — the career", href: site.linkedin }] : []),
-        ...(site.instagram ? [{ label: "Instagram — @ig_ds_sha", href: site.instagram }] : []),
+        ...(site.github ? [{ label: "github — the code", href: site.github }] : []),
+        ...(site.linkedin ? [{ label: "linkedin — the career", href: site.linkedin }] : []),
+        ...(site.instagram ? [{ label: "instagram — @ig_sd_sha", href: site.instagram }] : []),
       ],
       chips: ["Contact", "Projects"],
     };
   }
 
-  /* Specific projects first (most specific intent wins) */
+  /* Specific projects (most specific intent wins) */
   const projectHit = publicProjects.find(
     (p) =>
       q.includes(p.id.replace(/-/g, " ")) ||
@@ -200,26 +252,29 @@ export function answer(raw: string): AssistantReply {
   /* Resume */
   if (/resume|\bcv\b|curriculum/.test(q)) {
     return {
-      text: "You can preview the resume in your browser or download the PDF — it covers the full project portfolio, experience and stack.",
+      text: out(
+        "open ~/resume.pdf",
+        "FILE     Sridhar_Mahalingam_Resume.pdf",
+        "COVERS   projects · experience · stack · education",
+      ),
       links: [
-        { label: "Preview resume", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
-        { label: "Download resume (PDF)", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
+        { label: "preview in browser", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
+        { label: "download pdf", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
       ],
       chips: ["Experience", "Skills", "Contact"],
     };
   }
 
-  /* Contact / hire */
+  /* Contact */
   if (/contact|email|phone|hire|reach|touch|connect|whatsapp|call/.test(q)) {
     return {
-      text: [
-        "$ cat ~/contact",
-        "",
+      text: out(
+        "cat ~/contact",
         `EMAIL     ${site.email ?? "—"}`,
         `PHONE     ${site.phone ?? "—"}`,
         `LOCATION  ${site.location}`,
-        `STATUS    open to opportunities`,
-      ].join("\n"),
+        "STATUS    open to opportunities",
+      ),
       links: [
         ...(site.email ? [{ label: "send email", href: `mailto:${site.email}` }] : []),
         { label: "open contact form", href: "/#contact" },
@@ -235,7 +290,12 @@ export function answer(raw: string): AssistantReply {
         `${(e.start + " – " + e.end).padEnd(22)} ${e.role} @ ${e.company} (${e.location})`,
     );
     return {
-      text: `$ history --career\n\n${lines.join("\n")}\n\ntotal: 3+ years · 5 client platforms shipped at Techynova · backend lead at Holora`,
+      text: out(
+        "history --career",
+        ...lines,
+        "",
+        "total: 3+ years · 5 client platforms shipped · backend lead at Holora",
+      ),
       links: [{ label: "view full timeline", href: "/#experience" }],
       chips: ["Projects", "Skills", "Resume"],
     };
@@ -244,18 +304,27 @@ export function answer(raw: string): AssistantReply {
   /* Education */
   if (/educat|degree|university|college|study|certif/.test(q)) {
     return {
-      text: EDUCATION,
+      text: out(
+        "cat ~/education",
+        "DEGREE   B.Tech, Petrochemical Technology",
+        "SCHOOL   Anna University, India · 2022 · CGPA 7.61/10",
+        "CERTS    Full Stack Development with Python (IBM, SLA Institute)",
+        "         Codeathon Event Project (IBM Certification)",
+      ),
       chips: ["Experience", "Skills", "Contact"],
     };
   }
 
-  /* Skills / stack */
+  /* Skills */
   if (/skill|stack|tech|language|framework|tool|database|frontend|backend/.test(q)) {
     const lines = skills
       .slice(0, 6)
-      .map((g) => `${g.name.toLowerCase().padEnd(20)} ${g.items.slice(0, 4).join(" · ")}${g.items.length > 4 ? " …" : ""}`);
+      .map(
+        (g) =>
+          `${g.name.toLowerCase().padEnd(22)} ${g.items.slice(0, 4).join(" · ")}${g.items.length > 4 ? " …" : ""}`,
+      );
     return {
-      text: `$ ls ~/skills\n\n${lines.join("\n")}`,
+      text: out("ls ~/skills", ...lines),
       links: [{ label: "full breakdown", href: "/#skills" }],
       chips: ["Projects", "AI / ML", "Experience"],
     };
@@ -265,8 +334,13 @@ export function answer(raw: string): AssistantReply {
   if (/\bai\b|machine learning|\bml\b|ocr|vision|model/.test(q)) {
     const ai = publicProjects.filter((p) => p.constraints.includes("ai-ml"));
     return {
-      text: `All AI work runs on self-hosted infrastructure — no third-party inference API anywhere.\n\n${ai.map((p) => `• ${p.title} — ${p.category}`).join("\n")}`,
-      links: ai.slice(0, 2).map((p) => ({ label: p.title, href: `/work/${p.id}` })),
+      text: out(
+        "ls ~/projects --filter=ai",
+        ...ai.map((p) => `${p.id.padEnd(26)} ${p.category.toLowerCase()}`),
+        "",
+        "all trained & served on self-hosted infrastructure — zero third-party APIs",
+      ),
+      links: ai.slice(0, 2).map((p) => ({ label: p.title.toLowerCase(), href: `/work/${p.id}` })),
       chips: ["MeetingMind", "Airsume", "TrafficVision"],
     };
   }
@@ -275,9 +349,12 @@ export function answer(raw: string): AssistantReply {
   if (/project|system|portfolio|built|work|show/.test(q) || q === "more projects") {
     const flag = publicProjects.filter((p) => p.tier === "flagship");
     return {
-      text: `$ ls ~/projects --flagship\n\n${flag
-        .map((p) => `${p.id.padEnd(18)} ${p.category.toLowerCase()}`)
-        .join("\n")}\n\ntotal: ${publicProjects.length} projects · ${activeConstraints().length} domains · + client platforms for UK & Qatar`,
+      text: out(
+        "ls ~/projects --flagship",
+        ...flag.map((p) => `${p.id.padEnd(18)} ${p.category.toLowerCase()}`),
+        "",
+        `total: ${publicProjects.length} projects · ${activeConstraints().length} domains · + client platforms for UK & Qatar`,
+      ),
       links: [{ label: "browse all projects", href: "/work" }],
       chips: ["ShieldDNS", "MeetingMind", "CommerceOS", "Client work"],
     };
@@ -287,8 +364,13 @@ export function answer(raw: string): AssistantReply {
   if (/client|freelance|business|delivered/.test(q)) {
     const prod = publicProjects.filter((p) => p.tier === "production");
     return {
-      text: `Five client platforms delivered end to end at Techynova:\n\n${prod.map((p) => `• ${p.title} — ${p.category}`).join("\n")}`,
-      links: [{ label: "See production work", href: "/work" }],
+      text: out(
+        "ls ~/projects --client",
+        ...prod.map((p) => `${p.id.padEnd(26)} ${p.category.toLowerCase()}`),
+        "",
+        "all five delivered end to end at Techynova · live in production",
+      ),
+      links: [{ label: "see production work", href: "/work" }],
       chips: ["Projects", "Experience", "Contact"],
     };
   }
@@ -297,8 +379,13 @@ export function answer(raw: string): AssistantReply {
   if (/decision|why|trade.?off|architecture|design/.test(q)) {
     const d = decisions.slice(0, 4);
     return {
-      text: `Engineering judgment is a section of its own here. A few of the questions answered:\n\n${d.map((x) => `• ${x.question}`).join("\n")}`,
-      links: [{ label: "Read the decisions", href: "/#decisions" }],
+      text: out(
+        "cat ~/decisions | head -4",
+        ...d.map((x) => `- ${x.question}`),
+        "",
+        "engineering judgment gets its own section on the site",
+      ),
+      links: [{ label: "read the decisions", href: "/#decisions" }],
       chips: ["Projects", "Skills"],
     };
   }
@@ -306,14 +393,23 @@ export function answer(raw: string): AssistantReply {
   /* Location / visa */
   if (/location|where|doha|qatar|visa|relocat/.test(q)) {
     return {
-      text: `Based in ${site.location}. ${site.availability}.`,
+      text: out(
+        "curl -s ipinfo/sridhar",
+        `CITY    ${site.location}`,
+        "VISA    Qatar residence permit · transferable · NOC available",
+        "ROOTS   Chennai, India",
+      ),
       chips: ["Contact", "Resume", "Experience"],
     };
   }
 
-  /* Fallback — honest, with directions */
+  /* Fallback */
   return {
-    text: "I only answer from the real portfolio data, and I couldn't match that question. Try one of these — or ask about a specific project by name.",
+    text: out(
+      `${q.split(" ")[0] || "input"}: command not found`,
+      "I only answer from real portfolio data and couldn't match that.",
+      "try one of these — or ask about a project by name:",
+    ),
     chips: DEFAULT_CHIPS,
   };
 }

@@ -78,7 +78,7 @@ export function Footer({ site }: { site: Site }) {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="Instagram"
-                title="Instagram (@ig_ds_sha)"
+                title="Instagram (@ig_sd_sha)"
                 className="grid h-10 w-10 place-items-center rounded-theme border border-line transition-all hover:-translate-y-0.5 hover:border-gold"
               >
                 <TechIcon name="Instagram" size={17} />

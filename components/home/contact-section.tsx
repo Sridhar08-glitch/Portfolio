@@ -87,7 +87,7 @@ export function ContactSection({ site }: { site: Site }) {
       brand: "Instagram",
       title: "Instagram",
       sub: "Behind the code",
-      value: "@ig_ds_sha",
+      value: "@ig_sd_sha",
       href: site.instagram,
     },
     {
