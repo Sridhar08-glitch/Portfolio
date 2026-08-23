@@ -22,6 +22,7 @@
       "Django",
       "Django REST Framework",
       "Django Channels",
+      "FastAPI",
       "Celery",
       "Flask",
       "WebSockets",
@@ -36,8 +37,12 @@
       "React.js",
       "Next.js 14 (App Router, SSR/ISR)",
       "TypeScript",
+      "JavaScript (ES6+)",
+      "HTML5",
+      "CSS3",
       "Redux",
       "Tailwind CSS",
+      "Bootstrap",
       "Core Web Vitals"
     ]
   },
@@ -65,6 +70,9 @@
       "OCR & Tesseract",
       "Custom model architecture & training",
       "Evaluation & benchmarking (IoU, mAP)",
+      "RAG & hybrid retrieval",
+      "Vector search (pgvector)",
+      "Speech-to-text (Whisper)",
       "Self-hosted GPU inference"
     ]
   },

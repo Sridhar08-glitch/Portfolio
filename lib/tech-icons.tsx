@@ -6,7 +6,7 @@ import {
   siAndroid, siJavascript, siTailwindcss, siSqlite, siGooglemaps, siFlask,
   siJsonwebtokens, siOllama, siFfmpeg, siHtml5, siSharp, siJetpackcompose,
   siVercel, siRender, siBootstrap, siOnnx, siHive, siReactrouter, siRedux,
-  siApple, siIos, siGradle, siBrave, siFirefox,
+  siApple, siIos, siGradle, siBrave, siFirefox, siFastapi,
   type SimpleIcon,
 } from "simple-icons";
 
@@ -36,6 +36,7 @@ const BRAND: [RegExp, SimpleIcon][] = [
   [/gradle/i, siGradle],
   [/brave/i, siBrave],
   [/firefox/i, siFirefox],
+  [/fastapi/i, siFastapi],
   [/react native/i, siReact],
   [/react/i, siReact],
   [/django/i, siDjango],

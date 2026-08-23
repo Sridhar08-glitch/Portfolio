@@ -162,7 +162,7 @@ export function WhatIDo({ site }: { site: Site }) {
 /** The stack Sridhar is known for — scrolls continuously, pauses on hover. */
 const MARQUEE_TECH = [
   "Python", "Django", "Django REST Framework", "React.js", "Next.js",
-  "TypeScript", "JavaScript", "Flutter", "React Native", "Kotlin",
+  "TypeScript", "JavaScript", "HTML5", "CSS3", "Flutter", "React Native", "Kotlin",
   "Jetpack Compose", "PostgreSQL", "MySQL", "Redis", "SQLite", "Celery",
   "WebSockets", "Stripe", "Firebase", "PyTorch", "Tesseract OCR", "Rust",
   "Tauri", "C# / .NET", "Docker", "Nginx", "Linux", "AWS S3", "Tailwind CSS",

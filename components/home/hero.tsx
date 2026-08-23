@@ -79,12 +79,13 @@ export function Hero({
               />
               <div className="relative overflow-hidden rounded-2xl border-2 border-gold/50 shadow-[0_0_40px_-8px_rgb(var(--c-gold)/0.45)]">
                 <Image
-                  src="/images/portrait-studio.png"
+                  src="/images/portrait-formal.png"
                   alt="Sridhar Mahalingam"
-                  width={250}
-                  height={376}
+                  width={280}
+                  height={360}
                   priority
-                  className="h-[320px] w-[220px] object-cover object-top sm:h-[376px] sm:w-[250px]"
+                  className="h-[320px] w-[240px] object-cover sm:h-[360px] sm:w-[280px]"
+                  style={{ objectPosition: "32% 12%" }}
                 />
               </div>
               <p className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-surface/90 px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-gold backdrop-blur">

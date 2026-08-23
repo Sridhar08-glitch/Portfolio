@@ -172,48 +172,21 @@ export function SystemsHub({
           preserveAspectRatio="none"
           aria-hidden
         >
-          {constraints.map((c, i) => {
+          {constraints.map((c) => {
             const color = CONSTRAINT_COLORS[c.key] ?? "#3AA189";
             const on = active === c.key;
-            const anchor = LAYOUT[c.key].anchor;
-            const [ex, ey] = ringPoint(anchor);
-            const d = pathFor(anchor);
+            const d = pathFor(LAYOUT[c.key].anchor);
             return (
-              <g key={c.key}>
-                <path
-                  d={d}
-                  fill="none"
-                  stroke={color}
-                  strokeOpacity={on ? 0.95 : 0.5}
-                  strokeWidth={on ? 1.8 : 1.2}
-                  vectorEffect="non-scaling-stroke"
-                  className="dash-flow"
-                />
-                {/* departure node at the card */}
-                <circle
-                  cx={anchor[0]}
-                  cy={anchor[1]}
-                  r={on ? 1.1 : 0.7}
-                  fill={color}
-                  className="node-pulse"
-                />
-                {/* arrival node where the connector plugs into the core ring */}
-                <circle cx={ex} cy={ey} r={on ? 1 : 0.65} fill={color} />
-                {/* energy dot travelling the path into the core (reference look) */}
-                <circle
-                  r={on ? 1.2 : 0.9}
-                  fill={color}
-                  className="anim-dot"
-                  style={{ filter: `drop-shadow(0 0 3px ${color})` }}
-                >
-                  <animateMotion
-                    dur={`${2.6 + (i % 3) * 0.5}s`}
-                    begin={`${i * 0.45}s`}
-                    repeatCount="indefinite"
-                    path={d}
-                  />
-                </circle>
-              </g>
+              <path
+                key={c.key}
+                d={d}
+                fill="none"
+                stroke={color}
+                strokeOpacity={on ? 0.95 : 0.55}
+                strokeWidth={on ? 1.8 : 1.2}
+                vectorEffect="non-scaling-stroke"
+                className="dash-flow"
+              />
             );
           })}
         </svg>
