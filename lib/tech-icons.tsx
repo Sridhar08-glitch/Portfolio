@@ -79,13 +79,16 @@ const BRAND: [RegExp, SimpleIcon][] = [
   [/redux|riverpod|zustand|tanstack/i, siRedux],
 ];
 
-const FALLBACK: [RegExp, React.ElementType][] = [
-  [/aws|s3|ses|cloud/i, Cloud],
-  [/sql|db|storage|datastore/i, Database],
-  [/mobile|ios/i, Smartphone],
-  [/websocket|channels|dns|doh|dot|http/i, Globe],
-  [/ml|ai|ocr|vision|whisper|tesseract|fcos|model/i, Cpu],
-  [/css|ui|design/i, Layers],
+/** No official mark exists — use a category glyph in a recognisable colour. */
+const FALLBACK: [RegExp, React.ElementType, string][] = [
+  [/aws|s3|ses/i, Cloud, "#FF9900"],
+  [/cloud/i, Cloud, "#38BDF8"],
+  [/sql|db|storage|datastore/i, Database, "#38BDF8"],
+  [/mobile|ios/i, Smartphone, "#4BA47B"],
+  [/websocket|channels|realtime/i, Globe, "#22D3EE"],
+  [/dns|doh|dot|http|rest/i, Globe, "#60A5FA"],
+  [/ml|ai|ocr|vision|whisper|tesseract|fcos|model/i, Cpu, "#A78BFA"],
+  [/css|ui|design/i, Layers, "#F472B6"],
 ];
 
 export function findBrand(name: string): SimpleIcon | null {
@@ -93,14 +96,13 @@ export function findBrand(name: string): SimpleIcon | null {
   return null;
 }
 
-/** Official brand colours that are too dark for the dark canvas → cream ink. */
-function visibleFill(hex: string): string {
+/** Is the official brand colour too dark to read on the dark canvas? */
+function isDarkBrand(hex: string): boolean {
   const n = parseInt(hex, 16);
   const r = (n >> 16) & 255;
   const g = (n >> 8) & 255;
   const b = n & 255;
-  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return lum < 64 ? "rgb(var(--c-ink))" : `#${hex}`;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 72;
 }
 
 export function TechIcon({
@@ -116,22 +118,41 @@ export function TechIcon({
 }) {
   const brand = findBrand(name);
   if (brand) {
+    // Dark official colours (Next.js, Flask, Rust, JWT, Apple…) keep their TRUE
+    // colour on a light badge tile — the way real logos are shown on dark UIs.
+    const dark = colored && isDarkBrand(brand.hex);
     return (
       <svg
         role="img"
         aria-hidden
-        viewBox="0 0 24 24"
+        viewBox={dark ? "-4 -4 32 32" : "0 0 24 24"}
         width={size}
         height={size}
         className={className}
-        fill={colored ? visibleFill(brand.hex) : "currentColor"}
       >
-        <path d={brand.path} />
+        {dark && <rect x="-4" y="-4" width="32" height="32" rx="7" fill="#EFE9DC" />}
+        <path d={brand.path} fill={colored ? `#${brand.hex}` : "currentColor"} />
       </svg>
     );
   }
-  for (const [re, Icon] of FALLBACK) {
-    if (re.test(name)) return <Icon size={size} className={className} aria-hidden />;
+  for (const [re, Icon, color] of FALLBACK) {
+    if (re.test(name)) {
+      return (
+        <Icon
+          size={size}
+          className={className}
+          style={colored ? { color } : undefined}
+          aria-hidden
+        />
+      );
+    }
   }
-  return <Code2 size={size} className={className} aria-hidden />;
+  return (
+    <Code2
+      size={size}
+      className={className}
+      style={colored ? { color: "#94A3B8" } : undefined}
+      aria-hidden
+    />
+  );
 }

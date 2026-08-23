@@ -11,6 +11,7 @@ import {
 import type { Site } from "@/lib/schemas";
 import { Reveal, Stagger } from "@/components/ui/reveal";
 import { Cta } from "@/components/ui/primitives";
+import { TechIcon } from "@/lib/tech-icons";
 
 /** Honest, computed stats + personal quote strip (reference bottom band). */
 export function StatsBand({
@@ -158,6 +159,36 @@ export function WhatIDo({ site }: { site: Site }) {
   );
 }
 
+/** The stack Sridhar is known for — scrolls continuously, pauses on hover. */
+const MARQUEE_TECH = [
+  "Python", "Django", "Django REST Framework", "React.js", "Next.js",
+  "TypeScript", "JavaScript", "Flutter", "React Native", "Kotlin",
+  "Jetpack Compose", "PostgreSQL", "MySQL", "Redis", "SQLite", "Celery",
+  "WebSockets", "Stripe", "Firebase", "PyTorch", "Tesseract OCR", "Rust",
+  "Tauri", "C# / .NET", "Docker", "Nginx", "Linux", "AWS S3", "Tailwind CSS",
+  "Git",
+];
+
+function TechMarquee() {
+  const items = [...MARQUEE_TECH, ...MARQUEE_TECH]; // two copies → seamless loop
+  return (
+    <div className="marquee overflow-hidden border-t border-surface/10 py-5" aria-label="Technologies Sridhar works with">
+      <div className="marquee-track gap-3">
+        {items.map((t, i) => (
+          <span
+            key={`${t}-${i}`}
+            aria-hidden={i >= MARQUEE_TECH.length}
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-surface/15 bg-surface/5 px-4 py-2 font-mono text-[0.72rem] text-surface/80"
+          >
+            <TechIcon name={t} size={15} />
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** About — cream editorial band with portrait. */
 export function AboutBand({ site }: { site: Site }) {
   if (!site.aboutBody.length) return null;
@@ -195,6 +226,11 @@ export function AboutBand({ site }: { site: Site }) {
             </p>
           ))}
         </Reveal>
+      </div>
+      {/* Known stack — animated strip */}
+      <div className="shell pb-10">
+        <p className="label mb-1">The stack I&apos;m known for</p>
+        <TechMarquee />
       </div>
     </section>
   );

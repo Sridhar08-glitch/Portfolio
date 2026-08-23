@@ -172,11 +172,23 @@ html[data-motion="off"] *::after {
 }
 .orbit-spin { animation: orbit-spin 40s linear infinite; transform-origin: center; }
 
+/* Tech-stack marquee (About band). Track holds two copies of the list. */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 36s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
 html[data-motion="off"] .dash-flow,
 html[data-motion="off"] .node-pulse,
-html[data-motion="off"] .orbit-spin {
+html[data-motion="off"] .orbit-spin,
+html[data-motion="off"] .marquee-track {
   animation: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
-  .dash-flow, .node-pulse, .orbit-spin { animation: none !important; }
+  .dash-flow, .node-pulse, .orbit-spin, .marquee-track { animation: none !important; }
 }

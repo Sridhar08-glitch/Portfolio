@@ -43,7 +43,7 @@ const config: Config = {
         theme: "var(--radius)",
       },
       maxWidth: {
-        shell: "96rem",
+        shell: "112rem",
       },
       transitionTimingFunction: {
         systems: "cubic-bezier(.22,.68,0,1)",

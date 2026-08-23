@@ -1,31 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  Brain,
-  Building2,
-  HardDrive,
-  ShieldCheck,
-  ShoppingCart,
-  Smartphone,
-  Zap,
-} from "lucide-react";
+import { BadgeCheck, MapPin } from "lucide-react";
 import type { Site } from "@/lib/schemas";
-import { CONSTRAINT_COLORS } from "@/lib/theme";
 import { Cta } from "@/components/ui/primitives";
 import { useMotionEnabled } from "@/components/ui/reveal";
 import { SystemsHub } from "./systems-hub";
 
 const EASE: [number, number, number, number] = [0.22, 0.68, 0, 1];
-const ICONS: Record<string, React.ElementType> = {
-  security: ShieldCheck,
-  enterprise: Building2,
-  offline: HardDrive,
-  realtime: Zap,
-  "ai-ml": Brain,
-  mobile: Smartphone,
-  commerce: ShoppingCart,
-};
 
 function Rise({
   children,
@@ -72,7 +55,7 @@ export function Hero({
         }}
       />
 
-      <div className="shell relative grid items-center gap-12 pb-14 pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-8 lg:pb-20 lg:pt-20">
+      <div className="shell relative grid items-center gap-12 pb-14 pt-14 lg:grid-cols-[1.05fr_1.2fr] lg:gap-6 lg:pb-20 lg:pt-20">
         {/* Left — statement */}
         <div>
           <Rise delay={0}>
@@ -100,7 +83,7 @@ export function Hero({
           </Rise>
 
           <Rise delay={0.16}>
-            <p className="mt-6 max-w-lg text-[1.05rem] leading-relaxed text-muted">
+            <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted">
               {site.heroSupport}
             </p>
           </Rise>
@@ -117,26 +100,30 @@ export function Hero({
             </Cta>
           </Rise>
 
+          {/* Who I am · where I am */}
           <Rise delay={0.32}>
-            <ul className="mt-10 grid max-w-md grid-cols-4 gap-x-2 gap-y-5 sm:grid-cols-7 lg:max-w-none">
-              {site.constraints.map((c) => {
-                const Icon = ICONS[c.key] ?? Zap;
-                const color = CONSTRAINT_COLORS[c.key] ?? "#3AA189";
-                return (
-                  <li key={c.key} className="flex flex-col items-center gap-2 text-center">
-                    <span
-                      className="grid h-10 w-10 place-items-center rounded-lg border transition-transform hover:-translate-y-1"
-                      style={{ borderColor: `${color}55`, color }}
-                    >
-                      <Icon size={17} aria-hidden />
-                    </span>
-                    <span className="font-mono text-[0.58rem] uppercase tracking-[0.1em] text-muted">
-                      {c.label}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+            <div className="card-dark mt-10 flex max-w-xl items-center gap-5 p-5">
+              <Image
+                src="/images/portrait-studio.png"
+                alt="Sridhar Mahalingam"
+                width={88}
+                height={112}
+                className="h-28 w-[88px] shrink-0 rounded-theme border border-gold/40 object-cover object-top"
+              />
+              <div className="min-w-0">
+                <p className="flex items-center gap-2 font-display text-lg font-semibold">
+                  {site.name}
+                  <BadgeCheck size={16} className="shrink-0 text-mineral" aria-hidden />
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-muted">
+                  Senior Backend Developer at Holora Performance — 3+ years of
+                  shipping production systems end to end as the sole technical owner.
+                </p>
+                <p className="mt-2 flex items-center gap-1.5 font-mono text-[0.66rem] uppercase tracking-[0.12em] text-gold">
+                  <MapPin size={12} aria-hidden /> {site.location} · transferable visa · NOC available
+                </p>
+              </div>
+            </div>
           </Rise>
         </div>
 

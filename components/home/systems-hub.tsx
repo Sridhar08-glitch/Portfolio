@@ -62,12 +62,25 @@ const LAYOUT: Record<
 };
 
 const CENTER: [number, number] = [50, 44];
+/** Core-ring radii in viewBox units (the circle is ~176px in a ~700×560 box). */
+const RING: [number, number] = [14, 17];
+
+/** Point on the ring edge in the direction of the anchor — connectors plug in
+ *  here instead of vanishing under the circle, so the flow visibly arrives. */
+function ringPoint(anchor: [number, number]): [number, number] {
+  const [ax, ay] = anchor;
+  const [cx, cy] = CENTER;
+  const dx = ax - cx;
+  const dy = ay - cy;
+  const s = 1 / Math.sqrt((dx / RING[0]) ** 2 + (dy / RING[1]) ** 2 || 1);
+  return [cx + dx * s, cy + dy * s];
+}
 
 function pathFor(anchor: [number, number]): string {
   const [ax, ay] = anchor;
-  const [cx, cy] = CENTER;
-  const mx = (ax + cx) / 2;
-  return `M ${ax} ${ay} Q ${mx} ${ay} ${cx} ${cy}`;
+  const [ex, ey] = ringPoint(anchor);
+  const mx = (ax + ex) / 2;
+  return `M ${ax} ${ay} Q ${mx} ${ay} ${ex} ${ey}`;
 }
 
 export function SystemsHub({
@@ -161,25 +174,29 @@ export function SystemsHub({
           {constraints.map((c) => {
             const color = CONSTRAINT_COLORS[c.key] ?? "#3AA189";
             const on = active === c.key;
-            const d = pathFor(LAYOUT[c.key].anchor);
+            const anchor = LAYOUT[c.key].anchor;
+            const [ex, ey] = ringPoint(anchor);
             return (
               <g key={c.key}>
                 <path
-                  d={d}
+                  d={pathFor(anchor)}
                   fill="none"
                   stroke={color}
-                  strokeOpacity={on ? 0.9 : 0.3}
-                  strokeWidth={on ? 1.4 : 0.9}
+                  strokeOpacity={on ? 0.95 : 0.5}
+                  strokeWidth={on ? 1.8 : 1.2}
                   vectorEffect="non-scaling-stroke"
                   className="dash-flow"
                 />
+                {/* departure node at the card */}
                 <circle
-                  cx={LAYOUT[c.key].anchor[0]}
-                  cy={LAYOUT[c.key].anchor[1]}
+                  cx={anchor[0]}
+                  cy={anchor[1]}
                   r={on ? 1.1 : 0.7}
                   fill={color}
                   className="node-pulse"
                 />
+                {/* arrival node where the connector plugs into the core ring */}
+                <circle cx={ex} cy={ey} r={on ? 1 : 0.65} fill={color} />
               </g>
             );
           })}
