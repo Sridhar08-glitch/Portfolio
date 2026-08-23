@@ -5,6 +5,7 @@ import {
   Boxes,
   Braces,
   Download,
+  Eye,
   FileText,
   GraduationCap,
   Palette,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/draft";
 import { cn, fingerprint } from "@/lib/utils";
 import { SitePanel } from "./panels/site-panel";
+import { PreviewPanel } from "./panels/preview-panel";
 import { ProjectsPanel } from "./panels/projects-panel";
 import { ListPanel } from "./panels/list-panel";
 import { ThemePanel } from "./panels/theme-panel";
@@ -38,9 +40,11 @@ type SectionId =
   | "decisions"
   | "writing"
   | "theme"
+  | "preview"
   | "data";
 
 const NAV: { id: SectionId; label: string; icon: React.ElementType }[] = [
+  { id: "preview", label: "Preview", icon: Eye },
   { id: "site", label: "Site", icon: Settings },
   { id: "projects", label: "Projects", icon: Boxes },
   { id: "experience", label: "Experience", icon: GraduationCap },
@@ -224,6 +228,7 @@ export function AdminApp({ base }: { base: Content }) {
             </div>
           )}
 
+          {section === "preview" && <PreviewPanel content={content} />}
           {section === "site" && (
             <SitePanel
               site={content.site}
