@@ -399,15 +399,26 @@ A Flask web app streamlining cafeteria operations — authentication, menu manag
 
 ---
 
-## 📊 GitHub Stats
+## 📊 GitHub Activity
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=Sridhar08-glitch&show_icons=true&theme=dark&hide_border=true&bg_color=0b0b0b&title_color=c9a057&icon_color=3aa189&text_color=e8e6df" />
-  <br/>
-  <img src="https://streak-stats.demolab.com?user=Sridhar08-glitch&theme=dark&hide_border=true&background=0b0b0b&ring=c9a057&fire=c05b3f&currStreakLabel=c9a057" />
-  <br/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sridhar08-glitch&layout=compact&theme=dark&hide_border=true&bg_color=0b0b0b&title_color=c9a057&text_color=e8e6df" />
+  <img src="https://ghchart.rshah.org/c9a057/Sridhar08-glitch" alt="Contribution graph" width="100%" />
 </div>
+
+<!--
+  The fancy stats cards (github-readme-stats) rely on a shared public Vercel
+  deployment that is frequently paused/rate-limited (503). For always-working
+  cards, self-host your own instance (free, ~10 min):
+
+  1. Open https://github.com/anuraghazra/github-readme-stats and click
+     "Deploy to Vercel" in its README (or fork + import into your Vercel).
+  2. In the Vercel project → Settings → Environment Variables, add
+     PAT_1 = a GitHub personal access token (classic, no scopes needed).
+  3. Redeploy, then swap these in below (replace YOUR-APP):
+
+  <img src="https://YOUR-APP.vercel.app/api?username=Sridhar08-glitch&show_icons=true&theme=dark&hide_border=true&bg_color=0b0b0b&title_color=c9a057&icon_color=3aa189&text_color=e8e6df" />
+  <img src="https://YOUR-APP.vercel.app/api/top-langs/?username=Sridhar08-glitch&layout=compact&theme=dark&hide_border=true&bg_color=0b0b0b&title_color=c9a057&text_color=e8e6df" />
+-->
 
 ---
 
