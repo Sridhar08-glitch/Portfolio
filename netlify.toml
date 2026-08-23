@@ -11,7 +11,10 @@
   # a public repo path. Scanning them floods the build with false positives
   # (the word "main" appears everywhere in webpack output). The real secrets
   # (RESEND_API_KEY, GITHUB_TOKEN, ADMIN_PUBLISH_KEY) remain fully scanned.
-  SECRETS_SCAN_OMIT_KEYS = "GITHUB_BRANCH,GITHUB_REPO"
+  # ADMIN_PUBLISH_KEY equals the admin gate passphrase, which is a soft
+  # client-side lock by design (it appears in the client bundle). The layer
+  # that actually protects the repo is GITHUB_TOKEN — server-only and scanned.
+  SECRETS_SCAN_OMIT_KEYS = "GITHUB_BRANCH,GITHUB_REPO,ADMIN_PUBLISH_KEY"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
