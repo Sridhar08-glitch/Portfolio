@@ -1,0 +1,68 @@
+{
+  "name": "Sridhar Mahalingam",
+  "role": "Systems & Full-Stack Developer",
+  "tagline": "Software Developer building systems around constraints — security, offline, real-time, multi-tenancy and self-hosted AI.",
+  "heroThesis": "I build software around constraints.",
+  "heroSupport": "Security ecosystems, metadata-driven enterprise platforms, offline-first desktop software, real-time apps and AI that runs entirely on my own infrastructure — designed, built and shipped end to end.",
+  "location": "Doha, Qatar",
+  "availability": "Currently Senior Backend Developer at Holora Performance · Transferable visa, NOC available",
+  "email": "sridharansridhar22@gmail.com",
+  "phone": "+974 3145 2430",
+  "github": "https://github.com/Sridhar08-glitch",
+  "siteUrl": "https://sridhar-portfolio.vercel.app",
+  "constraints": [
+    {
+      "key": "security",
+      "label": "Security",
+      "blurb": "DNS filtering, VPN packet interception, threat detection and privacy-first design."
+    },
+    {
+      "key": "enterprise",
+      "label": "Enterprise",
+      "blurb": "Metadata-driven platforms, event sourcing, multi-tenancy and double-entry accounting."
+    },
+    {
+      "key": "offline",
+      "label": "Offline-first",
+      "blurb": "Local-first storage, peer synchronisation and conflict reconciliation without a hosted server."
+    },
+    {
+      "key": "realtime",
+      "label": "Real-time",
+      "blurb": "WebSockets, live tracking, notifications and operational workflows."
+    },
+    {
+      "key": "ai-ml",
+      "label": "AI / ML",
+      "blurb": "OCR, computer vision and document intelligence — trained and served on self-hosted infrastructure."
+    },
+    {
+      "key": "mobile",
+      "label": "Mobile",
+      "blurb": "Flutter, React Native and native Android with Kotlin and Jetpack Compose."
+    },
+    {
+      "key": "commerce",
+      "label": "Commerce",
+      "blurb": "Payments, catalogues, orders, inventory and customer systems for live businesses."
+    }
+  ],
+  "portrait": {
+    "src": "/images/portrait-mono.png",
+    "alt": "Sridhar Mahalingam",
+    "width": 280,
+    "height": 350
+  },
+  "aboutPortrait": {
+    "src": "/images/portrait-sand.png",
+    "alt": "Sridhar Mahalingam",
+    "width": 480,
+    "height": 320
+  },
+  "aboutBody": [
+    "I'm a software developer with 3+ years of experience shipping production web and mobile applications end to end, currently Senior Backend Developer at Holora Performance in Doha.",
+    "My work spans an unusually wide range of constraints: a cross-platform DNS security ecosystem, an offline-first desktop ERP that runs with no hosted server, multi-tenant commerce and metadata-driven enterprise platforms, and AI systems — OCR, computer vision and meeting intelligence — that I train and serve entirely on my own infrastructure with no third-party inference API.",
+    "Before Holora I spent three years at Techynova delivering five live client platforms for UK and Qatar businesses as the primary or sole engineer — owning architecture, backend, frontend, deployment, security and direct English-language client communication.",
+    "I'm comfortable as the sole technical owner of a product, and I care most about the decisions underneath the software: why a Bloom filter sits before the trie, why the network can disappear and the app keeps working, why the AI stays on owned hardware."
+  ]
+}

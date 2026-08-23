@@ -1,0 +1,50 @@
+[
+  {
+    "id": "bloom-before-trie",
+    "question": "Why a Bloom filter before the trie?",
+    "answer": "The authoritative blocklist match lives in a Patricia trie of millions of entries, but most domains a user visits aren't on any list — so a full trie descent on every lookup is wasted work. A Bloom filter answers 'definitely not blocked' in constant time and lets the common case skip the trie entirely. False positives cost a confirming trie lookup, which is accepted because they're rare and the trie stays authoritative.",
+    "projects": ["shielddns"]
+  },
+  {
+    "id": "event-sourcing",
+    "question": "Why event sourcing?",
+    "answer": "For enterprise and financial workflows, 'what did this record look like last quarter?' is a real question. Storing only the latest row and overwriting it can't answer it, and a bolt-on audit log can drift or be bypassed. Making the immutable event stream the source of truth gives complete audit history and point-in-time reconstruction inherently — at the cost of maintaining projections and thinking in events.",
+    "projects": ["nexus-erp", "meetingmind-ai"]
+  },
+  {
+    "id": "rls",
+    "question": "Why PostgreSQL Row-Level Security?",
+    "answer": "Multi-tenant isolation enforced only in application code is one forgotten `WHERE tenant_id = …` away from a cross-tenant data leak. Pushing isolation into the database with Row-Level Security removes that entire class of bug — the database refuses to return another tenant's rows regardless of what the query layer does.",
+    "projects": ["nexus-erp"]
+  },
+  {
+    "id": "local-first",
+    "question": "Why local-first instead of a hosted server?",
+    "answer": "On a construction site the network is unreliable or absent, so a hosted web app simply stops working. Treating the network as an optimisation rather than a requirement — each installation locally complete, syncing peer-to-peer on reconnection — keeps every user productive with zero connectivity and removes the always-on server as both a cost and a single point of failure. The price is real distributed-systems work: sync and conflict reconciliation.",
+    "projects": ["construction-erp"]
+  },
+  {
+    "id": "self-host-ai",
+    "question": "Why self-host the AI?",
+    "answer": "Calling a hosted LLM or OCR API sends confidential data off-device, creates per-call cost and vendor lock-in, and makes 'why did it produce that?' unanswerable. Running local models behind provider interfaces keeps documents and audio on owned infrastructure, removes vendor cost, and — paired with deterministic logic or citation-bound RAG — keeps every result auditable. Local inference is slower and more operationally involved; that's the trade accepted.",
+    "projects": ["meetingmind-ai", "airsume", "ocr-document-intelligence"]
+  },
+  {
+    "id": "deterministic-over-llm",
+    "question": "Why deterministic logic over an LLM for the ATS?",
+    "answer": "An ATS exists to make a defensible decision. An LLM produces fluent output you can't audit and can quietly fabricate fields. A staged, rule-based matcher (exact → alias → normalised → fuzzy, never fuzzy-first) with a source-span envelope records exactly how every field and score was produced, so 'why did this candidate score 62?' has a precise answer. The cost is that it won't loosely infer meaning the way a model can.",
+    "projects": ["airsume"]
+  },
+  {
+    "id": "market-vs-currency",
+    "question": "Why model market separately from currency?",
+    "answer": "Price as 'amount + currency' breaks the moment one currency spans markets with different pricing, or a market is served with no locked local price. Modelling market as a first-class concept — with explicit locked prices, an FX reference-currency fallback and a resolver that never borrows a price between markets — is the difference between a platform that expands globally and one that has to be re-architected the first time it tries.",
+    "projects": ["commerceos"]
+  },
+  {
+    "id": "websockets",
+    "question": "Why WebSockets for the hospital and booking apps?",
+    "answer": "A lab result, a freed bed or a booking status is only useful if the right person sees it immediately. Polling at that scale is both slower and heavier than pushing domain events over a persistent connection. WebSockets add connection state and a channels layer to operate, which is the accepted cost of genuine real-time behaviour.",
+    "projects": ["medical-erp", "carwash-booking"]
+  }
+]

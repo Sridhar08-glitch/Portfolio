@@ -1,0 +1,37 @@
+[
+  {
+    "id": "holora",
+    "company": "Holora Performance",
+    "role": "Senior Backend Developer",
+    "location": "Doha, Qatar",
+    "start": "Feb 2026",
+    "end": "Present",
+    "current": true,
+    "summary": "Lead backend engineering across a concurrent portfolio of products spanning e-commerce, offline-first desktop ERP, a metadata-driven enterprise platform, in-house document intelligence and fitness technology — owning API architecture, data modelling, model development, security and deployment.",
+    "bullets": [
+      "Own backend architecture across multiple concurrent products — Django REST services, database schemas, authentication and authorisation, and integration contracts consumed by web, mobile and desktop clients.",
+      "Lead in-house machine learning for OCR and document intelligence — all models trained internally on self-hosted infrastructure, with no third-party AI provider or external inference API in the pipeline.",
+      "Design and optimise PostgreSQL data models for multi-module enterprise systems: schema design, indexing, migration management and query performance tuning under production load.",
+      "Build mobile-facing API layers for Flutter and React Native clients with JWT authentication, token refresh, RBAC and versioned REST contracts.",
+      "Implement asynchronous and background processing with Celery and Redis for scheduled jobs, notification dispatch and document-processing pipelines.",
+      "Own deployment and production operations — Linux administration, Nginx, HTTPS/TLS, environment separation, database backups and post-release support."
+    ]
+  },
+  {
+    "id": "techynova",
+    "company": "Techynova",
+    "role": "Full Stack Developer",
+    "location": "Chennai, India",
+    "start": "Jan 2023",
+    "end": "Feb 2026",
+    "current": false,
+    "summary": "Technology consultancy delivering web and mobile products for clients in the UK, Qatar and India. Owned the full delivery lifecycle — frontend, backend, deployment, security and direct English-language client communication — across five production platforms.",
+    "bullets": [
+      "Delivered five production platforms end to end — architecture, backend APIs, frontend, deployment and security — as the primary or sole engineer, working in teams of three to four.",
+      "Built and secured payment and transactional flows with Stripe: PCI-compliant encrypted checkout, automated invoice generation and order-confirmation email pipelines via AWS SES.",
+      "Administered production Linux infrastructure on Contabo VPS and Render — Nginx reverse proxying, HTTPS/TLS, JWT-protected routes, environment isolation and database backups.",
+      "Improved organic reach through dynamic sitemaps, structured metadata, robots.txt and Next.js server-side rendering, with Google Analytics and Search Console setup.",
+      "Ran client-facing delivery in English with UK and Qatar stakeholders — requirements gathering, scope negotiation, demos and post-launch support — without an intermediary account manager."
+    ]
+  }
+]

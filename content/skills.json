@@ -1,0 +1,110 @@
+[
+  {
+    "id": "systems",
+    "name": "Systems & Architecture",
+    "blurb": "The capabilities the work is really organised around.",
+    "items": [
+      "Clean Architecture & ports/adapters",
+      "Metadata-driven system design",
+      "Event sourcing",
+      "Multi-tenancy & row-level security",
+      "Offline-first / local-first systems",
+      "Business rules engines",
+      "Double-entry ledger design",
+      "REST API design"
+    ]
+  },
+  {
+    "id": "backend",
+    "name": "Backend",
+    "items": [
+      "Python",
+      "Django",
+      "Django REST Framework",
+      "Django Channels",
+      "Celery",
+      "Flask",
+      "WebSockets",
+      "JWT & OAuth",
+      "Redis task queues"
+    ]
+  },
+  {
+    "id": "frontend",
+    "name": "Frontend",
+    "items": [
+      "React.js",
+      "Next.js 14 (App Router, SSR/ISR)",
+      "TypeScript",
+      "Redux",
+      "Tailwind CSS",
+      "Core Web Vitals"
+    ]
+  },
+  {
+    "id": "mobile-desktop",
+    "name": "Mobile & Desktop",
+    "items": [
+      "Flutter (Riverpod, Dio, GoRouter, Hive)",
+      "React Native",
+      "Native Android (Kotlin 2.0)",
+      "Jetpack Compose, Hilt, Room, WorkManager",
+      "Android VpnService",
+      "Rust / Tauri",
+      "C# / .NET 10 (WPF)"
+    ]
+  },
+  {
+    "id": "ai-ml",
+    "name": "AI / ML",
+    "items": [
+      "PyTorch",
+      "FCOS object detection",
+      "ONNX Runtime",
+      "Computer vision",
+      "OCR & Tesseract",
+      "Custom model architecture & training",
+      "Evaluation & benchmarking (IoU, mAP)",
+      "Self-hosted GPU inference"
+    ]
+  },
+  {
+    "id": "data",
+    "name": "Data",
+    "items": [
+      "PostgreSQL",
+      "MySQL",
+      "Redis",
+      "SQLite",
+      "Schema design & indexing",
+      "Query optimisation",
+      "Migrations & backups"
+    ]
+  },
+  {
+    "id": "infra",
+    "name": "Cloud & DevOps",
+    "items": [
+      "Linux (Ubuntu) VPS administration",
+      "Nginx",
+      "Docker",
+      "AWS (S3, SES)",
+      "HTTPS/TLS",
+      "Vercel & Render",
+      "Git & GitHub"
+    ]
+  },
+  {
+    "id": "security-networking",
+    "name": "Systems & Networking",
+    "items": [
+      "DNS protocol & resolution",
+      "DNS-over-HTTPS / DNS-over-TLS",
+      "Android VpnService & TUN packet processing",
+      "Local DNS server implementation",
+      "Bloom filters & Patricia tries",
+      "LFU caching",
+      "Manifest V3 extensions"
+    ]
+  }
+]

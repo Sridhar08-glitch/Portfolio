@@ -1,0 +1,910 @@
+[
+  {
+    "id": "shielddns",
+    "title": "ShieldDNS v2.0",
+    "category": "Security · Networking · Systems",
+    "tier": "flagship",
+    "status": "production",
+    "featured": true,
+    "accent": "mineral",
+    "role": "Sole developer — designed, built and released end to end",
+    "summary": "A self-hosted, privacy-first ecosystem that blocks ads, trackers and malware at three layers — an Android VPN filter, a Windows DNS server and a browser extension — all filtering locally with no accounts and no telemetry.",
+    "constraints": ["security", "mobile"],
+    "technologies": [
+      "Kotlin 2.0",
+      "Jetpack Compose",
+      "Android VpnService",
+      "Hilt",
+      "Room",
+      "WorkManager",
+      "C# / .NET 10",
+      "WPF",
+      "Manifest V3",
+      "declarativeNetRequest",
+      "DNS-over-HTTPS",
+      "DNS-over-TLS"
+    ],
+    "problem": "Ad and tracker blocking is usually solved per-browser or behind a paid cloud resolver that sees every domain you visit. Sridhar wanted coverage across the whole device — every app, every browser, and the desktop — without routing traffic through a third party or trusting anyone else's server.",
+    "constraintsNarrative": "Everything had to run locally: no accounts, no telemetry, no data leaving the device. On Android it had to work without root. And it had to stay fast while matching against millions of blocklist entries on every single DNS lookup.",
+    "architecture": "Three independent applications share one principle — an ad cannot load if its domain never resolves. The Android app runs a loopback VpnService that intercepts only DNS queries; the Windows app runs a local resolver on 127.0.0.1:53 and redirects the system DNS; the browser extension blocks at the network and DOM layers. Each resolves a domain through an ordered, fastest-first pipeline before forwarding clean queries over encrypted upstream DNS.",
+    "decision": {
+      "title": "A Bloom filter in front of the Patricia trie",
+      "body": "The authoritative match lives in a Patricia trie holding millions of blocklist entries. But most domains a user visits are not on any blocklist — so paying for a full trie descent on every lookup is wasted work. A Bloom filter answers 'is this definitely not blocked?' in constant time and lets the overwhelming common case skip the trie entirely, with the whitelist and an LFU hot cache short-circuiting even earlier."
+    },
+    "tradeoff": "A Bloom filter can report a false positive, so a 'maybe blocked' answer still costs a trie lookup to confirm. That cost is accepted deliberately: false positives are rare, the trie is authoritative, and the pipeline is tuned so the expensive path runs only when it has to.",
+    "alternative": {
+      "obvious": "Ship a browser extension that blocks against a filter list — the standard, well-trodden approach.",
+      "whyNot": "A browser extension only protects that browser. Native apps, games, telemetry and other browsers leak straight past it, and CNAME-cloaked trackers hiding behind first-party hostnames are invisible to a domain-only list.",
+      "approach": "Block at the DNS layer across the whole device and reconstruct the CNAME chain hop by hop, so a tracker disguised as a first-party subdomain still gets caught. Three apps cover browser, desktop and mobile from one shared principle.",
+      "tradeoff": "Three codebases (Kotlin, C#, JavaScript) and a real DNS pipeline to maintain — far more surface than one extension — in exchange for coverage nothing browser-only can match."
+    },
+    "implementation": [
+      "Five-layer resolution pipeline: session whitelist → LFU hot cache → session blacklist → Bloom-filter prefilter → authoritative Patricia trie match.",
+      "CNAME uncloaking inspects every hop of the chain rather than only the queried hostname.",
+      "Behavioural reputation scoring (0–100) from subdomain entropy, risky TLDs, homoglyph look-alike detection and visit frequency, with time-decay so one spike never permanently blocks a site.",
+      "Redirect-chain reconstruction from a rolling DNS buffer, scored by hop count, /24 IP-block diversity and inter-hop timing.",
+      "Android VpnService loopback tunnel intercepts DNS only — user traffic is never routed off-device.",
+      "Windows .NET 10 WPF app runs a resolver on 127.0.0.1:53, redirecting system DNS on start and restoring it on stop.",
+      "Eight community blocklists (EasyList, EasyPrivacy, uBlock, OISD, StevenBlack, Hagezi, URLhaus, AdGuard) refreshed in the background via WorkManager.",
+      "Release engineering: R8 shrinking, certificate pinning, separate debug/release signing, JUnit + MockK tests and LeakCanary."
+    ],
+    "highlights": [
+      "Root-free, system-wide DNS filtering on Android via a loopback VpnService.",
+      "Per-app firewall across Wi-Fi, mobile data and roaming, enforced at the DNS layer.",
+      "Encrypted upstream resolution over DoH/DoT to Cloudflare, Quad9, AdGuard, Mullvad or Google, with bootstrap IPs compiled in.",
+      "Tiered shield levels (Normal / Aggressive / Nuclear) trading false-positive rate against aggressiveness."
+    ],
+    "claims": [
+      {
+        "statement": "Designed for microsecond-scale lookups against millions of blocklist entries by making the common case nearly free.",
+        "kind": "design-target",
+        "source": "ShieldDNS architecture — Bloom + cache pipeline"
+      },
+      {
+        "statement": "Filters at three layers: browser extension, Windows applications system-wide, and Android system-wide without root.",
+        "kind": "qualitative",
+        "source": "ShieldDNS scope"
+      }
+    ],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Sheild-DNS", "kind": "repo" }
+    ],
+    "images": [],
+    "diagram": {
+      "kind": "funnel",
+      "caption": "A DNS request descends an ordered, fastest-first pipeline — session whitelist, LFU hot cache, session blacklist, Bloom-filter prefilter, then an authoritative Patricia trie — and resolves to ALLOW or BLOCK. Most requests exit early; only ambiguous ones reach the trie.",
+      "stages": [
+        { "id": "request", "label": "DNS request", "detail": "Incoming domain lookup" },
+        { "id": "whitelist", "label": "Session whitelist", "detail": "Known-good — allow immediately" },
+        { "id": "cache", "label": "LFU hot cache", "detail": "Recently seen — answer without a full match" },
+        { "id": "blacklist", "label": "Session blacklist", "detail": "Known-bad — block immediately" },
+        { "id": "bloom", "label": "Bloom-filter prefilter", "detail": "Definitely-not-blocked exits here" },
+        { "id": "trie", "label": "Patricia trie", "detail": "Authoritative match against millions of entries" },
+        { "id": "verdict", "label": "Allow / Block", "detail": "Clean queries forwarded over DoH / DoT" }
+      ]
+    }
+  },
+  {
+    "id": "meetingmind-ai",
+    "title": "MeetingMind AI",
+    "category": "Local-First AI · Knowledge Systems",
+    "tier": "flagship",
+    "status": "in-development",
+    "featured": true,
+    "accent": "blue",
+    "role": "Independent project — sole architect and developer",
+    "summary": "A meeting-intelligence platform that turns raw audio and video into transcripts, grounded summaries and tracked work — running entirely locally with no paid APIs, cloud AI or commercial SDKs.",
+    "constraints": ["ai-ml", "offline", "realtime"],
+    "technologies": [
+      "Python",
+      "Django 5",
+      "Django REST Framework",
+      "Celery",
+      "Redis",
+      "PostgreSQL",
+      "Faster-Whisper",
+      "Ollama (Llama 3.2)",
+      "SpeechBrain ECAPA",
+      "FFmpeg",
+      "pgvector",
+      "Next.js 16",
+      "TypeScript"
+    ],
+    "problem": "Meeting assistants that summarise calls and extract action items almost always ship your audio to a cloud AI provider. For confidential conversations that is a non-starter — and it means the product stops working the moment an API key or budget runs out.",
+    "constraintsNarrative": "Every AI capability — speech-to-text, summarisation, chat, embeddings, diarisation — had to run on local models by default, so the product works end to end after a clone and setup, yet can swap in optional cloud providers by configuration alone. And the AI must never fabricate: summaries and answers have to trace back to the source.",
+    "architecture": "Every AI capability sits behind a provider interface defaulting to a local engine. An asynchronous Celery/Redis pipeline (validate → media-inspect → extract → normalise → transcribe → diarise → summarise → index) runs all long work off the request path. On top sits a bitemporal, event-sourced knowledge hub and a 12-agent intelligence layer, each agent reaching data only through a permissioned tool registry.",
+    "decision": {
+      "title": "Human-in-the-loop, never auto-create",
+      "body": "The AI never silently creates tasks, decisions or risks. It emits confidence-scored suggestions with full explainability — source meeting, segment, speaker, quote and reason — that a person approves, edits or rejects. Only then do real work items materialise, each carrying an immutable audit trail back to its evidence."
+    },
+    "tradeoff": "Requiring human approval means the system produces less 'automatic' output than a fully autonomous assistant. That friction is the point: in a knowledge system, a wrong fact that looks confident is worse than a missing one.",
+    "alternative": {
+      "obvious": "Call a hosted LLM API for transcription, summaries and chat — fastest path to a working demo.",
+      "whyNot": "It sends confidential audio off-device, creates per-call cost and vendor lock-in, and makes 'why did it say that?' unanswerable.",
+      "approach": "Run local models (Faster-Whisper, Ollama, SpeechBrain) behind provider interfaces, with RAG grounded in local embeddings + Postgres full-text and citations that refuse to answer beyond the source.",
+      "tradeoff": "Local inference is slower and more operationally involved than a hosted API, but the data never leaves and every answer is auditable."
+    },
+    "implementation": [
+      "Offline transcription via Faster-Whisper + FFmpeg, emitting timestamped editable transcripts in TXT, MD, SRT, VTT and JSON with graceful degradation.",
+      "Grounded local AI: Ollama/Llama 3.2 produces summaries, action items, decisions and risks; RAG chat answers with clickable-timestamp citations and refuses to go beyond the source.",
+      "Reusable background-job engine: self-registering stages, dependency-graph ordering, per-stage retry with backoff, idempotent resume and live progress.",
+      "Bitemporal, event-sourced knowledge hub with 'what did we know as of…' time-travel queries, decision-evolution history and conflict detection.",
+      "12 declarative, owner-scoped agents coordinated by a planner (intent → agent selection → parallel execution → merge → conflict resolution).",
+      "Speaker diarisation with SpeechBrain ECAPA embeddings and a cross-meeting voice registry that reuses persisted embeddings.",
+      "Universal media import (YouTube, Vimeo, direct URLs, podcast/RSS) with SSRF protection and three-layer deduplication."
+    ],
+    "highlights": [
+      "Runs end to end with zero paid APIs — local by default, cloud by configuration.",
+      "RAG answers are citation-bound and refuse to hallucinate beyond source material.",
+      "Reproducible diarisation benchmark harness with provenance-stamped runs."
+    ],
+    "claims": [
+      {
+        "statement": "Executive dashboard health, score and analytics are materialised incrementally (around 14 ms dashboard reads) rather than recomputed per request.",
+        "kind": "measured",
+        "source": "Author benchmark (MeetingMind incremental materialisation)"
+      },
+      {
+        "statement": "Built solo across 15 phases — backend, background engine, local AI stack, knowledge layer, multi-agent platform and dashboard.",
+        "kind": "qualitative",
+        "source": "MeetingMind project scope"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "stream",
+      "caption": "Raw media enters an asynchronous pipeline — validate, extract, transcribe, diarise, summarise, index — and every result is appended to a bitemporal, event-sourced knowledge hub that supports time-travel queries and feeds human-approved work items.",
+      "stages": [
+        { "id": "media", "label": "Audio / video in" },
+        { "id": "transcribe", "label": "Transcribe (Whisper)" },
+        { "id": "diarise", "label": "Diarise (ECAPA)" },
+        { "id": "summarise", "label": "Ground & summarise (Llama)" },
+        { "id": "index", "label": "Index" },
+        { "id": "knowledge", "label": "Event-sourced knowledge hub" },
+        { "id": "approve", "label": "Human-approved work items" }
+      ]
+    }
+  },
+  {
+    "id": "commerceos",
+    "title": "CommerceOS",
+    "category": "Multi-Tenant Commerce · Architecture",
+    "tier": "flagship",
+    "status": "in-development",
+    "featured": true,
+    "accent": "clay",
+    "role": "Independent project — sole architect and developer",
+    "summary": "A multi-tenant, headless commerce platform whose backend is deliberately vertical-neutral — the same engine powers a fashion boutique, a grocery, a pharmacy or a B2B wholesaler, with each store's identity expressed as data rather than code.",
+    "constraints": ["commerce", "enterprise"],
+    "technologies": [
+      "Python 3.12",
+      "Django 5.2",
+      "Django REST Framework",
+      "Django Channels",
+      "Celery",
+      "Redis",
+      "PostgreSQL",
+      "Next.js 15",
+      "TypeScript",
+      "TanStack Query",
+      "Docker"
+    ],
+    "problem": "Commerce backends usually hardcode the business type — a grocery engine, a fashion engine, a pharmacy engine. Adding a new vertical means forking the code and threading business-type conditionals through the domain, which rots fast.",
+    "constraintsNarrative": "The core had to stay strictly vertical-neutral: never a single business-type conditional branch anywhere in the backend. Independent stores had to run on one deployment without ever seeing each other's data, and prices had to resolve correctly per market — not just per currency.",
+    "architecture": "Clean Architecture with CI-enforced dependency boundaries. The domain models the commerce network (tenant → catalogue → category → product → variant) with dynamic attributes and pluggable product-type strategies. Every external integration — payment, email, storage, search — sits behind an abstract service with swappable adapters resolved per tenant, so the core depends only on interfaces.",
+    "decision": {
+      "title": "Market modelled as distinct from currency",
+      "body": "Naïvely, price is 'amount + currency'. But the same currency can span markets with different pricing, and a market can be served without a locked local price. CommerceOS models market as a first-class concept with explicit locked prices, an FX reference-currency fallback and a deterministic resolver that never borrows a price between markets."
+    },
+    "tradeoff": "Modelling market separately from currency adds concepts and a resolver most shops never need. For a single-country store it is overkill — but it is the difference between a platform that expands globally and one that has to be re-architected the first time it does.",
+    "alternative": {
+      "obvious": "Build the store for its first vertical and add a `business_type` flag when a second one appears.",
+      "whyNot": "Every flag multiplies conditional branches across the domain; the code becomes a maze of 'if pharmacy… else grocery…' that no one can safely change.",
+      "approach": "Express identity as data and configuration — dynamic attributes and pluggable product-type strategies — so a new vertical is a configuration change, never a code fork.",
+      "tradeoff": "More upfront abstraction and discipline (import-linter, strict mypy) than a hardcoded store, repaid the first time a genuinely different vertical ships without touching the core."
+    },
+    "implementation": [
+      "Multi-tenant isolation enforced at the query layer — every tenant-scoped row carries a tenant identifier.",
+      "Catalogue engine end to end: products, a variant engine with an enforced generation ceiling, dynamic attributes, brands, collections, tags and SEO / JSON-LD / sitemap generation.",
+      "Global-market pricing engine with a batched, N+1-safe read path folding price into product detail and variants.",
+      "Ports-and-adapters for Stripe/PayPal, SMTP/SES, Local/S3, Postgres-FTS/OpenSearch, resolved per tenant.",
+      "API-first: standard response envelope, OpenAPI schema and versioned REST contract so the UI can be replaced with zero backend change.",
+      "Clean Architecture with import-linter-enforced boundaries, strict mypy with zero suppressions, UUIDv7 keys and feature flags."
+    ],
+    "highlights": [
+      "A new vertical is a configuration change, not a code fork.",
+      "Per-tenant adapter resolution keeps the core dependent only on interfaces.",
+      "Governance via a constitution, ADRs and per-phase validation reports."
+    ],
+    "claims": [
+      {
+        "statement": "No business-type conditional branch exists anywhere in the backend — vertical identity is data, not code.",
+        "kind": "qualitative",
+        "source": "CommerceOS design constraint"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "lattice",
+      "caption": "One deployment hosts many tenants. Each tenant-scoped row carries a tenant identifier and isolation is enforced at the query layer, so independent stores share one engine and one catalogue model without ever reading each other's data.",
+      "stages": [
+        { "id": "engine", "label": "Vertical-neutral core" },
+        { "id": "t1", "label": "Tenant · fashion" },
+        { "id": "t2", "label": "Tenant · grocery" },
+        { "id": "t3", "label": "Tenant · pharmacy" },
+        { "id": "t4", "label": "Tenant · B2B" }
+      ]
+    }
+  },
+  {
+    "id": "nexus-erp",
+    "title": "No-Code Enterprise ERP",
+    "category": "Enterprise · Metadata-Driven Architecture",
+    "tier": "flagship",
+    "status": "in-development",
+    "featured": true,
+    "accent": "gold",
+    "role": "Independent project — sole architect and developer",
+    "summary": "A metadata-driven enterprise operating system where organisations define their own data models, workflows and business logic through configuration rather than code — entities and rules stored as metadata and interpreted at runtime.",
+    "constraints": ["enterprise"],
+    "technologies": [
+      "Python",
+      "Django REST Framework",
+      "Next.js 14",
+      "TypeScript",
+      "PostgreSQL (Row-Level Security)",
+      "Redis",
+      "Celery"
+    ],
+    "problem": "Every business wants its ERP shaped to its own processes, but bespoke modules mean a code deployment for every change. The platform had to let administrators assemble and change business applications without waiting on a developer.",
+    "constraintsNarrative": "New modules had to be created through configuration rather than schema migration and redeployment. Tenant data had to be genuinely isolated, and the whole system needed a complete, trustworthy audit trail — including the ability to reconstruct any record as it was at a past point in time.",
+    "architecture": "Entities, fields, relationships and validation rules are stored as metadata and interpreted at runtime. State changes are captured as an immutable event stream, so current state is a projection that can be replayed to any point in time. A business-rules engine lets administrators author conditional logic, triggers, computed fields and automation without developer involvement.",
+    "decision": {
+      "title": "Event sourcing as the system of record",
+      "body": "Instead of storing only the latest row and overwriting it, every change is recorded as an immutable event; current state is derived by folding those events. That gives complete audit history and point-in-time reconstruction for free — essential for financial and approval workflows where 'what did this look like last quarter?' is a real question."
+    },
+    "tradeoff": "Event sourcing is more complex than CRUD — you maintain projections and think in events rather than rows. In exchange you get an audit trail that cannot be quietly edited and the ability to reconstruct any record's history exactly.",
+    "alternative": {
+      "obvious": "Model each ERP module as normal database tables and add an audit-log table alongside.",
+      "whyNot": "A separate audit log can drift from the real data, be bypassed, or fail to capture intent — and it can't reconstruct a record's exact past state.",
+      "approach": "Make the event stream the source of truth so audit history and point-in-time reconstruction are inherent, not bolted on, and enforce tenant isolation in the database with Row-Level Security.",
+      "tradeoff": "Projections and event versioning to maintain, in exchange for an audit trail and replay you can actually trust."
+    },
+    "implementation": [
+      "Metadata-driven model layer: entities, fields, relationships and rules defined as metadata, interpreted at runtime.",
+      "Event-sourced architecture with immutable event stream, full audit history and point-in-time reconstruction.",
+      "Business-rules engine: conditional logic, triggers, computed fields and process automation authored by administrators.",
+      "Multi-tenant isolation via PostgreSQL Row-Level Security — enforced at the database layer, not in application code.",
+      "Approval matrix and SLA engine with configurable multi-stage chains and automated escalation on breach.",
+      "Genuine double-entry accounting ledger underpinning the financial modules.",
+      "Webhook and API builders, plus an external portal builder with per-tenant white-labelling."
+    ],
+    "highlights": [
+      "New business modules created through configuration, without a code deployment.",
+      "Row-Level Security removes an entire class of cross-tenant data-leak risk.",
+      "Double-entry ledger keeps balanced books across all transactional activity."
+    ],
+    "claims": [
+      {
+        "statement": "Tenant separation is enforced at the database layer via PostgreSQL Row-Level Security rather than in application code.",
+        "kind": "qualitative",
+        "source": "No-Code ERP architecture"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "projection",
+      "caption": "A command is validated, becomes an immutable domain event on an append-only stream, and current state is a projection folded from those events — so any record can be replayed to any point in time.",
+      "stages": [
+        { "id": "command", "label": "Command" },
+        { "id": "validate", "label": "Validation" },
+        { "id": "event", "label": "Domain event" },
+        { "id": "stream", "label": "Immutable event stream" },
+        { "id": "projection", "label": "Projection" },
+        { "id": "state", "label": "Current state (replayable)" }
+      ]
+    }
+  },
+  {
+    "id": "construction-erp",
+    "title": "Construction ERP",
+    "category": "Offline-First · Desktop · Synchronisation",
+    "tier": "flagship",
+    "status": "in-development",
+    "featured": true,
+    "accent": "mineral",
+    "role": "Independent project — sole architect and developer",
+    "summary": "An enterprise resource planning system for construction, delivered as a native Windows desktop application that runs fully offline — all records persist locally and synchronise to other authorised installations when connectivity returns.",
+    "constraints": ["offline", "enterprise"],
+    "technologies": [
+      "Tauri (Rust shell)",
+      "Rust",
+      "Web frontend",
+      "Local on-device storage",
+      "Peer synchronisation",
+      "Inno Setup"
+    ],
+    "problem": "Construction work happens on sites with unreliable or absent connectivity. A hosted web ERP is useless the moment the network drops — yet field and site users still need full access to project, resource and procurement data.",
+    "constraintsNarrative": "The application had to work with no network at all, with no always-on central server to host, pay for, or fail. When connectivity returned, distributed copies had to converge — including resolving edits multiple users made offline to the same records.",
+    "architecture": "A Tauri application (Rust shell + web frontend) writes all records to local device storage, so the app is fully functional offline. Internal REST contracts decouple the interface from the data layer, so the same API surface serves both local operation and synchronised multi-user operation. On reconnection, changes propagate peer-to-peer to other authorised installations, with conflict reconciliation for divergent offline state.",
+    "decision": {
+      "title": "Local-first with peer sync instead of a hosted server",
+      "body": "The default assumption for an ERP is a central server everyone connects to. Here the network is treated as an optimisation, not a requirement: each installation is complete on its own and syncs peer-to-peer when it can. That removes the always-on hosting cost and the single point of failure entirely."
+    },
+    "tradeoff": "Peer synchronisation and conflict reconciliation are genuinely harder than a single authoritative database. The reward is an application where the network can disappear and every user stays fully productive.",
+    "alternative": {
+      "obvious": "Host the ERP as a web service with a central database everyone connects to.",
+      "whyNot": "On a construction site with no connectivity, a hosted web app simply stops working — and it adds a permanent server to host and a single point of failure.",
+      "approach": "Make each desktop installation locally complete with on-device storage, and synchronise peer-to-peer on reconnection with explicit conflict reconciliation.",
+      "tradeoff": "You take on distributed-systems complexity (sync, conflicts) to remove the hosting dependency and keep the app working with zero connectivity."
+    },
+    "implementation": [
+      "Local-first data persistence: complete functionality with no network access.",
+      "Peer synchronisation on reconnection keeps distributed copies consistent without a hosted backend.",
+      "Native desktop packaging with Tauri — a Rust shell + web frontend, far lighter than an Electron equivalent.",
+      "Internal REST contracts decouple interface from data so one API serves local and synced operation.",
+      "Modular ERP domains (project, resource, procurement, reporting) over a shared permissions model.",
+      "Conflict reconciliation for concurrent offline edits, resolving divergent local state on sync."
+    ],
+    "highlights": [
+      "No hosted server — no hosting cost, no single point of failure.",
+      "Rust/Tauri binary with a substantially smaller footprint than Electron.",
+      "Same REST surface serves both offline and synced multi-user modes."
+    ],
+    "claims": [
+      {
+        "statement": "The application operates fully offline with all records on local device storage, requiring no hosted central server.",
+        "kind": "qualitative",
+        "source": "Construction ERP architecture"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "clusters",
+      "caption": "Two devices work independently offline, each writing to local storage. When connectivity returns, their changes propagate peer-to-peer across a sync bridge and a conflict-reconciliation step converges divergent edits — with no central server between them.",
+      "stages": [
+        { "id": "a-write", "label": "Device A · local write" },
+        { "id": "a-offline", "label": "Offline" },
+        { "id": "reconnect", "label": "Reconnect" },
+        { "id": "sync", "label": "Peer sync" },
+        { "id": "reconcile", "label": "Conflict reconciliation" },
+        { "id": "b-write", "label": "Device B · local write" }
+      ]
+    }
+  },
+  {
+    "id": "airsume",
+    "title": "Airsume",
+    "category": "Deterministic AI · Document Intelligence",
+    "tier": "flagship",
+    "status": "in-development",
+    "featured": true,
+    "accent": "blue",
+    "role": "Independent research project — sole architect and developer",
+    "summary": "A resume-analysis and ATS platform that turns unstructured resumes and job descriptions into structured, explainable hiring intelligence — with no LLM or cloud AI. Every parsed field and score traces back to the exact text and rule that produced it.",
+    "constraints": ["ai-ml", "offline"],
+    "technologies": [
+      "Python",
+      "Django 5.2",
+      "Django REST Framework",
+      "Celery",
+      "Redis",
+      "PostgreSQL",
+      "PyMuPDF",
+      "Tesseract OCR",
+      "RapidFuzz",
+      "Next.js 16",
+      "React 19"
+    ],
+    "problem": "ATS tools increasingly lean on opaque LLMs that can't explain why a candidate scored the way they did — and that can quietly hallucinate fields that were never in the document. For hiring decisions, that unaccountability is a real liability.",
+    "constraintsNarrative": "Every result had to be produced by deterministic, auditable logic so each parsed field and score traces back to the exact text and rule behind it. The engine had to run fully offline — handling two-column layouts, tables and scanned PDFs — and it must never fabricate data.",
+    "architecture": "A fully offline extraction pipeline (PyMuPDF, pdfplumber, python-docx, Tesseract for scans) emits every field as a value + confidence + method + source-span envelope with a strict no-guess threshold. A versioned skill taxonomy drives a staged matcher, and an explainable scoring engine grades resume-to-job fit across weighted categories — each score shipping with the human-readable reasons behind it.",
+    "decision": {
+      "title": "Deterministic and explainable instead of an LLM",
+      "body": "The whole point of an ATS is a defensible decision. An LLM gives you fluent output you can't audit; a staged, rule-based matcher (exact → alias → normalised → fuzzy, never fuzzy-first) records exactly how every match was made. When someone asks 'why did this candidate score 62?', the system can answer precisely."
+    },
+    "tradeoff": "Deterministic logic can't infer meaning as loosely as a language model — it won't 'understand' an unusual phrasing the way an LLM might. In exchange, it never invents a skill that isn't there, and every output is auditable end to end.",
+    "alternative": {
+      "obvious": "Feed each resume and job description to an LLM and ask it to extract fields and score the fit.",
+      "whyNot": "You get confident output you can't verify, occasional fabricated fields, and no defensible answer to 'why this score?' — plus per-call cost and data leaving your infrastructure.",
+      "approach": "A deterministic pipeline with a source-span envelope and a staged taxonomy matcher, so every field and score is traceable and reproducible.",
+      "tradeoff": "It requires building and maintaining a real skill taxonomy and matcher rather than delegating to a model, but the result is fully explainable and never fabricates."
+    },
+    "implementation": [
+      "Deterministic offline parsing handling two-column layouts, tables and scanned/image PDFs via Tesseract, with a strict no-guess threshold.",
+      "Versioned skill taxonomy matched by a staged offline matcher (exact → alias → normalised → fuzzy) recording how each match was made.",
+      "Document-agnostic pipeline: resumes and job descriptions share one plugin-based parsing framework.",
+      "Explainable scoring across weighted categories summing to 100, with neutralise-and-redistribute for non-applicable criteria.",
+      "Asynchronous processing off the request path (Celery/Redis) with live status polling.",
+      "Golden-dataset benchmark harness with tolerant per-field comparison and regression-versus-baseline checks."
+    ],
+    "highlights": [
+      "Every field ships with value, confidence, method and source-span — it never fabricates.",
+      "Scores come with the human-readable reasons behind them.",
+      "Honest evaluation built in via a golden-dataset benchmark harness."
+    ],
+    "claims": [
+      {
+        "statement": "Versioned skill taxonomy of 432 skills across 33 categories and 10 industries with typed aliases and weighted relationships.",
+        "kind": "measured",
+        "source": "Airsume taxonomy (author-defined dataset)"
+      },
+      {
+        "statement": "Produces structured hiring intelligence with no LLM or cloud AI anywhere in the pipeline.",
+        "kind": "qualitative",
+        "source": "Airsume design constraint"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "review",
+      "caption": "A document is parsed offline into typed fields, each carrying a confidence score and a source span. Fields above the no-guess threshold pass through; low-confidence fields are held rather than fabricated, and scoring ships with the reasons behind it.",
+      "stages": [
+        { "id": "document", "label": "Resume / job description" },
+        { "id": "extract", "label": "Deterministic extraction" },
+        { "id": "confidence", "label": "Confidence + source span" },
+        { "id": "match", "label": "Staged taxonomy match" },
+        { "id": "score", "label": "Explainable score" }
+      ]
+    }
+  },
+  {
+    "id": "medical-erp",
+    "title": "Medical ERP (SridharERP)",
+    "category": "Healthcare · Enterprise · Real-time",
+    "tier": "featured",
+    "status": "personal",
+    "featured": true,
+    "accent": "clay",
+    "role": "Sole developer",
+    "summary": "A full-stack hospital management platform integrating patient management, EMR, pharmacy, laboratory, nursing, ward management, billing, staff administration and analytics into one real-time system.",
+    "constraints": ["enterprise", "realtime"],
+    "technologies": [
+      "Next.js 14",
+      "TypeScript",
+      "Tailwind CSS",
+      "Django REST Framework",
+      "PostgreSQL",
+      "Redis",
+      "WebSockets",
+      "JWT"
+    ],
+    "problem": "Hospital operations sprawl across many roles and departments that all touch the same patient. Keeping registration, EMR, pharmacy, lab, wards and billing consistent — in real time — is the core challenge.",
+    "architecture": "A Django REST backend with PostgreSQL and Redis serves a Next.js frontend. WebSockets push live updates — lab results, pharmacy stock alerts, emergency notifications and bed-occupancy changes — across the modules, while Redis caches read-heavy dashboards. JWT authentication with role-based access control spans eight distinct clinical and administrative roles.",
+    "decision": {
+      "title": "WebSockets for cross-department events",
+      "body": "In a hospital, a lab result or a freed bed is only useful if the right person sees it immediately. Rather than polling, the system pushes domain events over WebSockets so pharmacy, wards and reception react in real time."
+    },
+    "tradeoff": "Real-time push adds connection state and a channels layer to operate, but polling at hospital scale would be both slower and heavier.",
+    "implementation": [
+      "Patient management, EMR, pharmacy, laboratory, nursing/ward, billing, staff and analytics modules.",
+      "Real-time notifications over WebSockets for lab results, stock alerts, emergencies and bed occupancy.",
+      "JWT authentication with role-based access control across eight roles.",
+      "Redis caching for read-heavy analytics dashboards."
+    ],
+    "highlights": [
+      "Eight-role RBAC spanning clinical and administrative staff.",
+      "Real-time operational events across every module."
+    ],
+    "claims": [
+      {
+        "statement": "Role-based access control across eight distinct roles: doctors, nurses, pharmacists, lab technicians, accountants, receptionists and administrators.",
+        "kind": "qualitative",
+        "source": "Medical ERP feature set"
+      }
+    ],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Medical--ERP", "kind": "repo" }
+    ],
+    "images": [],
+    "diagram": {
+      "kind": "hub",
+      "caption": "The patient record sits at the centre; EMR, lab, pharmacy, ward, billing and staff modules connect as spokes, and domain events propagate between them in real time over WebSockets.",
+      "stages": [
+        { "id": "patient", "label": "Patient / EMR" },
+        { "id": "lab", "label": "Laboratory" },
+        { "id": "pharmacy", "label": "Pharmacy" },
+        { "id": "ward", "label": "Nursing / Ward" },
+        { "id": "billing", "label": "Billing" },
+        { "id": "staff", "label": "Staff" }
+      ]
+    }
+  },
+  {
+    "id": "trafficvision",
+    "title": "TrafficVision",
+    "category": "Computer Vision · AI Research",
+    "tier": "featured",
+    "status": "research",
+    "featured": true,
+    "accent": "gold",
+    "role": "Independent research project — sole architect and developer",
+    "summary": "A computer-vision platform that ingests traffic video and turns it into structured, real-time intelligence about vehicles and road conditions — built from the detection model up on self-owned infrastructure.",
+    "constraints": ["ai-ml", "realtime"],
+    "technologies": [
+      "Python",
+      "PyTorch",
+      "FCOS",
+      "ONNX Runtime",
+      "Django REST Framework",
+      "Celery",
+      "Redis",
+      "PostgreSQL",
+      "Next.js"
+    ],
+    "problem": "Raw traffic video is just pixels. Turning it into decisions — counts, congestion, signal optimisation — needs both a detector and a model of the physical road network that gives each detection spatial meaning.",
+    "architecture": "The platform models the physical network (city → intersection → road → lane) with camera placements, regions-of-interest and virtual counting lines. A self-trained FCOS detector, exported to ONNX, localises vehicles per frame; a Celery-driven GPU engine runs video off the request path with GPU allocation, heartbeats and automatic crash recovery. Detections become typed, confidence-scored records in a canonical contract.",
+    "decision": {
+      "title": "Train-equals-serve preprocessing",
+      "body": "A model is only as good as the consistency between how it was trained and how it runs in production. TrafficVision uses identical preprocessing on both sides so results stay consistent from training to serving — and exports to ONNX for fast, portable inference."
+    },
+    "tradeoff": "Training a detector from first principles on self-owned hardware is far slower to a first result than calling a hosted vision API — but it keeps the model, the data and the infrastructure fully owned.",
+    "implementation": [
+      "Traffic-scene modelling: city → intersection → road → lane, with ROIs and virtual counting lines.",
+      "Self-trained FCOS detector exported to ONNX for fast inference.",
+      "GPU-managed Celery processing sessions with allocation, heartbeats and crash recovery.",
+      "End-to-end training pipeline: leakage-safe splits, interruptible multi-day training with checkpoint/resume, honest evaluation (IoU precision/recall, mAP).",
+      "Structured, validated, confidence-scored output in a canonical contract."
+    ],
+    "highlights": [
+      "Detection model trained and evaluated on self-owned infrastructure.",
+      "Modular-monolith architecture ready for RTSP/CCTV ingestion and multi-GPU."
+    ],
+    "claims": [
+      {
+        "statement": "Detection model is in training; the platform is an active independent research project, not a production deployment.",
+        "kind": "qualitative",
+        "source": "TrafficVision status"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "spatial",
+      "caption": "The platform models the road network hierarchically — city down to intersection, road and individual lane — so each frame-by-frame vehicle detection is anchored to a real place rather than a raw pixel box.",
+      "stages": [
+        { "id": "city", "label": "City" },
+        { "id": "intersection", "label": "Intersection" },
+        { "id": "road", "label": "Road" },
+        { "id": "lane", "label": "Lane · ROI · counting line" }
+      ]
+    }
+  },
+  {
+    "id": "ocr-document-intelligence",
+    "title": "OCR & Document Intelligence",
+    "category": "Self-Hosted ML · Document Processing",
+    "tier": "featured",
+    "status": "research",
+    "featured": true,
+    "accent": "blue",
+    "role": "Sole developer — in-house model development",
+    "summary": "Document intelligence built entirely on internally trained models, with no third-party AI service or external inference API anywhere in the pipeline — from dataset preparation and training through to a structured extraction serving layer.",
+    "constraints": ["ai-ml"],
+    "technologies": [
+      "Python",
+      "PyTorch",
+      "Self-trained recognition models",
+      "Django REST Framework",
+      "Celery",
+      "Redis",
+      "PostgreSQL"
+    ],
+    "problem": "Document processing usually means uploading source documents to a third-party OCR API — which is a non-starter when those documents are confidential or subject to data-residency rules.",
+    "architecture": "All recognition and extraction models are trained internally and served from owned infrastructure. Celery workers run inference off the request path. Recognised text is parsed into typed, validated fields with confidence thresholds, retry logic and a human review queue for low-confidence results.",
+    "decision": {
+      "title": "Self-host the whole pipeline",
+      "body": "Rather than depend on a hosted OCR API, every model is trained and served in-house. Source documents never leave controlled infrastructure, there is no per-call vendor cost, and the capability stays fully owned — the same principle that runs through Airsume and MeetingMind."
+    },
+    "tradeoff": "Training and maintaining your own recognition models is more work than an API call, but it keeps confidential documents on owned infrastructure and removes vendor cost and lock-in.",
+    "implementation": [
+      "Fully in-house model stack — no external AI provider or hosted inference API.",
+      "Training and evaluation pipeline: dataset preparation, annotation, training runs and benchmarking against held-out sets.",
+      "Asynchronous serving layer keeps API latency independent of model processing time.",
+      "Structured extraction into typed, validated fields with confidence thresholds and a human review queue."
+    ],
+    "highlights": [
+      "Source documents never leave controlled infrastructure.",
+      "Low-confidence results route to a human review queue rather than being trusted blindly."
+    ],
+    "claims": [
+      {
+        "statement": "No external AI provider or hosted inference API sits anywhere in the pipeline.",
+        "kind": "qualitative",
+        "source": "OCR project design constraint"
+      }
+    ],
+    "links": [],
+    "images": [],
+    "diagram": {
+      "kind": "review",
+      "caption": "A document is preprocessed, passed through in-house OCR, and its fields extracted with confidence scores. High-confidence fields flow onward; low-confidence fields route to a human review queue instead of being trusted automatically.",
+      "stages": [
+        { "id": "document", "label": "Document" },
+        { "id": "preprocess", "label": "Preprocessing" },
+        { "id": "ocr", "label": "In-house OCR" },
+        { "id": "extract", "label": "Extraction + confidence" },
+        { "id": "review", "label": "Human review queue" }
+      ]
+    }
+  },
+  {
+    "id": "carwash-booking",
+    "title": "CarWash Booking",
+    "category": "Mobile · Real-time · Payments",
+    "tier": "featured",
+    "status": "personal",
+    "featured": true,
+    "accent": "mineral",
+    "role": "Sole developer",
+    "summary": "A full-stack Flutter platform for car-wash businesses — customers book services, track appointments live, manage vehicles, buy memberships, earn loyalty rewards and pay securely, backed by a real-time Django REST + Channels API.",
+    "constraints": ["mobile", "realtime", "commerce"],
+    "technologies": [
+      "Flutter",
+      "Riverpod",
+      "Dio",
+      "Django REST Framework",
+      "Django Channels",
+      "PostgreSQL",
+      "Redis",
+      "Celery",
+      "Stripe",
+      "Firebase Cloud Messaging",
+      "Google Maps",
+      "WebSockets"
+    ],
+    "problem": "Car-wash booking spans the whole lifecycle — choosing a service, live tracking, payment, loyalty and back-office operations — and it all has to feel immediate on a phone.",
+    "architecture": "A Flutter app (Riverpod, Dio, GoRouter, Hive) talks to a Django REST + Channels backend. Live booking status streams over WebSockets with Google Maps; passwordless OTP login issues JWTs with automatic refresh; Stripe handles payments and subscriptions; Celery/Redis run notifications and scheduled jobs off the request path; FCM delivers push updates.",
+    "decision": {
+      "title": "Passwordless OTP authentication",
+      "body": "For a consumer booking app, a password is friction and a liability. OTP login over JWT with automatic token refresh removes the password entirely while keeping sessions secure."
+    },
+    "tradeoff": "OTP depends on message delivery and adds a verification step, but it removes password management and lowers the barrier to a first booking.",
+    "implementation": [
+      "Online booking with packages, locations and time-slot scheduling.",
+      "Real-time booking tracking over WebSockets + Google Maps.",
+      "Passwordless OTP login with JWT and automatic token refresh.",
+      "Vehicle management, memberships, loyalty and referral rewards.",
+      "Stripe payments and subscription billing; in-app product store.",
+      "Celery/Redis background processing for notifications and scheduled jobs; FCM push."
+    ],
+    "highlights": [
+      "Live service tracking on a map, end to end.",
+      "Memberships, loyalty tiers and referrals built in.",
+      "Admin dashboard for bookings, staff, attendance and analytics."
+    ],
+    "claims": [],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Carwash-Booking-App", "kind": "repo" }
+    ],
+    "images": [],
+    "diagram": {
+      "kind": "journey",
+      "caption": "A customer moves through a service lifecycle — book, pick location, choose service, pay, then watch live status update in real time until completion.",
+      "stages": [
+        { "id": "book", "label": "Book" },
+        { "id": "location", "label": "Location" },
+        { "id": "service", "label": "Service" },
+        { "id": "pay", "label": "Payment" },
+        { "id": "live", "label": "Live status" },
+        { "id": "done", "label": "Completion" }
+      ]
+    }
+  },
+  {
+    "id": "plugged-in-scents",
+    "title": "Plugged In Scents",
+    "category": "E-commerce",
+    "tier": "production",
+    "status": "client-delivered",
+    "accent": "clay",
+    "role": "Full Stack Developer (team of 3) — React admin, Django REST, Stripe, AWS S3, deployment",
+    "summary": "A secure e-commerce platform for a UK fragrance brand, with a custom React admin dashboard for full control over products, orders, users and inventory, and a separate customer storefront.",
+    "constraints": ["commerce"],
+    "technologies": ["React.js", "Django", "MySQL", "Stripe", "AWS S3", "JWT", "Linux"],
+    "implementation": [
+      "Custom React admin dashboard for products, categories, pricing, inventory, users and orders.",
+      "Stripe payment gateway with encrypted, PCI-compliant checkout.",
+      "Product media stored and served via AWS S3.",
+      "Django REST APIs with role-based access; MySQL on a Contabo VPS; Linux deployment with JWT and HTTPS."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "pluggedinscents.co.uk", "href": "https://www.pluggedinscents.co.uk", "kind": "live" }
+    ],
+    "images": []
+  },
+  {
+    "id": "seven-stars-stationery",
+    "title": "Seven Stars Stationery",
+    "category": "E-commerce · SEO",
+    "tier": "production",
+    "status": "client-delivered",
+    "accent": "gold",
+    "role": "Full Stack Developer — Next.js frontend, Django REST, payments, SEO, VPS deployment",
+    "summary": "An e-commerce platform for a Doha stationery and office-supplies store, extending it online with cart, checkout (COD and online payment), automated invoicing and SEO-optimised, server-rendered product pages.",
+    "constraints": ["commerce"],
+    "technologies": ["Next.js", "Django", "MySQL", "Linux VPS"],
+    "implementation": [
+      "Cart and checkout supporting both Cash on Delivery and online payment.",
+      "Automated downloadable invoices and order-confirmation emails.",
+      "SEO: dynamic sitemap and robots.txt with server-rendered product pages.",
+      "Deployed on a Contabo Linux VPS."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "sevenstars.qa", "href": "https://www.sevenstars.qa", "kind": "live" }
+    ],
+    "images": []
+  },
+  {
+    "id": "indiguard-security",
+    "title": "Indiguard Security",
+    "category": "Business Platform",
+    "tier": "production",
+    "status": "client-delivered",
+    "accent": "mineral",
+    "role": "Full Stack Developer — frontend, backend API integration, deployment",
+    "summary": "A scalable web platform for a UK security-services provider, with dynamic service modules the client can extend without a code change, secure quotation workflows and SEO-optimised content.",
+    "constraints": ["commerce"],
+    "technologies": ["React.js", "Tailwind CSS", "Django", "MySQL", "Vercel", "Render"],
+    "implementation": [
+      "Service modules as dynamic Django models rendered by reusable React components — the client adds services without a code change.",
+      "Secure inquiry and quotation forms with backend validation and automated email notifications.",
+      "React frontend on Vercel; Django backend on Render with automated build pipelines."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "indiguardsecurity.co.uk", "href": "https://www.indiguardsecurity.co.uk", "kind": "live" }
+    ],
+    "images": []
+  },
+  {
+    "id": "nh-livespace",
+    "title": "NH LiveSpace",
+    "category": "Business · Construction",
+    "tier": "production",
+    "status": "client-delivered",
+    "accent": "clay",
+    "role": "Full Stack Developer — frontend, backend API integration, deployment",
+    "summary": "A professional business website for a construction and interior-solutions company — showcasing services, architectural capability and completed projects, with a secure client inquiry system and SEO-optimised structure.",
+    "constraints": ["commerce"],
+    "technologies": ["React.js", "Django", "JavaScript", "HTML", "CSS", "Linux"],
+    "implementation": [
+      "Service and portfolio showcase for construction and interior work.",
+      "Secure contact forms handled through the Django backend via REST APIs.",
+      "SEO-optimised content and structure; Linux deployment."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "nhlivespace.com", "href": "https://www.nhlivespace.com", "kind": "live" }
+    ],
+    "images": []
+  },
+  {
+    "id": "techynova",
+    "title": "Techynova",
+    "category": "Technology · Business",
+    "tier": "production",
+    "status": "client-delivered",
+    "accent": "blue",
+    "role": "Full Stack Developer — frontend, backend integration, deployment",
+    "summary": "A business website for a technology consultancy's own startup initiative — service showcase, client inquiry handling, SEO-friendly structure and Linux deployment.",
+    "constraints": ["commerce"],
+    "technologies": ["React.js", "Django", "JavaScript", "HTML", "CSS", "Linux"],
+    "implementation": [
+      "Structured service pages for web and application development.",
+      "Secure client inquiry forms processed through the Django backend.",
+      "SEO-friendly structure; Linux deployment."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "techynova.tech", "href": "https://www.techynova.tech", "kind": "live" }
+    ],
+    "images": []
+  },
+  {
+    "id": "student-teacher-management",
+    "title": "Student–Teacher Management",
+    "category": "Mobile · Education",
+    "tier": "additional",
+    "status": "personal",
+    "accent": "gold",
+    "role": "Sole developer",
+    "summary": "A cross-platform React Native app digitalising academic administration — role-based dashboards for teachers and students covering attendance, marks, class info and notifications, with real-time data sync.",
+    "constraints": ["mobile", "realtime"],
+    "technologies": ["React Native", "Django REST Framework", "MySQL", "REST API"],
+    "implementation": [
+      "Separate role-based dashboards for teachers and students.",
+      "Attendance and marks management; in-app notifications.",
+      "React Native app over Django REST APIs; MySQL storage."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "Frontend repo", "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-frontend", "kind": "repo" },
+      { "label": "Backend repo", "href": "https://github.com/Sridhar08-glitch/Student-management-Mobile-APP-backend", "kind": "repo" }
+    ],
+    "images": []
+  },
+  {
+    "id": "inventory-management",
+    "title": "Inventory Management System",
+    "category": "Web · Business",
+    "tier": "additional",
+    "status": "personal",
+    "accent": "mineral",
+    "role": "Sole developer",
+    "summary": "A full-stack web app for product inventory, stock movement, seller activity and sales analytics — with real-time stock updates, JWT auth, low-stock alerts and advanced search.",
+    "constraints": ["commerce"],
+    "technologies": ["React.js", "Django", "MySQL", "JWT"],
+    "implementation": [
+      "Product and stock management with stock levels auto-updated from sales.",
+      "Seller and sales management with analytics dashboards.",
+      "JWT authentication, low-stock alerts and advanced search/filtering."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "Frontend repo", "href": "https://github.com/Sridhar08-glitch/Inventory-Frontend", "kind": "repo" },
+      { "label": "Backend repo", "href": "https://github.com/Sridhar08-glitch/Inventory-Backend", "kind": "repo" }
+    ],
+    "images": []
+  },
+  {
+    "id": "people-safety",
+    "title": "People Safety & Crime Reporting",
+    "category": "Web · Real-time · Civic",
+    "tier": "additional",
+    "status": "academic",
+    "accent": "clay",
+    "role": "Developer (team of 4)",
+    "summary": "A public-safety web app for reporting crimes on an interactive map, viewing nearby incidents and danger zones, real-time chat with authorities and an SOS alert to saved contacts.",
+    "constraints": ["realtime"],
+    "technologies": ["Django", "JavaScript", "MySQL", "WebSockets", "Maps API"],
+    "implementation": [
+      "Map-based crime reporting with auto-detected and manual location.",
+      "WebSocket chat between users and authorities, plus alerts.",
+      "SOS emergency alerts; admin-defined danger zones and nearby safe places."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/Feel-safe", "kind": "repo" }
+    ],
+    "images": []
+  },
+  {
+    "id": "smart-cafeteria",
+    "title": "Smart Cafeteria Management",
+    "category": "Web · Flask",
+    "tier": "additional",
+    "status": "academic",
+    "accent": "gold",
+    "role": "Sole developer",
+    "summary": "A Flask web app streamlining cafeteria operations — authentication, menu management, order processing with email notifications and nutritional tracking.",
+    "constraints": ["commerce"],
+    "technologies": ["Python (Flask)", "SQLite", "Bootstrap", "JavaScript"],
+    "implementation": [
+      "User and admin authentication.",
+      "Menu management and order processing with automated email notifications.",
+      "Nutritional tracking of calories and food types."
+    ],
+    "highlights": [],
+    "claims": [],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Sridhar08-glitch/SMART-CAFETERIA", "kind": "repo" }
+    ],
+    "images": []
+  }
+]
