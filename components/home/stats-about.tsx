@@ -17,18 +17,18 @@ import { TechIcon } from "@/lib/tech-icons";
 export function StatsBand({
   site,
   systems,
-  technologies,
   domains,
 }: {
   site: Site;
   systems: number;
-  technologies: number;
   domains: number;
 }) {
   const stats: [string, string][] = [
     ["3+", "Years experience"],
     [`${systems}`, "Systems built"],
-    [`${technologies}+`, "Technologies"],
+    // Core stack only — the curated set he actually works in daily, not every
+    // library string that appears across project stacks.
+    [`${MARQUEE_TECH.length}`, "Core technologies"],
     [`${domains}`, "Problem domains"],
   ];
   return (

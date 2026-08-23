@@ -33,7 +33,6 @@ export default function HomePage() {
   const projectTitles = Object.fromEntries(
     publicProjects.map((p) => [p.id, p.title]),
   );
-  const technologies = new Set(publicProjects.flatMap((p) => p.technologies)).size;
 
   return (
     <>
@@ -42,7 +41,6 @@ export default function HomePage() {
       <StatsBand
         site={site}
         systems={publicProjects.length}
-        technologies={technologies}
         domains={activeConstraints().length}
       />
 
