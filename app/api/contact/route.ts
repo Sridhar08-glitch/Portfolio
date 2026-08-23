@@ -11,12 +11,13 @@ import { site } from "@/lib/content";
  */
 
 const BodySchema = z.object({
-  name: z.string().min(1).max(120),
-  email: z.string().email().max(200),
-  subject: z.string().min(1).max(200),
-  message: z.string().min(1).max(5000),
-  /** Honeypot — real users never fill this. */
-  company: z.string().max(0).optional().or(z.literal("")),
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(200),
+  subject: z.string().trim().min(1).max(200),
+  message: z.string().trim().min(1).max(5000),
+  /** Honeypot — humans never see it; bots (and overeager autofill) might fill
+   *  it, so accept any value and silently drop instead of rejecting. */
+  hp_field: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
   }
 
   // Honeypot tripped — pretend success, send nothing.
-  if (data.company) {
+  if (data.hp_field) {
     return NextResponse.json({ ok: true });
   }
 

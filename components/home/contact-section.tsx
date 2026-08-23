@@ -40,7 +40,7 @@ export function ContactSection({ site }: { site: Site }) {
           email: fd.get("email"),
           subject: fd.get("subject"),
           message: fd.get("message"),
-          company: fd.get("company") ?? "",
+          hp_field: fd.get("hp_field") ?? "",
         }),
       });
       const json = (await res.json()) as { ok: boolean; error?: string };
@@ -216,12 +216,13 @@ export function ContactSection({ site }: { site: Site }) {
               <input id="cf-subject" name="subject" required maxLength={200} placeholder="Subject" className={inputCls} />
               <label className="sr-only" htmlFor="cf-message">Your message</label>
               <textarea id="cf-message" name="message" required maxLength={5000} rows={6} placeholder="Your message" className={`${inputCls} resize-y`} />
-              {/* Honeypot — hidden from real users */}
+              {/* Honeypot — hidden from real users; obscure name so browser
+                  autofill never targets it (Chrome autofills "company"). */}
               <input
                 type="text"
-                name="company"
+                name="hp_field"
                 tabIndex={-1}
-                autoComplete="off"
+                autoComplete="one-time-code"
                 aria-hidden="true"
                 className="absolute -left-[9999px] h-0 w-0 opacity-0"
               />
