@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
@@ -63,6 +64,7 @@ export function ProjectDetail({
 
   const toc = [
     { id: "overview", label: "Overview", show: true },
+    { id: "shots", label: "Screenshots", show: p.images.length > 0 },
     { id: "problem", label: "Problem & constraints", show: Boolean(p.problem || p.constraintsNarrative) },
     { id: "architecture", label: "Architecture", show: Boolean(p.diagram || p.architecture) },
     { id: "how", label: "How it works", show: p.implementation.length > 0 },
@@ -207,6 +209,35 @@ export function ProjectDetail({
             </div>
           )}
         </header>
+
+        {/* Screenshots */}
+        {p.images.length > 0 && (
+          <SectionShell id="shots" label="Screenshots" className="mt-14">
+            <div className={cn("grid gap-5", p.images.length > 1 && "md:grid-cols-2")}>
+              {p.images.map((img) => (
+                <figure
+                  key={img.src}
+                  className="overflow-hidden rounded-theme border border-line bg-panel shadow-[0_12px_40px_-16px_rgb(0_0_0/0.7)]"
+                  style={{ "--glow": `${color}44` } as React.CSSProperties}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    width={img.width ?? 1600}
+                    height={img.height ?? 900}
+                    className="w-full"
+                    sizes="(max-width: 1024px) 100vw, 900px"
+                  />
+                  {img.caption && (
+                    <figcaption className="border-t border-line px-4 py-2.5 text-xs text-muted">
+                      {img.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          </SectionShell>
+        )}
 
         {/* Problem & constraints */}
         {(p.problem || p.constraintsNarrative) && (

@@ -128,7 +128,7 @@
     "title": "MeetingMind AI",
     "category": "Local-First AI · Knowledge Systems",
     "tier": "flagship",
-    "status": "in-development",
+    "status": "personal",
     "featured": true,
     "accent": "blue",
     "role": "Independent project — sole architect and developer",
@@ -194,7 +194,14 @@
       }
     ],
     "links": [],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/copilot.png",
+        "alt": "MeetingMind AI — Copilot workspace dashboard with executive brief, workspace score and knowledge tools",
+        "width": 2880,
+        "height": 1800
+      }
+    ],
     "diagram": {
       "kind": "stream",
       "caption": "Raw media enters an asynchronous pipeline — validate, extract, transcribe, diarise, summarise, index — and every result is appended to a bitemporal, event-sourced knowledge hub that supports time-travel queries and feeds human-approved work items.",
@@ -333,7 +340,7 @@
     "title": "No-Code Enterprise ERP",
     "category": "Enterprise · Metadata-Driven Architecture",
     "tier": "flagship",
-    "status": "in-development",
+    "status": "personal",
     "featured": true,
     "accent": "gold",
     "role": "Independent project — sole architect and developer",
@@ -427,7 +434,7 @@
     "title": "Construction ERP",
     "category": "Offline-First · Desktop · Synchronisation",
     "tier": "flagship",
-    "status": "in-development",
+    "status": "personal",
     "featured": true,
     "accent": "mineral",
     "role": "Independent project — sole architect and developer",
@@ -992,7 +999,14 @@
         "kind": "live"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/pluggedinscents.png",
+        "alt": "Plugged In Scents — e-commerce storefront for a UK fragrance brand",
+        "width": 1916,
+        "height": 930
+      }
+    ],
     "audience": {
       "who": "A UK fragrance brand selling direct to consumers, with staff managing products, orders and customers from a custom dashboard.",
       "where": "Live at pluggedinscents.co.uk — storefront, Stripe checkout and admin, running on Linux with media on AWS S3."
@@ -1031,7 +1045,14 @@
         "kind": "live"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/sevenstars.png",
+        "alt": "Seven Stars Stationery — e-commerce storefront",
+        "width": 1889,
+        "height": 926
+      }
+    ],
     "audience": {
       "who": "A Doha stationery and office-supplies store extending beyond its physical shop to students, professionals and businesses.",
       "where": "Live at sevenstars.qa — 24/7 ordering with COD and online payment, automated invoices, and SEO-tuned server-rendered pages."
@@ -1071,7 +1092,14 @@
         "kind": "live"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/indiguard.png",
+        "alt": "Indiguard Security — service platform homepage",
+        "width": 1895,
+        "height": 926
+      }
+    ],
     "audience": {
       "who": "A UK security-services provider — manned guarding, CCTV monitoring, keyholding — presenting services and capturing qualified inquiries.",
       "where": "Live at indiguardsecurity.co.uk — dynamic service modules the client extends without code changes, plus quotation workflows."
@@ -1111,7 +1139,14 @@
         "kind": "live"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/nhspce.png",
+        "alt": "NH LiveSpace — construction & interior business website",
+        "width": 1881,
+        "height": 948
+      }
+    ],
     "audience": {
       "who": "A licensed construction and interior-solutions company showcasing craftsmanship and converting visitors into project inquiries.",
       "where": "Live at nhlivespace.com — services, portfolio and secure inquiry handling on a Linux deployment."
@@ -1151,7 +1186,14 @@
         "kind": "live"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/techynova.png",
+        "alt": "Techynova — technology business website",
+        "width": 1902,
+        "height": 964
+      }
+    ],
     "audience": {
       "who": "A technology consultancy's own storefront — presenting web and application development services to prospective clients.",
       "where": "Live at techynova.tech — service showcase, inquiry capture and SEO-friendly structure."
@@ -1238,7 +1280,14 @@
         "kind": "repo"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/inventory.png",
+        "alt": "Inventory Management System — dashboard interface",
+        "width": 1904,
+        "height": 965
+      }
+    ],
     "audience": {
       "who": "Businesses tracking products, stock movement, sellers and sales performance in one place.",
       "where": "Web-based back office with live stock levels, low-stock alerts and analytics dashboards."
@@ -1277,7 +1326,14 @@
         "kind": "repo"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/feelsafe.png",
+        "alt": "People Safety & Crime Reporting — web application interface",
+        "width": 1890,
+        "height": 856
+      }
+    ],
     "audience": {
       "who": "Communities and local authorities coordinating on public safety — reporting incidents, tracking danger zones, reaching help fast.",
       "where": "A web platform with map-based reporting, real-time chat with authorities and SOS alerts to saved contacts."
@@ -1315,7 +1371,14 @@
         "kind": "repo"
       }
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "/images/projects/smartcafe.png",
+        "alt": "Smart Cafeteria Management — web application interface",
+        "width": 1899,
+        "height": 927
+      }
+    ],
     "audience": {
       "who": "Cafeteria operators streamlining menus, orders and nutrition awareness for their customers.",
       "where": "A Flask web app covering authentication, menu management and order processing with email notifications."
