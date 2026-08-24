@@ -497,7 +497,13 @@
         "source": "Construction ERP architecture"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Construction-ERP",
+        "kind": "repo"
+      }
+    ],
     "images": [],
     "diagram": {
       "kind": "clusters",

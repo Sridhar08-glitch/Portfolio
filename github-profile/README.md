@@ -214,7 +214,7 @@ An enterprise resource planning system for construction, delivered as a native W
 
 <code>Tauri (Rust shell)</code> <code>Rust</code> <code>Web frontend</code> <code>Local on-device storage</code> <code>Peer synchronisation</code> <code>Inno Setup</code>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/Construction-ERP"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
