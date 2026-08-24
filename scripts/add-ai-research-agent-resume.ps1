@@ -5,6 +5,9 @@
 # ML sentence. Backups already taken in E:\sridhar reums\backup_2026-08-24.
 $ErrorActionPreference = "Stop"
 $src = "E:\sridhar reums"
+$logPath = Join-Path $env:TEMP "resume-edit-log.txt"
+Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+function Log($s) { Add-Content -Path $logPath -Value "$(Get-Date -Format HH:mm:ss.fff) $s"; Write-Output $s }
 
 $em  = [string][char]0x2014   # em dash
 $en  = [string][char]0x2013   # en dash
@@ -75,32 +78,54 @@ function SetAfterLabel($doc, $para, $text) {
   $r.Text = $text
 }
 
-function FindReplace($doc, $find, $repl) {
-  $f = $doc.Content.Find
-  $f.ClearFormatting(); $f.Replacement.ClearFormatting()
-  return $f.Execute($find, $true, $false, $false, $false, $false, $true, 1, $false, $repl, 2)
+# Word's Find.Execute hangs on these documents (observed spinning for 18+ min),
+# so replace by locating the substring in a paragraph and setting the range text.
+function ReplaceInDoc($doc, $find, $repl) {
+  foreach ($p in $doc.Paragraphs) {
+    $t = $p.Range.Text.TrimEnd([char]13, [char]7)
+    $idx = $t.IndexOf($find)
+    if ($idx -ge 0) {
+      $S = $p.Range.Start
+      $r = $doc.Range($S + $idx, $S + $idx + $find.Length)
+      $r.Text = $repl
+      return $true
+    }
+  }
+  return $false
 }
 
 $m = [System.Reflection.Missing]::Value
-$word = New-Object -ComObject Word.Application
-$word.Visible = $false
-$word.DisplayAlerts = 0
 
-try {
-  foreach ($name in @(
-    "Sridhar_Mahalingam_Software_Developer_Qatar.docx",
-    "Sridhar_Mahalingam_Software_Developer_Qatar_Full.docx",
-    "Sridhar_Mahalingam_Software_Developer_Singapore.docx",
-    "Sridhar_Mahalingam_Software_Developer_Singapore_Full.docx"
-  )) {
-    $path = Join-Path $src $name
+foreach ($name in @(
+  "Sridhar_Mahalingam_Software_Developer_Qatar.docx",
+  "Sridhar_Mahalingam_Software_Developer_Qatar_Full.docx",
+  "Sridhar_Mahalingam_Software_Developer_Singapore.docx",
+  "Sridhar_Mahalingam_Software_Developer_Singapore_Full.docx"
+)) {
+  $path = Join-Path $src $name
+  Log "=== $name : starting Word"
+  $word = New-Object -ComObject Word.Application
+  $word.Visible = $false
+  $word.DisplayAlerts = 0
+  try {
+    $word.Options.CheckSpellingAsYouType = $false
+    $word.Options.CheckGrammarAsYouType = $false
     $doc = $word.Documents.Open($path, $false, $false, $false, $m, $m, $false, $m, $m, $m, $m, $false, $true)
-    $paras = @($doc.Paragraphs)
-
-    if (($paras | Where-Object { (Get-ParaText $_).StartsWith("AI Research Agent") }).Count -gt 0) {
-      "$name : already contains AI Research Agent, skipping insert"
+    Log "opened, scanning"
+    if ($doc.Content.Text.Contains("AI Research Agent")) {
+      Log "$name : already contains AI Research Agent, skipping insert"
       $doc.Close($false); continue
     }
+    $doc.TrackRevisions = $false
+
+    # Word enters a state after the block rewrite where any further Find or
+    # paragraph enumeration hangs, so do the small line replacements FIRST.
+    $mlOk = ReplaceInDoc $doc $mlFind $mlRepl
+    $profOk = ReplaceInDoc $doc $profFind $profRepl
+    Log "line updates done: ml=$mlOk profile=$profOk"
+
+    $paras = @($doc.Paragraphs)
+    Log "paragraphs: $($paras.Count)"
 
     # locate the TrafficVision block and the next project title after it
     $i = -1
@@ -116,11 +141,13 @@ try {
     }
     if ($j -lt 0) { throw "$name : end of TrafficVision block not found" }
     $N = $j - $i
+    Log "anchor at $i, block size $N"
 
     # duplicate the block in place (formatting preserved)
     $blockRange = $doc.Range($paras[$i].Range.Start, $paras[$j].Range.Start)
     $ins = $doc.Range($paras[$i].Range.Start, $paras[$i].Range.Start)
     $ins.FormattedText = $blockRange.FormattedText
+    Log "block duplicated"
 
     # re-fetch: the new copy sits at i..i+N-1
     $paras = @($doc.Paragraphs)
@@ -129,10 +156,10 @@ try {
     $block = $paras[$i..($i + $N - 1)]
 
     $isShort = (Get-ParaText $block[1]).StartsWith("Stack:")
+    Log "rewriting (short=$isShort)"
     if ($isShort) {
       if ($N -ne 5) { throw "$name : expected 5-paragraph short block, got $N" }
       # bottom-up so earlier offsets stay valid
-      for ($b = 2; $b -le 4; $b++) { }
       Set-ParaText $doc $block[4] $bullets[2]
       Set-ParaText $doc $block[3] $bullets[1]
       Set-ParaText $doc $block[2] $bullets[0]
@@ -150,18 +177,16 @@ try {
       SetAfterLabel $doc $block[1] $roleFull
       Set-ParaText $doc $block[0] $titleNew
     }
-
-    $mlOk = FindReplace $doc $mlFind $mlRepl
-    $profOk = FindReplace $doc $profFind $profRepl
+    Log "rewrite done, saving"
 
     # OpenAndRepair yields a detached recovered document (FullName "Document1");
     # plain Save() never reaches the master, so save back to the path explicitly.
     $doc.SaveAs2($path, 16)
-    "$name : inserted (block=$N paras, short=$isShort) ml-line=$mlOk profile=$profOk"
+    Log "$name : inserted (block=$N paras, short=$isShort) ml-line=$mlOk profile=$profOk"
     $doc.Close($false)
+  } finally {
+    $word.Quit()
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($word) | Out-Null
   }
-} finally {
-  $word.Quit()
-  [System.Runtime.Interopservices.Marshal]::ReleaseComObject($word) | Out-Null
 }
-"Masters updated."
+Log "Masters updated."
