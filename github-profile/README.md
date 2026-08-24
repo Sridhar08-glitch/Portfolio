@@ -143,7 +143,7 @@ A meeting-intelligence platform that turns raw audio and video into transcripts,
 
 <code>Python</code> <code>Django 5</code> <code>Django REST Framework</code> <code>Celery</code> <code>Redis</code> <code>PostgreSQL</code> <sub>+7</sub>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/MeetingMind-AI"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
@@ -190,7 +190,7 @@ A metadata-driven enterprise operating system where organisations define their o
 
 <code>Python</code> <code>Django REST Framework</code> <code>Next.js 14</code> <code>TypeScript</code> <code>PostgreSQL (Row-Level Security)</code> <code>Redis</code> <sub>+1</sub>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/Nocode-Meta-Data-Driven-ERP"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
@@ -236,7 +236,7 @@ A resume-analysis and ATS platform that turns unstructured resumes and job descr
 
 <code>Python</code> <code>Django 5.2</code> <code>Django REST Framework</code> <code>Celery</code> <code>Redis</code> <code>PostgreSQL</code> <sub>+5</sub>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/air-resume"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
@@ -254,6 +254,28 @@ A resume-analysis and ATS platform that turns unstructured resumes and job descr
 
 <table>
 <tr>
+<td width="50%" valign="top">
+
+### 🤖 MyLLM (S1-LLM)
+
+<img src="https://img.shields.io/badge/RESEARCH-C05B3F?style=flat-square" />
+<br/><sub><b>AI Research · Language Models · From Scratch</b> · Independent research project — sole architect and developer</sub>
+
+A large language model built entirely from first principles — own BPE tokenizer, own data pipeline, own decoder-only Transformer, own training loop and inference engine — trained from random initialization with no pretrained weights, no external LLM APIs and no borrowed vocabularies.
+
+<code>Python 3.12</code> <code>PyTorch</code> <code>NumPy</code> <code>Own BPE tokenizer</code> <code>MinHash + LSH (from scratch)</code> <code>YAML-driven configs</code> <sub>+2</sub>
+
+🔗 <a href="https://github.com/Sridhar08-glitch/S1-LLM"><b>Repo</b></a>
+
+<details><summary><b>📖 More about this system</b></summary>
+<br/>
+<p><b>👥 Who it's for —</b> Engineers, researchers and hiring teams who want proof of understanding LLMs at the implementation level — every component built, tested and verified rather than imported.</p>
+<p><b>🎯 The problem —</b> Using an LLM teaches you nothing about how one works. The only way to genuinely understand tokenization, attention, training dynamics and inference is to build every piece yourself — which means resisting the shortcut of pretrained weights, hosted APIs and imported vocabularies at every step.</p>
+<p><b>🧠 Key decision · The from-scratch rule is enforced by code, not by promise —</b> A 'built from scratch' claim is easy to make and easy to quietly break. Here NO_PRETRAINED_WEIGHTS is a guard enforced at every checkpoint-loading boundary and covered by tests — any code path that tries to load foreign weights is a defect by definition. The same discipline runs through the data: every document carries source, license, hashes and lineage, and every stage must balance its accounting (input = retained + removed + errors) or the run fails.</p>
+<p><b>⚖️ Trade-off —</b> Starting from random initialization on an 8 GB laptop GPU is enormously slower to any usable capability than fine-tuning an open model — and the first trained model (~10M parameters) will not be competitive with anything. That is accepted deliberately: the milestone is scientific, proving the full pipeline end to end, with a scaling ladder (1M overfit gate → 10M v0.1 → upward) climbed only as each rung is verified.</p>
+<p><b>✨ Highlights</b></p><ul><li>Zero pretrained weights, APIs or vocabularies — enforced in code and covered by tests.</li><li>70M-word source deduplicated in streaming mode with ~327 MB peak RSS on laptop hardware.</li><li>Honest status reporting: the Phase 5 audit flags the current corpus as synthetic and not yet training-ready, recorded as an explicit gap.</li></ul>
+</details>
+</td>
 <td width="50%" valign="top">
 
 ### 🏥 Medical ERP (SridharERP)
@@ -276,6 +298,8 @@ A full-stack hospital management platform integrating patient management, EMR, p
 <p><b>✨ Highlights</b></p><ul><li>Eight-role RBAC spanning clinical and administrative staff.</li><li>Real-time operational events across every module.</li></ul>
 </details>
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 
 ### 🚦 TrafficVision
@@ -287,7 +311,7 @@ A computer-vision platform that ingests traffic video and turns it into structur
 
 <code>Python</code> <code>PyTorch</code> <code>FCOS</code> <code>ONNX Runtime</code> <code>Django REST Framework</code> <code>Celery</code> <sub>+3</sub>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/ai-camera"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
@@ -298,8 +322,6 @@ A computer-vision platform that ingests traffic video and turns it into structur
 <p><b>✨ Highlights</b></p><ul><li>Detection model trained and evaluated on self-owned infrastructure.</li><li>Modular-monolith architecture ready for RTSP/CCTV ingestion and multi-GPU.</li></ul>
 </details>
 </td>
-</tr>
-<tr>
 <td width="50%" valign="top">
 
 ### 🔍 OCR & Document Intelligence
@@ -311,7 +333,7 @@ Document intelligence built entirely on internally trained models, with no third
 
 <code>Python</code> <code>PyTorch</code> <code>Self-trained recognition models</code> <code>Django REST Framework</code> <code>Celery</code> <code>Redis</code> <sub>+1</sub>
 
-🔗 <i>private repository</i>
+🔗 <a href="https://github.com/Sridhar08-glitch/OCR"><b>Repo</b></a>
 
 <details><summary><b>📖 More about this system</b></summary>
 <br/>
@@ -322,6 +344,8 @@ Document intelligence built entirely on internally trained models, with no third
 <p><b>✨ Highlights</b></p><ul><li>Source documents never leave controlled infrastructure.</li><li>Low-confidence results route to a human review queue rather than being trusted blindly.</li></ul>
 </details>
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 
 ### 🚗 CarWash Booking
@@ -344,6 +368,7 @@ A full-stack Flutter platform for car-wash businesses — customers book service
 <p><b>✨ Highlights</b></p><ul><li>Live service tracking on a map, end to end.</li><li>Memberships, loyalty tiers and referrals built in.</li><li>Admin dashboard for bookings, staff, attendance and analytics.</li></ul>
 </details>
 </td>
+<td width="50%"></td>
 </tr>
 </table>
 

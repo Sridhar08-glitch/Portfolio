@@ -8,7 +8,7 @@ const projects = JSON.parse(
 
 const EMOJI = {
   shielddns: "🛡️", "meetingmind-ai": "🧠", commerceos: "🛒", "nexus-erp": "🏢",
-  "construction-erp": "🏗️", airsume: "📄", "medical-erp": "🏥",
+  "construction-erp": "🏗️", airsume: "📄", "s1-llm": "🤖", "medical-erp": "🏥",
   trafficvision: "🚦", "ocr-document-intelligence": "🔍", "carwash-booking": "🚗",
   "plugged-in-scents": "🕯️", "seven-stars-stationery": "✏️",
   "indiguard-security": "🎥", "nh-livespace": "🏠", techynova: "💻",

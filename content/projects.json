@@ -193,7 +193,13 @@
         "source": "MeetingMind project scope"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/MeetingMind-AI",
+        "kind": "repo"
+      }
+    ],
     "images": [
       {
         "src": "/images/projects/copilot.png",
@@ -392,7 +398,13 @@
         "source": "No-Code ERP architecture"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/Nocode-Meta-Data-Driven-ERP",
+        "kind": "repo"
+      }
+    ],
     "images": [],
     "diagram": {
       "kind": "projection",
@@ -588,7 +600,13 @@
         "source": "Airsume design constraint"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/air-resume",
+        "kind": "repo"
+      }
+    ],
     "images": [],
     "diagram": {
       "kind": "review",
@@ -619,6 +637,121 @@
     "audience": {
       "who": "Recruiters, HR teams and job seekers who need resume screening they can actually defend — every score traceable to the exact text and rule that produced it.",
       "where": "Hiring pipelines where explainability and data privacy rule out cloud LLMs: parsing, skill matching and ATS scoring entirely on owned infrastructure."
+    }
+  },
+  {
+    "id": "s1-llm",
+    "title": "MyLLM (S1-LLM)",
+    "category": "AI Research · Language Models · From Scratch",
+    "tier": "featured",
+    "status": "research",
+    "featured": true,
+    "accent": "clay",
+    "role": "Independent research project — sole architect and developer",
+    "summary": "A large language model built entirely from first principles — own BPE tokenizer, own data pipeline, own decoder-only Transformer, own training loop and inference engine — trained from random initialization with no pretrained weights, no external LLM APIs and no borrowed vocabularies.",
+    "constraints": [
+      "ai-ml"
+    ],
+    "technologies": [
+      "Python 3.12",
+      "PyTorch",
+      "NumPy",
+      "Own BPE tokenizer",
+      "MinHash + LSH (from scratch)",
+      "YAML-driven configs",
+      "pytest",
+      "ruff + mypy"
+    ],
+    "problem": "Using an LLM teaches you nothing about how one works. The only way to genuinely understand tokenization, attention, training dynamics and inference is to build every piece yourself — which means resisting the shortcut of pretrained weights, hosted APIs and imported vocabularies at every step.",
+    "constraintsNarrative": "Three rules are non-negotiable and enforced in code: no pretrained LLM weights (the model starts from random initialization), no external LLM APIs anywhere in the training, data or serving path, and no pretrained tokenizer. The allowed foundation stops at PyTorch, CUDA and NumPy. Hardware is a single 8 GB laptop GPU, so every stage must stream with bounded memory.",
+    "architecture": "The system is built in verified phases: a reproducibility foundation (config fingerprints, seeded RNG capture, experiment tracking), then a four-stage streaming data pipeline — ingestion with full provenance, quality scoring, exact/normalized/near deduplication, and corpus audit with a document-disjoint train/val/test split. Next comes the own-trained BPE tokenizer, then a decoder-only Transformer, training engine and inference layer, gated by a mandatory overfit test before any real training run.",
+    "decision": {
+      "title": "The from-scratch rule is enforced by code, not by promise",
+      "body": "A 'built from scratch' claim is easy to make and easy to quietly break. Here NO_PRETRAINED_WEIGHTS is a guard enforced at every checkpoint-loading boundary and covered by tests — any code path that tries to load foreign weights is a defect by definition. The same discipline runs through the data: every document carries source, license, hashes and lineage, and every stage must balance its accounting (input = retained + removed + errors) or the run fails."
+    },
+    "tradeoff": "Starting from random initialization on an 8 GB laptop GPU is enormously slower to any usable capability than fine-tuning an open model — and the first trained model (~10M parameters) will not be competitive with anything. That is accepted deliberately: the milestone is scientific, proving the full pipeline end to end, with a scaling ladder (1M overfit gate → 10M v0.1 → upward) climbed only as each rung is verified.",
+    "implementation": [
+      "Streaming, disk-backed data pipeline: ingestion → cleaning → deduplication → corpus audit, each stage a self-contained config-driven CLI.",
+      "Near-duplicate detection via MinHash + LSH implemented from scratch in NumPy only.",
+      "Full provenance on every document — source, license, SHA-256 hashes and lineage from raw file to final snapshot.",
+      "Bit-for-bit deterministic reruns: same seed + config fingerprint reproduces the corpus exactly.",
+      "Protected eval sources are never leaked into training; contamination is measured and reported.",
+      "Mandatory overfit gate: a ~1M-parameter model must drive loss to ~0 on a tiny corpus before any real training is allowed."
+    ],
+    "highlights": [
+      "Zero pretrained weights, APIs or vocabularies — enforced in code and covered by tests.",
+      "70M-word source deduplicated in streaming mode with ~327 MB peak RSS on laptop hardware.",
+      "Honest status reporting: the Phase 5 audit flags the current corpus as synthetic and not yet training-ready, recorded as an explicit gap."
+    ],
+    "claims": [
+      {
+        "statement": "280 tests passing, with ruff and mypy clean across 140 files.",
+        "kind": "measured",
+        "source": "S1-LLM test suite and per-phase verification reports"
+      },
+      {
+        "statement": "Data pipeline verified on 113.7M raw words across sources, distilled to a 16.5M-word balanced corpus with a bit-for-bit reproducible fingerprint.",
+        "kind": "measured",
+        "source": "Phase 5 verification report (corpus_0002)"
+      },
+      {
+        "statement": "Phases 0–5 (charter, foundation, full data pipeline) are implemented and verified; the tokenizer and model phases are next, not yet built.",
+        "kind": "qualitative",
+        "source": "S1-LLM phase status"
+      }
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/S1-LLM",
+        "kind": "repo"
+      }
+    ],
+    "images": [],
+    "diagram": {
+      "kind": "stream",
+      "caption": "Raw text flows through four verified streaming stages — ingestion with provenance, quality filtering, deduplication and corpus audit — into a fingerprinted train/val/test snapshot that feeds the own-trained BPE tokenizer and, from there, the from-scratch Transformer.",
+      "stages": [
+        {
+          "id": "raw",
+          "label": "Raw datasets",
+          "detail": "TXT · MD · JSON · JSONL"
+        },
+        {
+          "id": "ingest",
+          "label": "Ingestion + provenance",
+          "detail": "Canonical records, SHA-256 lineage"
+        },
+        {
+          "id": "clean",
+          "label": "Quality filtering",
+          "detail": "Weighted scoring — accept / review / exclude"
+        },
+        {
+          "id": "dedup",
+          "label": "Deduplication",
+          "detail": "Exact, normalized and MinHash-LSH near-dup"
+        },
+        {
+          "id": "corpus",
+          "label": "Corpus snapshot",
+          "detail": "Audited, balanced, document-disjoint splits"
+        },
+        {
+          "id": "tokenizer",
+          "label": "Own BPE tokenizer",
+          "detail": "Next phase — trained on the snapshot"
+        },
+        {
+          "id": "model",
+          "label": "From-scratch Transformer",
+          "detail": "Random init — 1M overfit gate, then v0.1"
+        }
+      ]
+    },
+    "audience": {
+      "who": "Engineers, researchers and hiring teams who want proof of understanding LLMs at the implementation level — every component built, tested and verified rather than imported.",
+      "where": "A research codebase and training ground today; architected to carry the same pipeline from a 1M-parameter correctness gate up a scaling ladder as data and hardware allow."
     }
   },
   {
@@ -762,7 +895,13 @@
         "source": "TrafficVision status"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/ai-camera",
+        "kind": "repo"
+      }
+    ],
     "images": [],
     "diagram": {
       "kind": "spatial",
@@ -837,7 +976,13 @@
         "source": "OCR project design constraint"
       }
     ],
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/OCR",
+        "kind": "repo"
+      }
+    ],
     "images": [],
     "diagram": {
       "kind": "review",
