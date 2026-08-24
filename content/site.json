@@ -36,7 +36,7 @@
     {
       "key": "ai-ml",
       "label": "AI / ML",
-      "blurb": "OCR, computer vision and document intelligence — trained and served on self-hosted infrastructure."
+      "blurb": "Multi-agent LLM systems, RAG, OCR and computer vision — trained and served on self-hosted infrastructure."
     },
     {
       "key": "mobile",

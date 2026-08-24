@@ -7,7 +7,7 @@ const projects = JSON.parse(
 );
 
 const EMOJI = {
-  shielddns: "🛡️", "meetingmind-ai": "🧠", commerceos: "🛒", "nexus-erp": "🏢",
+  shielddns: "🛡️", "ai-research-agent": "🔬", "meetingmind-ai": "🧠", commerceos: "🛒", "nexus-erp": "🏢",
   "construction-erp": "🏗️", airsume: "📄", "s1-llm": "🤖", "medical-erp": "🏥",
   trafficvision: "🚦", "ocr-document-intelligence": "🔍", "carwash-booking": "🚗",
   "plugged-in-scents": "🕯️", "seven-stars-stationery": "✏️",
@@ -32,6 +32,7 @@ const badge = (label, color) =>
 
 /** Screenshots that ship with the profile repo. */
 const SHOTS = {
+  "ai-research-agent": "./assets/ai-research-agent.png",
   "meetingmind-ai": "./assets/meetingmind.png",
   "plugged-in-scents": "./assets/pluggedinscents.png",
   "seven-stars-stationery": "./assets/sevenstars.png",
@@ -101,7 +102,7 @@ const additional = byTier("additional");
 
 const cards = `## 🚀 Flagship Systems
 
-Six systems, six different problems — each organised around a genuinely different constraint.
+Seven systems, seven different problems — each organised around a genuinely different constraint.
 <sub>Every card expands — click <b>📖 More about this system</b> for the problem, the key decision and the trade-off.</sub>
 
 ${grid(flagship, true)}

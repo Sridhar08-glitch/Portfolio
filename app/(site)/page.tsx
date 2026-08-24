@@ -62,7 +62,7 @@ export default function HomePage() {
         <div className="mt-20">
           <SectionHeading
             label="Featured systems"
-            title="Six systems, six different problems."
+            title="Seven systems, seven different problems."
             intro="Each flagship is organised around a genuinely different constraint — and drawn with a different visual grammar, because the architecture is what makes it interesting."
             action={<ViewAllLink href="/work">Explore all systems</ViewAllLink>}
           />

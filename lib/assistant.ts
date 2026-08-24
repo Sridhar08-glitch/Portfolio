@@ -144,7 +144,7 @@ export function answer(raw: string): AssistantReply {
       text: out(
         "help",
         "AVAILABLE TOPICS",
-        "  projects      all 19 systems, or ask one by name",
+        "  projects      all 20 systems, or ask one by name",
         "  skills        the stack, organised by capability",
         "  experience    the career timeline",
         "  education     degree and certifications",
@@ -181,7 +181,7 @@ export function answer(raw: string): AssistantReply {
       text: out(
         "cat ~/strengths",
         "- sole-owner delivery    entire platforms alone, schema → nginx",
-        "- breadth with depth     19 systems · 7 domains · real decisions",
+        "- breadth with depth     20 systems · 7 domains · real decisions",
         "- direct communication   ran UK & Qatar clients in English, no middleman",
         "- self-hosted mindset    if it can run on owned infrastructure, it does",
         "",

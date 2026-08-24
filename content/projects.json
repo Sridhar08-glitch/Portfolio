@@ -124,6 +124,141 @@
     }
   },
   {
+    "id": "ai-research-agent",
+    "title": "AI Research Agent",
+    "category": "Agentic AI · Multi-Agent Systems · RAG",
+    "tier": "flagship",
+    "status": "personal",
+    "featured": true,
+    "accent": "gold",
+    "role": "Independent project — sole architect and developer",
+    "summary": "A local-first, multi-agent research workstation — LangGraph-orchestrated agents plan the research, search the real web, ground every finding in retrieved evidence, criticise their own analysis and write cited reports on a fully local LLM, with every citation verified against the session's own sources before publishing.",
+    "constraints": [
+      "ai-ml",
+      "realtime"
+    ],
+    "technologies": [
+      "Python 3.12",
+      "LangGraph",
+      "FastAPI",
+      "Pydantic v2",
+      "Ollama (local LLM)",
+      "PostgreSQL + pgvector",
+      "sentence-transformers",
+      "FAISS",
+      "Next.js 16",
+      "TypeScript",
+      "Tailwind 4",
+      "Docker Compose"
+    ],
+    "problem": "LLM 'research' tools routinely hallucinate — they cite sources that were never read and state claims no evidence supports. Sridhar wanted an agent system where hallucination is prevented by construction, not by prompt-engineering hope: every claim must trace to evidence the system actually retrieved, or it does not get published.",
+    "constraintsNarrative": "Everything had to run locally except web search — local LLM via Ollama, local embeddings, local database — so grounded research works without sending data to a cloud AI. And the guarantees had to be structural: findings citing pages that were never fetched discarded deterministically, invalid citations stripped, weakly-supported statements disclosed rather than published as fact, and the self-correction loop hard-capped so it can never run away.",
+    "architecture": "A LangGraph state machine orchestrates eight specialised agents — Planner, Researcher (collect + RAG findings), Analyst, Critic, optional human review, Writer and CitationVerifier — over one explicit shared state with no hidden globals. Sources flow through a robots.txt-aware fetcher into a per-session RAG index: chunks with full provenance, local embeddings, and hybrid retrieval fusing dense cosine similarity with a BM25 keyword index via reciprocal rank fusion. A FastAPI backend streams live agent progress over Server-Sent Events to a Next.js research-workstation UI showing sources, evidence, traces and metrics.",
+    "decision": {
+      "title": "A Critic agent that can send the whole workflow back",
+      "body": "Most agent pipelines are a one-way conveyor belt: plan, search, write, ship — whatever the model produced goes out. Here the Critic is a real gate in the state machine: it checks the analysis against the retrieved evidence and, when evidence is insufficient, loops the workflow back to research with refined queries — bounded at two iterations so it can never loop forever. The report cannot be written until the Critic approves or iterations exhaust, and even then every [n] citation is verified against the session's own collected sources — semantically, in vector space — before publishing."
+    },
+    "tradeoff": "The verification loop costs real latency: a standard run takes ~2.5 minutes on a local 3B model, largely because the strict Critic rejects the first pass and forces a second research round. That cost is deliberate — a quick mode trades the critic loop for ~2× lower latency while keeping URL grounding and citation verification fully active, and the measured result is that quick mode actually gains citation coverage by publishing fewer, better-grounded claims.",
+    "alternative": {
+      "obvious": "Prompt a hosted LLM to 'research this and cite your sources' — the standard chatbot-with-search approach.",
+      "whyNot": "The model happily invents citations, references pages it never fetched and states claims no source supports — and with a cloud API the only fix available is asking more nicely in the prompt.",
+      "approach": "Make hallucination structurally unpublishable: schema-constrained JSON decoding so the model cannot emit malformed output, deterministic discarding of findings that cite un-fetched URLs, a Critic gate that blocks writing until evidence suffices, and claim-level citation verification against the session's own evidence — with uncited claims that a real source verifiably supports getting the citation attached automatically.",
+      "tradeoff": "A full state machine, RAG pipeline and verification layer to build and test — far more machinery than a prompt — in exchange for reports where every published claim traces to real retrieved evidence."
+    },
+    "implementation": [
+      "LangGraph workflow with a conditional verification loop: Planner → Researcher → Analyst → Critic, looping back to refined research on rejection (hard-capped at 2 iterations), then Writer → CitationVerifier.",
+      "Per-session RAG pipeline: word-window chunking with overlap and provenance, batched content-hash-cached embeddings, and a pgvector → FAISS → numpy auto-selection chain for the vector store.",
+      "Hybrid retrieval by default — dense cosine similarity fused with a per-session BM25 keyword index via reciprocal rank fusion, so exact terms embeddings blur (product names, APIs, versions) still hit.",
+      "Claim-level citation verification: every factual sentence is checked against retrieved evidence as SUPPORTED / PARTIALLY_SUPPORTED / UNSUPPORTED; invalid citations are stripped and weak ones disclosed in Limitations.",
+      "Schema-constrained decoding via Ollama's JSON-Schema format option, with retry and salvage parsing — plus num_predict caps after a real run caught a 3B model looping to 19k tokens inside a JSON string.",
+      "Failure recovery throughout: search-provider fallback chain (Tavily → DuckDuckGo → SearXNG), per-source unavailability handling, and honest 'insufficient evidence' errors instead of silent model-knowledge fallback.",
+      "Live observability: SSE-streamed agent timeline, per-agent traces (status, duration, token usage), metrics panel and per-session reproducibility config with versioned prompts.",
+      "Evaluation harness running real research sessions over a question dataset, scoring citation coverage, groundedness, completeness, retrieval relevance and latency — rendered in an in-app dashboard where every benchmark row links to the full inspectable session."
+    ],
+    "highlights": [
+      "Hallucination reduction is structural, not hopeful — six independent guards between the model and the published report.",
+      "Runs entirely locally except web search: local LLM, local embeddings, local database, no API keys required for grounded output.",
+      "Human-in-the-loop review gate that auto-approves on timeout, so autonomous runs never hang."
+    ],
+    "claims": [
+      {
+        "statement": "Claim-level citation verification lifted citation coverage from 0% to 60–86% depending on mode — measured on real runs of the same pipeline before and after.",
+        "kind": "measured",
+        "source": "AI Research Agent evaluation runs (docs/evaluation.md, benchmarked 2026-08-24)"
+      },
+      {
+        "statement": "Benchmarked end to end on two local models: 100% completion, 78–79% overall quality, fastest single run 29.8s on qwen3:1.7b.",
+        "kind": "measured",
+        "source": "AI Research Agent evaluation dashboard (2 questions per model/mode cell, real research runs)"
+      },
+      {
+        "statement": "Quick mode measured at 64s end to end on a local 3B model after profiling-led optimisation, down from a 118–129s baseline.",
+        "kind": "measured",
+        "source": "AI Research Agent performance instrumentation (per-stage timing)"
+      },
+      {
+        "statement": "38 tests passing (27 backend, 11 frontend) covering the critic rejection loop, iteration caps, citation stripping and fabricated-URL discarding — all web, LLM and search calls mocked.",
+        "kind": "measured",
+        "source": "AI Research Agent test suite (pytest + vitest)"
+      }
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Sridhar08-glitch/AI-Research-Agent",
+        "kind": "repo"
+      }
+    ],
+    "images": [
+      {
+        "src": "/images/projects/ai-research-agent.png",
+        "alt": "AI Research Agent — research workstation home with live agent pipeline",
+        "width": 1440,
+        "height": 1050
+      },
+      {
+        "src": "/images/projects/ai-research-agent-report.png",
+        "alt": "AI Research Agent — cited research report with verified citations and evidence",
+        "width": 1440,
+        "height": 1750
+      }
+    ],
+    "diagram": {
+      "kind": "review",
+      "caption": "A research question flows through planning, real web collection and evidence-grounded analysis to the Critic — a genuine gate that sends insufficient work back to research with refined queries (bounded at two loops). Only approved analysis reaches the Writer, and every citation is then verified against the session's own sources before the report publishes.",
+      "stages": [
+        {
+          "id": "question",
+          "label": "Research question"
+        },
+        {
+          "id": "plan",
+          "label": "Plan + collect sources"
+        },
+        {
+          "id": "ground",
+          "label": "RAG-grounded findings"
+        },
+        {
+          "id": "critic",
+          "label": "Critic gate — approve or re-research"
+        },
+        {
+          "id": "write",
+          "label": "Write cited report"
+        },
+        {
+          "id": "verify",
+          "label": "Verify every citation"
+        }
+      ]
+    },
+    "audience": {
+      "who": "Anyone who needs research they can actually trust — analysts, students, teams evaluating tools or markets — and engineers who want a working reference for agentic RAG done honestly.",
+      "where": "A self-hosted research workstation on your own hardware: local LLM, local embeddings, local database, with only web search reaching out — no cloud AI ever sees the questions or the reports."
+    }
+  },
+  {
     "id": "meetingmind-ai",
     "title": "MeetingMind AI",
     "category": "Local-First AI · Knowledge Systems",
