@@ -253,13 +253,13 @@ export function answer(raw: string): AssistantReply {
   if (/resume|\bcv\b|curriculum/.test(q)) {
     return {
       text: out(
-        "open ~/resume.pdf",
-        "FILE     Sridhar_Mahalingam_Resume.pdf",
-        "COVERS   projects · experience · stack · education",
+        "ls ~/resume/",
+        "REGIONS  Qatar · GCC · India · Singapore · UK · EU · US · Canada · AU",
+        "FORMATS  short + detailed · PDF + Word",
       ),
       links: [
-        { label: "preview in browser", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
-        { label: "download pdf", href: "/resume/Sridhar_Mahalingam_Resume.pdf" },
+        { label: "choose your region version", href: "/resume" },
+        { label: "quick pdf (Qatar)", href: "/resume/Sridhar_Mahalingam_Software_Developer_Qatar.pdf" },
       ],
       chips: ["Experience", "Skills", "Contact"],
     };

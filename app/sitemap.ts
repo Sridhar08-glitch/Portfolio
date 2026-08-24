@@ -3,7 +3,7 @@ import { orderedProjects } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/work", "/writing"].map((path) => ({
+  const staticRoutes = ["", "/work", "/writing", "/resume"].map((path) => ({
     url: absoluteUrl(path || "/"),
     changeFrequency: "monthly" as const,
     priority: path === "" ? 1 : 0.7,

@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="./assets/banner.png" alt="Sridhar Mahalingam" width="100%" />
 
@@ -18,7 +18,7 @@
 [![Email](https://img.shields.io/badge/📧_Email-hire_me-C05B3F?style=for-the-badge)](mailto:sridharansridhar22@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-connect-0A66C2?style=for-the-badge)](https://www.linkedin.com/in/sridhar-mahalingam-6b8357245/)
 [![Instagram](https://img.shields.io/badge/Instagram-@ig__sd__sha-FF0069?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/ig_sd_sha)
-[![Resume](https://img.shields.io/badge/📄_Resume-download-3AA189?style=for-the-badge)](https://sridharportfolio1.netlify.app/resume/Sridhar_Mahalingam_Resume.pdf)
+[![Resume](https://img.shields.io/badge/📄_Resume-download-3AA189?style=for-the-badge)](https://sridharportfolio1.netlify.app/resume)
 
 <img src="https://komarev.com/ghpvc/?username=Sridhar08-glitch&style=flat-square&color=C9A057" alt="Profile views"/>
 

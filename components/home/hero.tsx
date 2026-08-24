@@ -184,14 +184,12 @@ export function Hero({
             <Link href="/work" className="btn-gold">
               View my work <ArrowUpRight size={16} aria-hidden />
             </Link>
-            <a
-              href="/resume/Sridhar_Mahalingam_Resume.pdf"
-              target="_blank"
-              rel="noreferrer noopener"
+            <Link
+              href="/resume"
               className="inline-flex items-center gap-2 font-medium text-gold underline-offset-4 transition-colors hover:text-clay hover:underline"
             >
               <Download size={16} aria-hidden /> Download resume
-            </a>
+            </Link>
           </Rise>
 
           {/* Stats bar — every number real and computed */}
