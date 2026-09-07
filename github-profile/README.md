@@ -4,7 +4,7 @@
 
 # Hi, I'm Sridhar Mahalingam 👋
 
-<img src="https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&weight=600&size=22&duration=2800&pause=900&color=C9A057&center=true&vCenter=true&width=640&lines=Full+Stack+Developer+%E2%80%94+Doha%2C+Qatar;I+build+software+around+constraints.;Django+%E2%80%A2+Next.js+%E2%80%A2+Flutter+%E2%80%A2+Kotlin+%E2%80%A2+Rust;Self-hosted+AI+%E2%80%94+no+cloud+APIs%2C+ever.;19+systems+%C2%B7+7+problem+domains+%C2%B7+5+live+clients" alt="Typing intro" />
+<img src="https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&weight=600&size=22&duration=2800&pause=900&color=C9A057&center=true&vCenter=true&width=640&lines=Full+Stack+Developer+%E2%80%94+Doha%2C+Qatar;I+build+software+around+constraints.;Django+%E2%80%A2+Next.js+%E2%80%A2+Flutter+%E2%80%A2+Kotlin+%E2%80%A2+Rust;Self-hosted+AI+%E2%80%94+no+cloud+APIs%2C+ever.;20+systems+%C2%B7+7+problem+domains+%C2%B7+5+live+clients" alt="Typing intro" />
 
 **I build software around constraints** — security, offline-first, real-time, multi-tenancy and self-hosted AI.
 
@@ -40,7 +40,7 @@ SCOPE   security · ERPs · e-commerce · healthcare · mobile · self-hosted AI
 ORIGIN  studied petrochemical engineering → fell in love with code
 ```
 
-Full Stack Developer with 3+ years of experience building scalable web and mobile applications for **UK and Qatar clients** — modern responsive UIs, secure REST APIs, payment integrations, real-time systems, and Linux/cloud deployment. I've shipped **19 systems across 7 problem domains**, most of them alone, from the first database schema to the Nginx config on the server.
+Full Stack Developer with 3+ years of experience building scalable web and mobile applications for **UK and Qatar clients** — modern responsive UIs, secure REST APIs, payment integrations, real-time systems, and Linux/cloud deployment. I've shipped **20 systems across 7 problem domains**, most of them alone, from the first database schema to the Nginx config on the server.
 
 If a system depends on someone else's cloud, my first question is always — *does it have to?*
 
@@ -77,7 +77,7 @@ If a system depends on someone else's cloud, my first question is always — *do
 <td width="50%" align="center">
 <h3>🤖 AI / ML</h3>
 <img src="https://skillicons.dev/icons?i=pytorch,tensorflow" />
-<br/><sub>FCOS • ONNX Runtime • Faster-Whisper • Ollama • Tesseract OCR • RAG + pgvector — all self-hosted</sub>
+<br/><sub>LangGraph multi-agent • FCOS • ONNX Runtime • Faster-Whisper • Ollama • Tesseract OCR • RAG + pgvector — all self-hosted</sub>
 </td>
 <td width="50%" align="center">
 <h3>🗄️ Databases</h3>
@@ -105,7 +105,7 @@ If a system depends on someone else's cloud, my first question is always — *do
 
 ## 🚀 Flagship Systems
 
-Six systems, six different problems — each organised around a genuinely different constraint.
+Eight systems, eight different problems — each organised around a genuinely different constraint.
 <sub>Every card expands — click <b>📖 More about this system</b> for the problem, the key decision and the trade-off.</sub>
 
 <table>
@@ -130,6 +130,54 @@ A self-hosted, privacy-first ecosystem that blocks ads, trackers and malware at 
 <p><b>🧠 Key decision · A Bloom filter in front of the Patricia trie —</b> The authoritative match lives in a Patricia trie holding millions of blocklist entries. But most domains a user visits are not on any blocklist — so paying for a full trie descent on every lookup is wasted work. A Bloom filter answers 'is this definitely not blocked?' in constant time and lets the overwhelming common case skip the trie entirely, with the whitelist and an LFU hot cache short-circuiting even earlier.</p>
 <p><b>⚖️ Trade-off —</b> A Bloom filter can report a false positive, so a 'maybe blocked' answer still costs a trie lookup to confirm. That cost is accepted deliberately: false positives are rare, the trie is authoritative, and the pipeline is tuned so the expensive path runs only when it has to.</p>
 <p><b>✨ Highlights</b></p><ul><li>Root-free, system-wide DNS filtering on Android via a loopback VpnService.</li><li>Per-app firewall across Wi-Fi, mobile data and roaming, enforced at the DNS layer.</li><li>Encrypted upstream resolution over DoH/DoT to Cloudflare, Quad9, AdGuard, Mullvad or Google, with bootstrap IPs compiled in.</li></ul>
+</details>
+</td>
+<td width="50%" valign="top">
+
+### 🧾 S POS
+
+<img src="https://img.shields.io/badge/COMPLETED-4D8A81?style=flat-square" />
+<br/><sub><b>Retail POS · Multi-Platform · Offline-First</b> · Independent product — sole architect and developer</sub>
+
+A complete, multi-currency retail point-of-sale and back-office platform — one Django engine, three ways to run a store: a hosted SaaS website, a self-contained Windows desktop exe that serves the whole shop over Wi-Fi, and a mobile app that can run the entire store on a phone, fully offline.
+
+<code>Python</code> <code>Django 5.2</code> <code>Django REST Framework</code> <code>Celery</code> <code>Redis</code> <code>PostgreSQL</code> <sub>+6</sub>
+
+🔗 <a href="https://github.com/Sridhar08-glitch/S-pos"><b>Repo</b></a>
+
+<details><summary><b>📖 More about this system</b></summary>
+<br/>
+<img src="./assets/spos.png" alt="S POS screenshot" width="100%" />
+<p><b>👥 Who it's for —</b> Retail shops of any size — from a market stall running everything on one phone to a multi-store, multi-company operation with registers, purchasing and accounting.</p>
+<p><b>🎯 The problem —</b> Point-of-sale software assumes a shape: either a cloud SaaS that dies with the internet connection, or a legacy desktop till that can't do e-commerce-grade back-office. A small shop shouldn't have to choose between 'works offline' and 'real inventory, accounting and multi-store' — and it shouldn't need an IT department to install either.</p>
+<p><b>🧠 Key decision · The server never trusts the till —</b> Every client computes its cart totals locally for instant UI — but at checkout the server recomputes the whole invoice with identical per-line rounding, tax and discount rules, and refuses the sale on any mismatch. Sale creation, row-locked stock decrement and double-entry ledger posting happen in one database transaction, keyed by an idempotency key, so the same key can never produce a duplicate charge and a crashed request can never half-record a sale.</p>
+<p><b>⚖️ Trade-off —</b> Recomputing totals server-side means the pricing rules exist twice — once in each client for responsiveness, once authoritatively on the server — and every rule change must keep them in agreement, with a retry protocol for the mismatch case. That duplication is accepted because the alternative is trusting whatever number a client sends about money.</p>
+<p><b>✨ Highlights</b></p><ul><li>One /api/v1 contract, three deployment shapes — hosted SaaS, single-exe LAN server, and a phone that can be the entire store offline.</li><li>Money paths are server-authoritative: totals recomputed with identical rules, stock row-locked and double-entry ledger posted in one transaction.</li><li>A shop can run forever with zero internet — SQLite inside the exe, a complete store engine on the phone.</li></ul>
+</details>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🔬 AI Research Agent
+
+<img src="https://img.shields.io/badge/COMPLETED-4D8A81?style=flat-square" />
+<br/><sub><b>Agentic AI · Multi-Agent Systems · RAG</b> · Independent project — sole architect and developer</sub>
+
+A local-first, multi-agent research workstation — LangGraph-orchestrated agents plan the research, search the real web, ground every finding in retrieved evidence, criticise their own analysis and write cited reports on a fully local LLM, with every citation verified against the session's own sources before publishing.
+
+<code>Python 3.12</code> <code>LangGraph</code> <code>FastAPI</code> <code>Pydantic v2</code> <code>Ollama (local LLM)</code> <code>PostgreSQL + pgvector</code> <sub>+6</sub>
+
+🔗 <a href="https://github.com/Sridhar08-glitch/AI-Research-Agent"><b>Repo</b></a>
+
+<details><summary><b>📖 More about this system</b></summary>
+<br/>
+<img src="./assets/ai-research-agent.png" alt="AI Research Agent screenshot" width="100%" />
+<p><b>👥 Who it's for —</b> Anyone who needs research they can actually trust — analysts, students, teams evaluating tools or markets — and engineers who want a working reference for agentic RAG done honestly.</p>
+<p><b>🎯 The problem —</b> LLM 'research' tools routinely hallucinate — they cite sources that were never read and state claims no evidence supports. Sridhar wanted an agent system where hallucination is prevented by construction, not by prompt-engineering hope: every claim must trace to evidence the system actually retrieved, or it does not get published.</p>
+<p><b>🧠 Key decision · A Critic agent that can send the whole workflow back —</b> Most agent pipelines are a one-way conveyor belt: plan, search, write, ship — whatever the model produced goes out. Here the Critic is a real gate in the state machine: it checks the analysis against the retrieved evidence and, when evidence is insufficient, loops the workflow back to research with refined queries — bounded at two iterations so it can never loop forever. The report cannot be written until the Critic approves or iterations exhaust, and even then every [n] citation is verified against the session's own collected sources — semantically, in vector space — before publishing.</p>
+<p><b>⚖️ Trade-off —</b> The verification loop costs real latency: a standard run takes ~2.5 minutes on a local 3B model, largely because the strict Critic rejects the first pass and forces a second research round. That cost is deliberate — a quick mode trades the critic loop for ~2× lower latency while keeping URL grounding and citation verification fully active, and the measured result is that quick mode actually gains citation coverage by publishing fewer, better-grounded claims.</p>
+<p><b>✨ Highlights</b></p><ul><li>Hallucination reduction is structural, not hopeful — six independent guards between the model and the published report.</li><li>Runs entirely locally except web search: local LLM, local embeddings, local database, no API keys required for grounded output.</li><li>Human-in-the-loop review gate that auto-approves on timeout, so autonomous runs never hang.</li></ul>
 </details>
 </td>
 <td width="50%" valign="top">
